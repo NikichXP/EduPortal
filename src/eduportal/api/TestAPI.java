@@ -1,7 +1,9 @@
-package eduportal;
+package eduportal.api;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+
+import eduportal.utils.Text;
 
 @Api(name = "test", version = "v1")
 public class TestAPI {

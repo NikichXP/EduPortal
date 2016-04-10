@@ -32,7 +32,7 @@
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.TestAPI.ping",
+      "rosyMethod" : "eduportal.api.TestAPI.ping",
       "request" : {
         "body" : "empty"
       },
@@ -54,7 +54,7 @@
       }
     },
     "methods" : {
-      "eduportal.TestAPI.ping" : {
+      "eduportal.api.TestAPI.ping" : {
         "response" : {
           "$ref" : "Text"
         }

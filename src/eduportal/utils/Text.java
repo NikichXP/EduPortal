@@ -1,4 +1,4 @@
-package eduportal;
+package eduportal.utils;
 
 import java.io.Serializable;
 
