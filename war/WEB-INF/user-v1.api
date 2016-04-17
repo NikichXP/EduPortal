@@ -1,0 +1,147 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://eduportal-1277.appspot.com/_ah/api",
+  "name" : "user",
+  "version" : "v1",
+  "title" : "API for user-accounts section",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://eduportal-1277.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "user.register" : {
+      "path" : "register",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.register",
+      "request" : {
+        "parameters" : {
+          "name" : {
+            "type" : "string",
+            "required" : true
+          },
+          "pass" : {
+            "type" : "string",
+            "required" : true
+          },
+          "login" : {
+            "type" : "string",
+            "required" : true
+          },
+          "surname" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.auth" : {
+      "path" : "auth",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.auth",
+      "request" : {
+        "parameters" : {
+          "login" : {
+            "type" : "string",
+            "required" : true
+          },
+          "pass" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.updateUser" : {
+      "path" : "update",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.updateUserInfo",
+      "request" : {
+        "parameters" : {
+          "name" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
+            "type" : "string",
+            "required" : true
+          },
+          "surname" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "Text" : {
+        "id" : "Text",
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "eduportal.api.UserAPI.register" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.UserAPI.auth" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.UserAPI.updateUserInfo" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      }
+    }
+  }
+}

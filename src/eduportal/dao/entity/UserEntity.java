@@ -22,7 +22,7 @@ public class UserEntity {
 	
 	public UserEntity() {
 		super();
-		this.id = (long) (new Random().nextInt(99_999));
+		this.id = new Random().nextLong();
 	}
 	
 	public long getId() {

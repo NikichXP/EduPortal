@@ -22,5 +22,9 @@ public class UserDAO {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static void update(UserEntity u) {
+		ofy().save().entity(u).now();
 	} 
 }
