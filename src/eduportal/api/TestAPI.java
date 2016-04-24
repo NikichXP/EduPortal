@@ -14,7 +14,6 @@ public class TestAPI {
 	static {
 		ObjectifyService.begin();
 		ObjectifyService.register(UserEntity.class);
-		System.out.println("reg complete");
 	}
 	
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")

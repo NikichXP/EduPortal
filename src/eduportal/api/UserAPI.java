@@ -5,13 +5,14 @@ import com.google.appengine.api.datastore.Text;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.AuthContainer;
+import eduportal.util.AuthToken;
 
 @Api(name = "user", version = "v1", title = "API for user-accounts section")
 public class UserAPI {
 	
 	@ApiMethod(name = "auth", httpMethod = "GET", path = "auth")
-	public Text auth (@Named ("login") String login, @Named ("pass") String pass) {
-		return new Text (AuthContainer.auth(login, pass));
+	public AuthToken auth (@Named ("login") String login, @Named ("pass") String pass) {
+		return AuthContainer.authToken(login, pass);
 	}
 	
 	@ApiMethod (name = "register", httpMethod = "GET", path="register")
@@ -21,12 +22,14 @@ public class UserAPI {
 	}
 	
 	@ApiMethod (name = "updateUser", httpMethod = "GET", path = "update")
-	public Text updateUserInfo (@Named ("name") String name, @Named ("token") String token, @Named ("surname") String surname) {
+	public UserEntity updateUserInfo (@Named ("name") String name, @Named ("token") String token, @Named ("surname") String surname, @Named ("pass") String pass) {
 		UserEntity u = AuthContainer.getUser(token);
 		u.setName(name);
 		u.setSurname(surname);
+		u.setPass(pass);
 		UserDAO.update(u);
-		return null;
+		u.setPass(null);
+		return u;
 	}
 	
 }

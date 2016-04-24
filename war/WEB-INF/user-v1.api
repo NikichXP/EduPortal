@@ -105,6 +105,10 @@
           "surname" : {
             "type" : "string",
             "required" : true
+          },
+          "pass" : {
+            "type" : "string",
+            "required" : true
           }
         },
         "body" : "empty"
@@ -124,6 +128,51 @@
             "type" : "string"
           }
         }
+      },
+      "AuthToken" : {
+        "id" : "AuthToken",
+        "type" : "object",
+        "properties" : {
+          "sessionId" : {
+            "type" : "string"
+          },
+          "timeout" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "timeoutTimestamp" : {
+            "type" : "string",
+            "format" : "int64"
+          }
+        }
+      },
+      "UserEntity" : {
+        "id" : "UserEntity",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "login" : {
+            "type" : "string"
+          },
+          "pass" : {
+            "type" : "string"
+          },
+          "accessGroup" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "token" : {
+            "type" : "string"
+          }
+        }
       }
     },
     "methods" : {
@@ -134,12 +183,12 @@
       },
       "eduportal.api.UserAPI.auth" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "AuthToken"
         }
       },
       "eduportal.api.UserAPI.updateUserInfo" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "UserEntity"
         }
       }
     }
