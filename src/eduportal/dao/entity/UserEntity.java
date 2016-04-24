@@ -24,6 +24,14 @@ public class UserEntity {
 		super();
 		this.id = new Random().nextLong();
 	}
+	public UserEntity (String login, String pass, String name, String surname) {
+		super();
+		this.id = new Random().nextLong();
+		this.name = name;
+		this.surname = surname;
+		this.login = login;
+		this.pass = pass;
+	}
 	
 	public long getId() {
 		return id;
@@ -57,6 +65,10 @@ public class UserEntity {
 	}
 	public void setAccessGroup(int accessGroup) {
 		this.accessGroup = accessGroup;
+	}
+	public UserEntity setAccessGroupR(int accessGroup) {
+		this.accessGroup = accessGroup;
+		return this;
 	}
 	public void setName(String name) {
 		this.name = name;

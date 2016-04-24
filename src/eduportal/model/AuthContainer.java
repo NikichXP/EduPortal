@@ -9,6 +9,7 @@ public class AuthContainer {
 
 	private static HashMap<String, UserEntity> currentSession = new HashMap<>();
 	private static HashMap<String, Long> tokenLimitTime = new HashMap<>();
+	private static HashMap<String, Integer> accessLevels = new HashMap<>();
 
 	/**
 	 * Session timeout
@@ -31,6 +32,7 @@ public class AuthContainer {
 		}
 		String token = UUID.randomUUID().toString();
 		currentSession.put(token, user);
+		accessLevels.put(token, user.getAccessGroup());
 		tokenLimitTime.put(token, System.currentTimeMillis() + SESSION_TIME);
 		return token;
 	}
@@ -63,6 +65,10 @@ public class AuthContainer {
 			}
 		}
 		return null;
+	}
+	
+	public static int getAccessGroup (String token) {
+		return accessLevels.get(token);
 	}
 
 	/**

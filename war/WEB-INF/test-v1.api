@@ -54,6 +54,21 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "test.rebuild_user_DB" : {
+      "path" : "rebuildDB",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.rebuildDB",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -82,6 +97,49 @@
             "type" : "string"
           }
         }
+      },
+      "UserEntity" : {
+        "id" : "UserEntity",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "login" : {
+            "type" : "string"
+          },
+          "pass" : {
+            "type" : "string"
+          },
+          "accessGroup" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "token" : {
+            "type" : "string"
+          },
+          "accessGroupR" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "UserEntityCollection" : {
+        "id" : "UserEntityCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "UserEntity"
+            }
+          }
+        }
       }
     },
     "methods" : {
@@ -93,6 +151,11 @@
       "eduportal.api.TestAPI.ping" : {
         "response" : {
           "$ref" : "Text"
+        }
+      },
+      "eduportal.api.TestAPI.rebuildDB" : {
+        "response" : {
+          "$ref" : "UserEntityCollection"
         }
       }
     }

@@ -1,7 +1,6 @@
 package eduportal.api;
 
 import com.google.api.server.spi.config.*;
-import com.google.appengine.api.datastore.Text;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.AuthContainer;
@@ -16,9 +15,9 @@ public class UserAPI {
 	}
 	
 	@ApiMethod (name = "register", httpMethod = "GET", path="register")
-	public Text register (@Named ("name") String name, @Named ("pass") String pass, @Named ("login") String login, @Named ("surname") String surname) {
-		UserEntity u = UserDAO.create(login, pass, name, surname);
-		return new Text ("done creating " + u.getId() + u.getName());
+	public AuthToken register (@Named ("name") String name, @Named ("pass") String pass, @Named ("login") String login, @Named ("surname") String surname) {
+		UserDAO.create(login, pass, name, surname);
+		return AuthContainer.authToken(login, pass);
 	}
 	
 	@ApiMethod (name = "updateUser", httpMethod = "GET", path = "update")

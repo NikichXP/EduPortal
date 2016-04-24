@@ -120,15 +120,6 @@
   },
   "descriptor" : {
     "schemas" : {
-      "Text" : {
-        "id" : "Text",
-        "type" : "object",
-        "properties" : {
-          "value" : {
-            "type" : "string"
-          }
-        }
-      },
       "AuthToken" : {
         "id" : "AuthToken",
         "type" : "object",
@@ -171,6 +162,9 @@
           },
           "token" : {
             "type" : "string"
+          },
+          "accessGroupR" : {
+            "type" : "integer"
           }
         }
       }
@@ -178,7 +172,7 @@
     "methods" : {
       "eduportal.api.UserAPI.register" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "AuthToken"
         }
       },
       "eduportal.api.UserAPI.auth" : {
