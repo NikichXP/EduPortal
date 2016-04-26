@@ -13,16 +13,19 @@ public class UserEntity {
     private String login;
     @Index 
     private String pass;
+    @Index
+    private String phone;
+    @Index
+    private String mail;
     
     private int accessGroup;
 	private String name;
 	private String surname;
-	@Ignore
-	private String token;
 	
 	public UserEntity() {
 		super();
 		this.id = new Random().nextLong();
+		this.accessGroup = 0;
 	}
 	public UserEntity (String login, String pass, String name, String surname) {
 		super();
@@ -31,6 +34,7 @@ public class UserEntity {
 		this.surname = surname;
 		this.login = login;
 		this.pass = pass;
+		this.accessGroup = 0;
 	}
 	
 	public long getId() {
@@ -50,9 +54,6 @@ public class UserEntity {
 	}
 	public String getSurname() {
 		return surname;
-	}
-	public String getToken() {
-		return token;
 	}
 	public void setId(long id) {
 		this.id = id;
@@ -76,8 +77,17 @@ public class UserEntity {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	public void setToken(String token) {
-		this.token = token;
+	public String getPhone() {
+		return phone;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 	@Override
 	public int hashCode() {
@@ -86,13 +96,13 @@ public class UserEntity {
 		result = prime * result + accessGroup;
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((pass == null) ? 0 : pass.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
-		result = prime * result + ((token == null) ? 0 : token.hashCode());
 		return result;
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -118,6 +128,13 @@ public class UserEntity {
 		} else if (!login.equals(other.login)) {
 			return false;
 		}
+		if (mail == null) {
+			if (other.mail != null) {
+				return false;
+			}
+		} else if (!mail.equals(other.mail)) {
+			return false;
+		}
 		if (name == null) {
 			if (other.name != null) {
 				return false;
@@ -132,6 +149,13 @@ public class UserEntity {
 		} else if (!pass.equals(other.pass)) {
 			return false;
 		}
+		if (phone == null) {
+			if (other.phone != null) {
+				return false;
+			}
+		} else if (!phone.equals(other.phone)) {
+			return false;
+		}
 		if (surname == null) {
 			if (other.surname != null) {
 				return false;
@@ -141,7 +165,5 @@ public class UserEntity {
 		}
 		return true;
 	}
-    
-    
-    
+	
 }

@@ -72,6 +72,12 @@
           "pass" : {
             "type" : "string"
           },
+          "phone" : {
+            "type" : "string"
+          },
+          "mail" : {
+            "type" : "string"
+          },
           "accessGroup" : {
             "type" : "integer"
           },
@@ -79,9 +85,6 @@
             "type" : "string"
           },
           "surname" : {
-            "type" : "string"
-          },
-          "token" : {
             "type" : "string"
           },
           "accessGroupR" : {

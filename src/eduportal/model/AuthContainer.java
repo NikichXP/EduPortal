@@ -7,10 +7,18 @@ import eduportal.util.AuthToken;
 
 public class AuthContainer {
 
-	private static HashMap<String, UserEntity> currentSession = new HashMap<>();
-	private static HashMap<String, Long> tokenLimitTime = new HashMap<>();
-	private static HashMap<String, Integer> accessLevels = new HashMap<>();
-
+	private static HashMap<String, AuthSession> sessions = new HashMap<>();
+	
+	public static ArrayList<String> testMethod () {
+		ArrayList<String> ret = new ArrayList<>();
+		for (String s : sessions.keySet()) {
+			ret.add("Session: " + s + "  ==  "+ sessions.get(s).getUser());
+			ret.add("Token_t: " + s + "  ==  "+ (((double)sessions.get(s).getTimeout() - System.currentTimeMillis())/(1000*3600)));
+			ret.add("Access : " + s + "  ==  "+ sessions.get(s).getAccessLevel());
+		}
+		return ret;
+	}
+	
 	/**
 	 * Session timeout
 	 */
@@ -25,26 +33,15 @@ public class AuthContainer {
 	 *            - user's pass
 	 * @return String token if login and pass are true; null if bad credentials
 	 */
-	public static String auth(String login, String pass) {
+	public static AuthToken authenticate (String login, String pass) {
 		UserEntity user = UserDAO.get(login, pass);
 		if (user == null) {
 			return null;
 		}
+		//TODO if auth level == null
 		String token = UUID.randomUUID().toString();
-		currentSession.put(token, user);
-		accessLevels.put(token, user.getAccessGroup());
-		tokenLimitTime.put(token, System.currentTimeMillis() + SESSION_TIME);
-		return token;
-	}
-	
-	public static AuthToken authToken (String login, String pass) {
-		UserEntity user = UserDAO.get(login, pass);
-		if (user == null) {
-			return null;
-		}
-		String token = UUID.randomUUID().toString();
-		currentSession.put(token, user);
-		tokenLimitTime.put(token, System.currentTimeMillis() + SESSION_TIME);
+		AuthSession session = new AuthSession (user);
+		sessions.put(token, session);
 		AuthToken ret = new AuthToken();
 		ret.setSessionId(token);
 		ret.setTimeoutTimestamp(System.currentTimeMillis() + SESSION_TIME);
@@ -58,9 +55,9 @@ public class AuthContainer {
 	 * @return - User
 	 */
 	public static UserEntity getUser(String token) {
-		UserEntity u = currentSession.get(token);
+		UserEntity u = sessions.get(token).getUser();
 		if (u != null) {
-			if (tokenLimitTime.get(token) < System.currentTimeMillis()) {
+			if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
 				return u;
 			}
 		}
@@ -68,7 +65,7 @@ public class AuthContainer {
 	}
 	
 	public static int getAccessGroup (String token) {
-		return accessLevels.get(token);
+		return sessions.get(token).getAccessLevel();
 	}
 
 	/**
@@ -78,9 +75,8 @@ public class AuthContainer {
 	 *            - sessionID to update
 	 */
 	public static void updateTimeout(String token) {
-		if (tokenLimitTime.get(token) < System.currentTimeMillis()) {
-			tokenLimitTime.put(token, System.currentTimeMillis() + SESSION_TIME);
+		if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
+			sessions.get(token).setTimeout(System.currentTimeMillis() + SESSION_TIME);
 		}
 	}
-
 }

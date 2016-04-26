@@ -6,6 +6,7 @@ import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.ObjectifyService;
 import eduportal.dao.entity.*;
+import eduportal.model.AuthContainer;
 
 @Api(name = "test", version = "v1")
 public class TestAPI {
@@ -20,8 +21,12 @@ public class TestAPI {
 		return new Text("ping");
 	}
 	
+	@ApiMethod (name = "listSessions", path = "list/session", httpMethod = "GET")
+	public List<String> listSession () {
+		return AuthContainer.testMethod();
+	}
 	
-	@ApiMethod(name = "user.getAll", path = "listUser", httpMethod = "GET")
+	@ApiMethod(name = "user.getAll", path = "list/user", httpMethod = "GET")
 	public List<Object> listUsers() {
 		return ofy().load().kind("UserEntity").list();
 	}

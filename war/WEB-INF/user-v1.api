@@ -51,9 +51,33 @@
           "surname" : {
             "type" : "string",
             "required" : true
+          },
+          "phone" : {
+            "type" : "string",
+            "required" : true
+          },
+          "mail" : {
+            "type" : "string",
+            "required" : true
           }
         },
         "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.create" : {
+      "path" : "create",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.create",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
       },
       "response" : {
         "body" : "autoTemplate(backendResponse)"
@@ -116,6 +140,31 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "user.deleteUser" : {
+      "path" : "delete",
+      "httpMethod" : "delete",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.userDelete",
+      "request" : {
+        "parameters" : {
+          "target" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -137,6 +186,10 @@
           }
         }
       },
+      "_any" : {
+        "id" : "_any",
+        "type" : "any"
+      },
       "UserEntity" : {
         "id" : "UserEntity",
         "type" : "object",
@@ -151,6 +204,12 @@
           "pass" : {
             "type" : "string"
           },
+          "phone" : {
+            "type" : "string"
+          },
+          "mail" : {
+            "type" : "string"
+          },
           "accessGroup" : {
             "type" : "integer"
           },
@@ -160,17 +219,31 @@
           "surname" : {
             "type" : "string"
           },
-          "token" : {
-            "type" : "string"
-          },
           "accessGroupR" : {
             "type" : "integer"
+          }
+        }
+      },
+      "Text" : {
+        "id" : "Text",
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
           }
         }
       }
     },
     "methods" : {
       "eduportal.api.UserAPI.register" : {
+        "response" : {
+          "$ref" : "AuthToken"
+        }
+      },
+      "eduportal.api.UserAPI.create" : {
+        "request" : {
+          "$ref" : "_any"
+        },
         "response" : {
           "$ref" : "AuthToken"
         }
@@ -183,6 +256,11 @@
       "eduportal.api.UserAPI.updateUserInfo" : {
         "response" : {
           "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.UserAPI.userDelete" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }

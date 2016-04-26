@@ -1,11 +1,13 @@
 package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import eduportal.dao.entity.DeletedUser;
 import eduportal.dao.entity.UserEntity;
 
 public class UserDAO {
 	
-	public static UserEntity create(String login, String pass, String name, String surname) {
+	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone) {
 		if (ofy().load().kind("UserEntity").filter("login", login).list().isEmpty() == false) {
 			return null;
 		}
@@ -36,5 +38,11 @@ public class UserDAO {
 	
 	public static UserEntity get(String parseLong) {
 		return (UserEntity) ofy().load().kind("UserEntity").id(parseLong).now();
+	}
+
+	public static void delete(String target) {
+		UserEntity u = (UserEntity) ofy().load().kind("UserEntity").id(target).now();
+		DeletedUser du = new DeletedUser(u);
+		ofy().delete().entity(u).now();
 	} 
 }
