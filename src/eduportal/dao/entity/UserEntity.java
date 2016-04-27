@@ -22,6 +22,24 @@ public class UserEntity {
 	private String name;
 	private String surname;
 	
+	public boolean hasNull () {
+		if (login == null) {
+			return true;
+		} else if (pass == null) {
+			return true;
+		} else if (phone == null) {
+			return true;
+		} else if (mail == null) {
+			return true;
+		} else if (name == null) {
+			return true;
+		} else if (surname == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public UserEntity() {
 		super();
 		this.id = new Random().nextLong();
@@ -164,6 +182,11 @@ public class UserEntity {
 			return false;
 		}
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "UserEntity [id=" + id + ", login=" + login + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail
+				+ ", accessGroup=" + accessGroup + ", name=" + name + ", surname=" + surname + "]";
 	}
 	
 }

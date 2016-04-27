@@ -44,5 +44,10 @@ public class UserDAO {
 		UserEntity u = (UserEntity) ofy().load().kind("UserEntity").id(target).now();
 		DeletedUser du = new DeletedUser(u);
 		ofy().delete().entity(u).now();
+	}
+
+	public static UserEntity create(UserEntity user) {
+		ofy().save().entity(user);
+		return user;
 	} 
 }

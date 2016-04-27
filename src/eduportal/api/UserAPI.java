@@ -1,13 +1,13 @@
 package eduportal.api;
 
-import java.util.HashMap;
+import java.util.Random;
+
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.AuthContainer;
 import eduportal.util.AuthToken;
-import eduportal.util.JSONUtils;
 
 @Api(name = "user", version = "v1", title = "API for user-accounts section")
 public class UserAPI {
@@ -24,11 +24,43 @@ public class UserAPI {
 	}
 	
 	@ApiMethod (name = "create", httpMethod = "POST", path = "create")
-	public Text create (Object user) {
-//		HashMap<String, String> map = JSONUtils.parse(user.toString());
-//		UserDAO.create(map.get("login"), map.get("pass"), map.get("name"), map.get("surname"), map.get("mail"), map.get("phone"));
-//		return AuthContainer.authenticate(map.get("login"), map.get("pass"));
-		return new Text (user.toString());
+	public Text create (UserEntity user) {
+		if (user.hasNull()) {
+			return new Text ("One of fields are not filled");
+		}
+		if (!user.getMail().matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
+			return new Text ("Mail is invalid");
+		}
+		if (!user.getPhone().matches("[+]{0,1}[0-9]{10,12}")) {
+			return new Text ("Phone is invalid");
+		}
+		user.setAccessGroup(0);
+		user.setId(new Random().nextLong());
+		UserDAO.create(user);
+		return new Text ("SID=" + AuthContainer.authenticate(user.getLogin(), user.getPass()).getSessionId());
+	}
+	
+	@ApiMethod (name = "getName", httpMethod = "GET", path = "getname")
+	public Dummy getName (@Named ("token") String token) {
+		final UserEntity u = AuthContainer.getUser(token);
+		@SuppressWarnings("unused")
+		Dummy o = new Dummy() {
+			private String name = u.getName(), 
+					surname = u.getSurname();
+			public String getName () {
+				return name;
+			}
+			public void setName (String name) {
+				this.name = name;
+			}
+			public String getSurname () {
+				return surname;
+			}
+			public void setSurname (String name) {
+				this.surname = name;
+			}
+		};
+		return o;
 	}
 	
 	@ApiMethod (name = "updateUser", httpMethod = "GET", path = "update")
@@ -50,4 +82,6 @@ public class UserAPI {
 		}
 		return new Text("fail");
 	}
+	
+	interface Dummy {}
 }

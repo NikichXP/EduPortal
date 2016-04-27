@@ -38,7 +38,6 @@ public class AuthContainer {
 		if (user == null) {
 			return null;
 		}
-		//TODO if auth level == null
 		String token = UUID.randomUUID().toString();
 		AuthSession session = new AuthSession (user);
 		sessions.put(token, session);
@@ -57,7 +56,7 @@ public class AuthContainer {
 	public static UserEntity getUser(String token) {
 		UserEntity u = sessions.get(token).getUser();
 		if (u != null) {
-			if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
+			if (sessions.get(token).getTimeout() > System.currentTimeMillis()) {
 				return u;
 			}
 		}
