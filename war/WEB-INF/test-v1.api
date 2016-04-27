@@ -25,21 +25,6 @@
     "maxAge" : 0
   },
   "methods" : {
-    "test.user.getAll" : {
-      "path" : "list/user",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.listUsers",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "test.rebuild_user_DB" : {
       "path" : "rebuildDB",
       "httpMethod" : "GET",
@@ -70,6 +55,21 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "test.user.getAll" : {
+      "path" : "list/user",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.listUsers",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "test.listSessions" : {
       "path" : "list/session",
       "httpMethod" : "GET",
@@ -88,22 +88,6 @@
   },
   "descriptor" : {
     "schemas" : {
-      "_any" : {
-        "id" : "_any",
-        "type" : "any"
-      },
-      "_anyCollection" : {
-        "id" : "_anyCollection",
-        "type" : "object",
-        "properties" : {
-          "items" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "_any"
-            }
-          }
-        }
-      },
       "UserEntity" : {
         "id" : "UserEntity",
         "type" : "object",
@@ -159,6 +143,22 @@
           }
         }
       },
+      "_any" : {
+        "id" : "_any",
+        "type" : "any"
+      },
+      "_anyCollection" : {
+        "id" : "_anyCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "_any"
+            }
+          }
+        }
+      },
       "StringCollection" : {
         "id" : "StringCollection",
         "type" : "object",
@@ -173,11 +173,6 @@
       }
     },
     "methods" : {
-      "eduportal.api.TestAPI.listUsers" : {
-        "response" : {
-          "$ref" : "_anyCollection"
-        }
-      },
       "eduportal.api.TestAPI.rebuildDB" : {
         "response" : {
           "$ref" : "UserEntityCollection"
@@ -186,6 +181,11 @@
       "eduportal.api.TestAPI.ping" : {
         "response" : {
           "$ref" : "Text"
+        }
+      },
+      "eduportal.api.TestAPI.listUsers" : {
+        "response" : {
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.listSession" : {

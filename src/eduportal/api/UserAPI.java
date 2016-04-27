@@ -24,10 +24,11 @@ public class UserAPI {
 	}
 	
 	@ApiMethod (name = "create", httpMethod = "POST", path = "create")
-	public AuthToken create (Object user) {
-		HashMap<String, String> map = JSONUtils.parse(user.toString());
-		UserDAO.create(map.get("login"), map.get("pass"), map.get("name"), map.get("surname"), map.get("mail"), map.get("phone"));
-		return AuthContainer.authenticate(map.get("login"), map.get("pass"));
+	public Text create (Object user) {
+//		HashMap<String, String> map = JSONUtils.parse(user.toString());
+//		UserDAO.create(map.get("login"), map.get("pass"), map.get("name"), map.get("surname"), map.get("mail"), map.get("phone"));
+//		return AuthContainer.authenticate(map.get("login"), map.get("pass"));
+		return new Text (user.toString());
 	}
 	
 	@ApiMethod (name = "updateUser", httpMethod = "GET", path = "update")
