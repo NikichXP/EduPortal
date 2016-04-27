@@ -1,0 +1,52 @@
+body {
+	margin: 0px;
+	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+	font-size: 14px; 
+}
+
+#div-auth {
+	position: absolute;
+	height: 300px;
+	width: 400px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+	left: 50%;
+	top: 50%;
+	margin-left: -201px; 
+    margin-top: -200px;
+}
+
+#div-send-button {
+	height: 30px;
+	width: 70px;
+	background-color: #688bb0;
+	color: #fff;
+	text-align: center;
+	line-height: 30px;
+	cursor: pointer;
+}
+
+#div-form {
+	margin: auto;
+	width: 200px;
+}
+
+
+#header {
+	height: 80px;
+	width: 100%;
+	background-color: #fff;
+}
+#header-main {
+	height: 100%;
+	width: 95%;
+	background-color: #688bb0;
+	margin: auto;
+}
+#main {
+	height: 500px;
+	width: 90%;
+	border: 1px solid #d9e0e7;
+	margin: auto;
+	margin-top: 10px;
+}

@@ -1,16 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Game engine</title>
-</head>
-<body>
-<h1>Hello world!</h1>
-log in:<br>
-<form action="login.jsp">
-<input type="text" id="login" name="login" value="login"></input>
-<input type="password" id="pass" name="pass" value="pass"></input>
-<input type="submit">
-</form>
-</body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<link rel='stylesheet' type='text/css' href='stylesheet.css' />
+		<script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="j_f.js"></script>
+		
+		<title>EduPortal</title>
+	</head>
+	<div id="div-auth">
+		<div id="div-form">
+			<p>Please authorise</p>
+			<label for="login">Login</label><br/>
+			<input type="text" id="login" name="login" value="3333"><br/>
+			<!-- <input type="text" id="name" name="login" value="name"></input>
+			<input type="text" id="surname" name="login" value="surname"></input> -->
+			<label for="pass">Password</label><br/>
+			<input type="password" id="pass" name="pass" value="1111">
+			<div id = "div-send-button">Enter</div>
+			<div id="div-res"></div>
+		</div>
+	</div>
+	
+	<body>
+		<div id="header">
+			<div id="header-main"></div>
+		</div>
+		<div id="main">
+			<div id="div-side-menu"></div>
+			<div id="div-right"></div>
+		</div>
+		<div id="footer"></div>
+	</body>
 </html>
