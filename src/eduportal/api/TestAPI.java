@@ -14,6 +14,11 @@ public class TestAPI {
 	static {
 		ObjectifyService.begin();
 		ObjectifyService.register(UserEntity.class);
+		ObjectifyService.register(DeletedUser.class);
+		ObjectifyService.register(Product.class);
+		ObjectifyService.register(Country.class);
+		ObjectifyService.register(City.class);
+		ObjectifyService.register(Order.class);
 	}
 	
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")

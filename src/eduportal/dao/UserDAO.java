@@ -1,9 +1,7 @@
 package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-
-import eduportal.dao.entity.DeletedUser;
-import eduportal.dao.entity.UserEntity;
+import eduportal.dao.entity.*;
 
 public class UserDAO {
 	

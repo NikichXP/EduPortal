@@ -1,7 +1,6 @@
 package eduportal.dao.entity;
 
 import java.util.Random;
-
 import com.googlecode.objectify.annotation.*;
 
 @Entity
@@ -21,6 +20,8 @@ public class UserEntity {
     private int accessGroup;
 	private String name;
 	private String surname;
+	
+	private Order[] orders;
 	
 	public boolean hasNull () {
 		if (login == null) {

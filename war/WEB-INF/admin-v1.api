@@ -26,6 +26,35 @@
     "maxAge" : 0
   },
   "methods" : {
+    "admin.addProduct" : {
+      "path" : "add/product",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.addProduct",
+      "request" : {
+        "parameters" : {
+          "title" : {
+            "type" : "string",
+            "required" : true
+          },
+          "description" : {
+            "type" : "string",
+            "required" : true
+          },
+          "cityid" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "admin.promote" : {
       "path" : "promote",
       "httpMethod" : "GET",
@@ -54,10 +83,44 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "admin.createCity" : {
+      "path" : "create/city",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.addCity",
+      "request" : {
+        "parameters" : {
+          "city" : {
+            "type" : "string",
+            "required" : true
+          },
+          "country" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
     "schemas" : {
+      "Text" : {
+        "id" : "Text",
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
       "UserEntity" : {
         "id" : "UserEntity",
         "type" : "object",
@@ -94,9 +157,19 @@
       }
     },
     "methods" : {
+      "eduportal.api.AdminAPI.addProduct" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
       "eduportal.api.AdminAPI.promoteUser" : {
         "response" : {
           "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.AdminAPI.addCity" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }

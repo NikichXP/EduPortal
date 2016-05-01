@@ -1,0 +1,203 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://eduportal-1277.appspot.com/_ah/api",
+  "name" : "order",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://eduportal-1277.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "order.getAll" : {
+      "path" : "get/all",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.getAllOrders",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "Order" : {
+        "id" : "Order",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "user" : {
+            "$ref" : "UserEntity"
+          },
+          "productid" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "product" : {
+            "$ref" : "Product"
+          },
+          "price" : {
+            "type" : "number"
+          },
+          "paid" : {
+            "type" : "number"
+          },
+          "start" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "end" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "donePaid" : {
+            "type" : "boolean"
+          },
+          "idKey" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserEntity" : {
+        "id" : "UserEntity",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "login" : {
+            "type" : "string"
+          },
+          "pass" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "mail" : {
+            "type" : "string"
+          },
+          "accessGroup" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "accessGroupR" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "Product" : {
+        "id" : "Product",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "cityId" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "city" : {
+            "$ref" : "City"
+          }
+        }
+      },
+      "City" : {
+        "id" : "City",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "country" : {
+            "$ref" : "Country"
+          },
+          "countryId" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Country" : {
+        "id" : "Country",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "City"
+            }
+          }
+        }
+      },
+      "OrderCollection" : {
+        "id" : "OrderCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Order"
+            }
+          }
+        }
+      }
+    },
+    "methods" : {
+      "eduportal.api.OrderAPI.getAllOrders" : {
+        "response" : {
+          "$ref" : "OrderCollection"
+        }
+      }
+    }
+  }
+}
