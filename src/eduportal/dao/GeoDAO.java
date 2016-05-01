@@ -17,7 +17,7 @@ public class GeoDAO {
 	
 	public static City getCity(String cityname) {
 		try {
-			return (City) ofy().load().kind("City").filter("city = ", cityname).list().get(0);
+			return (City) ofy().load().kind("City").filter("name", cityname).list().get(0);
 		} catch (Exception e) {
 			return null;
 		}
@@ -32,8 +32,8 @@ public class GeoDAO {
 	}
 
 	public static Country getCountry(String country) {
-		List<Object> list = ofy().load().kind("City").filter("country = ", country).list();
-		if (list.size() == 0) {
+		List<Object> list = ofy().load().kind("Country").filter("name", country).list();
+		if (list.isEmpty()) {
 			Country ctr = new Country(country);
 			ofy().save().entity(ctr);
 			return ctr;

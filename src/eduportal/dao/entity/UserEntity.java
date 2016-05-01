@@ -1,5 +1,7 @@
 package eduportal.dao.entity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import com.googlecode.objectify.annotation.*;
 
@@ -16,9 +18,11 @@ public class UserEntity {
     private String phone;
     @Index
     private String mail;
-    
+    @Index
     private int accessGroup;
+    @Index
 	private String name;
+    @Index
 	private String surname;
 	
 	private Order[] orders;
@@ -43,16 +47,31 @@ public class UserEntity {
 	
 	public UserEntity() {
 		super();
-		this.id = new Random().nextLong();
+		do {
+			this.id = new Random().nextLong();
+		} while (this.id < 0);
 		this.accessGroup = 0;
 	}
 	public UserEntity (String login, String pass, String name, String surname) {
 		super();
-		this.id = new Random().nextLong();
+		do {
+			this.id = new Random().nextLong();
+		} while (this.id < 0);
 		this.name = name;
 		this.surname = surname;
 		this.login = login;
-		this.pass = pass;
+		MessageDigest mDigest = null;
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] result = mDigest.digest(pass.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		this.pass = sb.toString();
 		this.accessGroup = 0;
 	}
 	
@@ -81,7 +100,18 @@ public class UserEntity {
 		this.login = login;
 	}
 	public void setPass(String pass) {
-		this.pass = pass;
+		MessageDigest mDigest = null;
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] result = mDigest.digest(pass.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		this.pass = sb.toString();
 	}
 	public void setAccessGroup(int accessGroup) {
 		this.accessGroup = accessGroup;

@@ -1,5 +1,7 @@
 package eduportal.dao.entity;
 
+import java.util.Random;
+
 import com.googlecode.objectify.annotation.*;
 
 @Entity
@@ -7,9 +9,17 @@ public class City {
 	
 	@Id
 	private long id;
+	@Ignore
 	private Country country;
 	private long countryId;
+	@Index
 	private String name;
+	
+	public City () {
+		do {
+			this.id = new Random().nextLong();
+		} while (this.id < 0);
+	}
 	
 	public long getId() {
 		return id;

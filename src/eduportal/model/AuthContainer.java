@@ -46,6 +46,14 @@ public class AuthContainer {
 		ret.setTimeoutTimestamp(System.currentTimeMillis() + SESSION_TIME);
 		return ret;
 	}
+	
+	public static boolean checkReq (String token, int acclvl) {
+		if (sessions.get(token).getAccessLevel() >= acclvl) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Return user if token is valid & session not over

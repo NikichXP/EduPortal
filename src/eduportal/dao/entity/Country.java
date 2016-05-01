@@ -8,7 +8,7 @@ public class Country {
 	
 	@Id
 	private long id;
-	
+	@Index
 	private String name;
 	private City[] city;
 	

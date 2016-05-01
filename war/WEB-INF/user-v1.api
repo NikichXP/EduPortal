@@ -129,31 +129,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "user.deleteUser" : {
-      "path" : "delete",
-      "httpMethod" : "delete",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.userDelete",
-      "request" : {
-        "parameters" : {
-          "target" : {
-            "type" : "string",
-            "required" : true
-          },
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "user.updateUser" : {
       "path" : "update",
       "httpMethod" : "GET",
@@ -177,6 +152,31 @@
             "required" : true
           },
           "pass" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.deleteUser" : {
+      "path" : "delete",
+      "httpMethod" : "delete",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.userDelete",
+      "request" : {
+        "parameters" : {
+          "target" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
             "type" : "string",
             "required" : true
           }
@@ -281,14 +281,14 @@
           "$ref" : "AuthToken"
         }
       },
-      "eduportal.api.UserAPI.userDelete" : {
-        "response" : {
-          "$ref" : "Text"
-        }
-      },
       "eduportal.api.UserAPI.updateUserInfo" : {
         "response" : {
           "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.UserAPI.userDelete" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }

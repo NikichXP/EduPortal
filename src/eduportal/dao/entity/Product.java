@@ -10,9 +10,12 @@ public class Product {
 	private long id;
 	private String title;
 	private String description;
+	@Index
 	private long cityId;
 	@Ignore
 	private City city;
+	@Index
+	private long counrtyid;
 	
 	public Product () {
 		do {
@@ -35,6 +38,9 @@ public class Product {
 	public City getCity() {
 		return city;
 	}
+	public long getCountryId() {
+		return counrtyid;
+	}
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -50,6 +56,7 @@ public class Product {
 	public void setCity(City city) {
 		this.city = city;
 		this.cityId = city.getId();
+		this.counrtyid = city.getCountryId();
 	}
 	@Override
 	public int hashCode() {
@@ -103,7 +110,5 @@ public class Product {
 		}
 		return true;
 	}
-	
-	
 
 }

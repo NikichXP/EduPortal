@@ -1,6 +1,10 @@
 package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import eduportal.dao.entity.*;
 
 public class UserDAO {
@@ -19,6 +23,18 @@ public class UserDAO {
 	}
 	
 	public static UserEntity get (String login, String pass) {
+		MessageDigest mDigest = null;
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] result = mDigest.digest(pass.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		pass = sb.toString();
 		try {
 			return (UserEntity) ofy().load().kind("UserEntity").filter("login", login).filter("pass", pass).first().now();
 		} catch (Exception e) {
@@ -42,6 +58,7 @@ public class UserDAO {
 		UserEntity u = (UserEntity) ofy().load().kind("UserEntity").id(target).now();
 		DeletedUser du = new DeletedUser(u);
 		ofy().delete().entity(u).now();
+		ofy().save().entity(du);
 	}
 
 	public static UserEntity create(UserEntity user) {

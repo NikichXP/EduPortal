@@ -15,11 +15,15 @@ public class Order {
 	private long userid;
 	@Index
 	private long productid;
+	@Ignore
 	private Product product;
 	private double price;
 	private double paid;
 	private Date start;
 	private Date end;
+	private String createdBy;
+	@Index
+	private String clientName;
 
 	public Order() {
 		do {
@@ -55,7 +59,11 @@ public class Order {
 	public UserEntity getUser() {
 		return user;
 	}
-	
+
+	public long getUserid() {
+		return userid;
+	}
+
 	public long getProductid() {
 		return productid;
 	}
@@ -80,12 +88,24 @@ public class Order {
 		return end;
 	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public void setUserid(long userid) {
+		this.userid = userid;
 	}
 
 	public void setProductid(long productid) {
@@ -112,10 +132,20 @@ public class Order {
 		this.end = end;
 	}
 
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((clientName == null) ? 0 : clientName.hashCode());
+		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
 		result = prime * result + ((end == null) ? 0 : end.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		long temp;
@@ -127,6 +157,7 @@ public class Order {
 		result = prime * result + (int) (productid ^ (productid >>> 32));
 		result = prime * result + ((start == null) ? 0 : start.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + (int) (userid ^ (userid >>> 32));
 		return result;
 	}
 
@@ -142,6 +173,20 @@ public class Order {
 			return false;
 		}
 		Order other = (Order) obj;
+		if (clientName == null) {
+			if (other.clientName != null) {
+				return false;
+			}
+		} else if (!clientName.equals(other.clientName)) {
+			return false;
+		}
+		if (createdBy == null) {
+			if (other.createdBy != null) {
+				return false;
+			}
+		} else if (!createdBy.equals(other.createdBy)) {
+			return false;
+		}
 		if (end == null) {
 			if (other.end != null) {
 				return false;
@@ -182,12 +227,16 @@ public class Order {
 		} else if (!user.equals(other.user)) {
 			return false;
 		}
+		if (userid != other.userid) {
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", user=" + user + ", productid=" + productid + ", product=" + product + ", price="
-				+ price + ", paid=" + paid + ", start=" + start + ", end=" + end + "]";
+		return "Order [id=" + id + ", user=" + user + ", userid=" + userid + ", productid=" + productid + ", product="
+				+ product + ", price=" + price + ", paid=" + paid + ", start=" + start + ", end=" + end + ", createdBy="
+				+ createdBy + ", clientName=" + clientName + "]";
 	}
 }

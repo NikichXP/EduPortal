@@ -1,40 +1,24 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import java.util.*;
+
+import java.util.List;
+
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
-import com.googlecode.objectify.ObjectifyService;
 import eduportal.dao.entity.*;
-import eduportal.model.AuthContainer;
 
 @Api(name = "test", version = "v1")
 public class TestAPI {
 	
-	static {
-		ObjectifyService.begin();
-		ObjectifyService.register(UserEntity.class);
-		ObjectifyService.register(DeletedUser.class);
-		ObjectifyService.register(Product.class);
-		ObjectifyService.register(Country.class);
-		ObjectifyService.register(City.class);
-		ObjectifyService.register(Order.class);
-	}
+	
 	
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")
 	public Text ping () {
 		return new Text("ping");
 	}
 	
-	@ApiMethod (name = "listSessions", path = "list/session", httpMethod = "GET")
-	public List<String> listSession () {
-		return AuthContainer.testMethod();
-	}
 	
-	@ApiMethod(name = "user.getAll", path = "list/user", httpMethod = "GET")
-	public List<Object> listUsers() {
-		return ofy().load().kind("UserEntity").list();
-	}
 	
 	@ApiMethod (name = "Rebuild_user_DB", path = "rebuildDB", httpMethod = "GET")
 	public UserEntity[] rebuildDB() {
@@ -47,6 +31,18 @@ public class TestAPI {
 		};
 		ofy().save().entities(users);
 		return users;
+	}
+	
+	@ApiMethod(path = "getAll", httpMethod = "GET")
+	public List<Object> getAll () {
+		return ofy().load().chunkAll().list();
+		
+	}
+	
+	@ApiMethod(path = "getCountry", httpMethod = "GET")
+	public List<Object> getCountry () {
+		return ofy().load().kind("Country").list();
+		
 	}
 	
 }
