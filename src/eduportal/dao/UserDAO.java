@@ -1,45 +1,57 @@
 package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
+import java.security.*;
 import eduportal.dao.entity.*;
 
 public class UserDAO {
 	
+	private static MessageDigest mDigest;
+	static {
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone) {
-		if (ofy().load().kind("UserEntity").filter("login", login).list().isEmpty() == false) {
+		if (ofy().load().kind("UserEntity").filter("login == ", login).list().isEmpty() == false) {
+			return null;
+		}
+		if (ofy().load().kind("UserEntity").filter("mail == ", mail).list().isEmpty() == false) {
+			return null;
+		}
+		if (ofy().load().kind("UserEntity").filter("phone == ", phone).list().isEmpty() == false) {
 			return null;
 		}
 		UserEntity u = new UserEntity();
 		u.setLogin(login);
 		u.setPass(pass);
 		u.setName(name);
+		u.setMail(mail);
+		u.setPhone(phone);
 		u.setSurname(surname);
 		ofy().save().entity(u).now();
 		return u;
 	}
 	
 	public static UserEntity get (String login, String pass) {
-		MessageDigest mDigest = null;
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
 		byte[] result = mDigest.digest(pass.getBytes());
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < result.length; i++) {
 			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
 		}
 		pass = sb.toString();
-		try {
-			return (UserEntity) ofy().load().kind("UserEntity").filter("login", login).filter("pass", pass).first().now();
-		} catch (Exception e) {
-			return null;
+		String [] param = {"mail", "login", "phone"}; //Types of login
+		UserEntity u = null;
+		for (String par : param) {
+			u = (UserEntity) ofy().load().kind("UserEntity").filter(par, login).filter("pass == ", pass).first().now();
+			if (u != null) {
+				return u;
+			}
 		}
+		return null;
 	}
 
 	public static void update(UserEntity u) {

@@ -151,7 +151,11 @@
             "type" : "string",
             "required" : true
           },
-          "pass" : {
+          "mail" : {
+            "type" : "string",
+            "required" : true
+          },
+          "phone" : {
             "type" : "string",
             "required" : true
           }

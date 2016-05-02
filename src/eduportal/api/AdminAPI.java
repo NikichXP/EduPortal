@@ -1,7 +1,6 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.util.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
@@ -13,6 +12,7 @@ import eduportal.model.AuthContainer;
 
 @Api(name = "admin", title = "Admin API", version = "v1")
 public class AdminAPI {
+	
 	// Init Objectify
 	static {
 		ObjectifyService.begin();
@@ -27,7 +27,7 @@ public class AdminAPI {
 	@ApiMethod(name = "createCity", httpMethod = "GET", path = "create/city")
 	public Text addCity(@Named("city") String cityname, @Named("country") String country) {
 		if (GeoDAO.getCity(cityname) != null) {
-			return new Text(GeoDAO.getCity(cityname).toString());
+			return new Text(GeoDAO.getCity(cityname).toString() + " already exists");
 		}
 		Country ctr = GeoDAO.getCountry(country);
 		City c = GeoDAO.createCity(cityname, ctr);
@@ -38,16 +38,48 @@ public class AdminAPI {
 		}
 	}
 
-	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "add/product")
+	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "product/add")
 	public Text addProduct(@Named("title") String title, @Named("description") String descr,
 			@Named("cityid") String cityname) {
-		City c = GeoDAO.getCityById(cityname);
-		if (c == null) {
+		City city = GeoDAO.getCityById(cityname);
+		if (city == null) {
 			return new Text("No such city exist");
 		}
+		Product p = new Product(title, descr, city);
+		ProductDAO.save(p);
 		return new Text("");
 	}
-
+	
+	@ApiMethod(name = "setInactive", httpMethod = "GET", path = "product/inactive")
+	public Text setUnActualProduct (@Named ("id") String alias) {
+		if (alias == null) {
+			return new Text ("Alias is null");
+		}
+		Product p = (Product) ofy().load().kind("Product").filter("alias == ", alias).first().now();
+		if (p == null) {
+			return new Text ("Product is null");
+		}
+		p.setActual(false);
+		ofy().deadline(5.0).save().entity(p);
+		return new Text (p.toString());
+	}
+	
+	@ApiMethod(name = "setActive", httpMethod = "GET", path = "product/active")
+	public Text setActualProduct (@Named ("id") String alias) {
+		if (alias == null) {
+			return new Text ("Alias is null");
+		}
+		Product p = (Product) ofy().load().kind("Product").filter("alias == ", alias).first().now();
+		if (p == null) {
+			return new Text ("Product is null");
+		}
+		p.setActual(true);
+		ofy().deadline(5.0).save().entity(p);
+		return new Text (p.toString());
+	}
+	
+	//		<! ==== Users moderating below ===== !>
+	
 	@ApiMethod(name = "promote", httpMethod = "GET", path = "promote")
 	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") String access) {

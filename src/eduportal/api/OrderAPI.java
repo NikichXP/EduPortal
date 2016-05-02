@@ -5,14 +5,20 @@ import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.cmd.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import eduportal.dao.OrderDAO;
-import eduportal.dao.ProductDAO;
-import eduportal.dao.entity.Order;
-import eduportal.model.AccessSettings;
-import eduportal.model.AuthContainer;
+import eduportal.dao.*;
+import eduportal.dao.entity.*;
+import eduportal.model.*;
 
 @Api(name = "order", version = "v1")
 public class OrderAPI {
+	
+	/*
+	 We need:
+	 1.: List active products
+	 2.: Assign product to user: moderator, admin, partner
+	 3.: 
+	 */
+	
 
 	@ApiMethod(name = "getAll", path = "all", httpMethod = "GET") 
 	public List<Order> getAllOrders (@Named ("token") String token) {

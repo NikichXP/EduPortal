@@ -23,11 +23,15 @@ public class ProductDAO {
 		return ofy().load().kind("Product").filter("countryid", countryid).list();
 	}
 	
-	public static List<Object> getAllByCity(String countryid) {
-		return ofy().load().kind("Product").filter("cityid", countryid).list();
+	public static List<Object> getAllByCity(String cityid) {
+		return ofy().load().kind("Product").filter("cityid", cityid).list();
 	}
 	
 	public static List<Object> getAllByCity(City city) {
 		return ofy().load().kind("Product").filter("cityid", city.getId()).list();
+	}
+
+	public static void save(Product p) {
+		ofy().deadline(5.0).save().entity(p);
 	}
 }

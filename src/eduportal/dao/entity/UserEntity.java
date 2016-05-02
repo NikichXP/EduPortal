@@ -52,7 +52,7 @@ public class UserEntity {
 		} while (this.id < 0);
 		this.accessGroup = 0;
 	}
-	public UserEntity (String login, String pass, String name, String surname) {
+	public UserEntity (String login, String pass, String name, String surname, String phone, String mail) {
 		super();
 		do {
 			this.id = new Random().nextLong();
@@ -60,6 +60,8 @@ public class UserEntity {
 		this.name = name;
 		this.surname = surname;
 		this.login = login;
+		this.mail = mail;
+		this.phone = phone;
 		MessageDigest mDigest = null;
 		try {
 			mDigest = MessageDigest.getInstance("SHA-512");
@@ -100,6 +102,10 @@ public class UserEntity {
 		this.login = login;
 	}
 	public void setPass(String pass) {
+		if (pass == null) {
+			this.pass = null;
+			return;
+		}
 		MessageDigest mDigest = null;
 		try {
 			mDigest = MessageDigest.getInstance("SHA-512");
