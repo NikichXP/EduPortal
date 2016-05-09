@@ -31,6 +31,14 @@ public abstract class AbstractEntity {
 	public long getId() {
 		return id;
 	}
+	
+	public String getIdString () {
+		return Long.toString(id);
+	}
+	
+	public String getIdHexString () {
+		return Long.toHexString(id);
+	}
 
 	public void setId (long id) {
 		this.id = id;

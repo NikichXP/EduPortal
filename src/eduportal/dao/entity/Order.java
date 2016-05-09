@@ -98,6 +98,8 @@ public class Order {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+		this.userid = user.getId();
+		this.clientName = user.getSurname() + " " + user.getName();
 	}
 
 	public void setUserid(long userid) {
@@ -110,6 +112,8 @@ public class Order {
 
 	public void setProduct(Product product) {
 		this.product = product;
+		this.productid = product.getId();
+		this.price = product.getDefaultPrice();
 	}
 
 	public void setPrice(double price) {

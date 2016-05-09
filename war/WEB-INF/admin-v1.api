@@ -261,8 +261,11 @@
           "surname" : {
             "type" : "string"
           },
-          "accessGroupR" : {
-            "type" : "integer"
+          "idHexString" : {
+            "type" : "string"
+          },
+          "idString" : {
+            "type" : "string"
           }
         }
       },

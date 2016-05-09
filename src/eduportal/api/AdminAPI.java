@@ -17,6 +17,8 @@ public class AdminAPI {
 	
 	public final static Class<?>[] objectifiedClasses = {UserEntity.class, DeletedUser.class, 
 			Product.class, Country.class, City.class, Order.class};
+	public final static String[] objectifiedClassesNames = {"UserEntity", "DeletedUser",
+			"Product", "Country", "City", "Order"};
 	static {
 		ObjectifyService.begin();
 		for (Class<?> c : objectifiedClasses) {

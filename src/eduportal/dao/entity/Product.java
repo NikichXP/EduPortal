@@ -19,6 +19,8 @@ public class Product {
 	private long counrtyid;
 	@Index
 	private boolean actual;
+	@Index
+	private double defaultPrice;
 	
 	public Product () {
 		
@@ -77,6 +79,15 @@ public class Product {
 	public void setActual(boolean actual) {
 		this.actual = actual;
 	}
+	
+	public double getDefaultPrice() {
+		return defaultPrice;
+	}
+
+	public void setDefaultPrice(double defaultPrice) {
+		this.defaultPrice = defaultPrice;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

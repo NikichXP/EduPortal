@@ -21,12 +21,20 @@ public class OrderAPI {
 	 */
 	
 
-	@ApiMethod(name = "getAll", path = "all", httpMethod = "GET") 
+	@ApiMethod(name = "getAllOrders", path = "all", httpMethod = "GET") 
 	public List<Order> getAllOrders (@Named ("token") String token) {
-		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
-			return null;
-		}
+//		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
+//			return null;
+//		}
 		return OrderDAO.getAll();
+	}
+	
+	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET") 
+	public List<Product> getAllProducts (@Named ("token") String token) {
+//		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
+//			return null;
+//		}
+		return OrderDAO.getAllProducts();
 	}
 	
 	@ApiMethod (path = "createorder", httpMethod = "GET")

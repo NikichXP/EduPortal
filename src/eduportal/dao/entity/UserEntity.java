@@ -111,11 +111,11 @@ public class UserEntity extends AbstractEntity {
 		this.pass = sb.toString();
 	}
 
-	public void setAccessGroup(int accessGroup) {
-		this.accessGroup = accessGroup;
-	}
+//	public void setAccessGroup(int accessGroup) {
+//		this.accessGroup = accessGroup;
+//	}
 
-	public UserEntity setAccessGroupR(int accessGroup) {
+	public UserEntity setAccessGroup(int accessGroup) {
 		this.accessGroup = accessGroup;
 		return this;
 	}

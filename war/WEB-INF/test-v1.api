@@ -119,6 +119,18 @@
           }
         }
       },
+      "StringCollection" : {
+        "id" : "StringCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
       "UserEntity" : {
         "id" : "UserEntity",
         "type" : "object",
@@ -148,8 +160,11 @@
           "surname" : {
             "type" : "string"
           },
-          "accessGroupR" : {
-            "type" : "integer"
+          "idHexString" : {
+            "type" : "string"
+          },
+          "idString" : {
+            "type" : "string"
           }
         }
       },
@@ -188,7 +203,7 @@
       },
       "eduportal.api.TestAPI.getAll" : {
         "response" : {
-          "$ref" : "_anyCollection"
+          "$ref" : "StringCollection"
         }
       },
       "eduportal.api.TestAPI.rebuildDB" : {

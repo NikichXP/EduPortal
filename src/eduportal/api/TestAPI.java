@@ -34,20 +34,30 @@ public class TestAPI {
 		}
 		UserEntity[] users = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
-						.setAccessGroupR(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now") };
+						.setAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
+						new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now"),
+						new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")};
 		ofy().save().entities(users);
 		City c = GeoDAO.createCity("Kiev", "Ukraine");
 		Product p = new Product("Test product", "Some product to test", c);
 		ofy().save().entity(p).now();
+		Order o = new Order();
+		o.setUser(users[1]);
+		o.setProduct(p);
+		o.setCreatedBy(users[0].getIdString());
+		o.setStart(new Date());
+		o.setEnd(new Date(System.currentTimeMillis()+1_000_000));
+		ofy().save().entity(o).now();
 		return users;
 	}
 	
 	@ApiMethod(path = "getAll", httpMethod = "GET")
-	public List<Object> getAll() {
-		List<Object> ret = new ArrayList<>();
-		for (Class<?> clazz : AdminAPI.objectifiedClasses) {
-			ret.addAll(ofy().load().kind(clazz.getName()).list());
+	public List<String> getAll() {
+		List<String> ret = new ArrayList<>();
+		for (String clazz : AdminAPI.objectifiedClassesNames) {
+			for (Object o : ofy().load().kind(clazz).list()) {
+				ret.add(o.toString());
+			}
 		}
 		ret.addAll(AuthContainer.testMethod());
 		return ret;
