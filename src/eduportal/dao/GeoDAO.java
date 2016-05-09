@@ -15,9 +15,23 @@ public class GeoDAO {
 		return city;
 	}
 	
+	public static City createCity (String name, String country) {
+		Object ct = ofy().load().kind("City").filter("name == ", name).first().now();
+		if (ct != null) {
+			return (City) ct;
+		}
+		City city = new City();
+		Country c = getCountry(country);
+		city.setName(name);
+		city.setCountry(c);
+		city.setCountryId(c.getId());
+		ofy().save().entity(city);
+		return city;
+	}
+	
 	public static City getCity(String cityname) {
 		try {
-			return (City) ofy().load().kind("City").filter("name", cityname).list().get(0);
+			return (City) ofy().load().kind("City").filter("name", cityname).first().now();
 		} catch (Exception e) {
 			return null;
 		}
@@ -30,18 +44,20 @@ public class GeoDAO {
 			return null;
 		}
 	}
-
+	
+	public static List<Country> getCountryList (String filterExp) {
+		return Arrays.asList((Country[])ofy().load().kind("Country").filter("name >= ", filterExp).
+				filter("name <=", filterExp+"\uFFFD").list().toArray());
+	}
+	
 	public static Country getCountry(String country) {
-		List<Object> list = ofy().load().kind("Country").filter("name", country).list();
-		if (list.isEmpty()) {
+		Country c = (Country) ofy().load().kind("Country").filter("name", country).first().now();
+		if (c == null) {
 			Country ctr = new Country(country);
 			ofy().save().entity(ctr);
 			return ctr;
-		} else if (list.size() > 1) {
-			System.out.println("Err: more than one country");
-			return null;
 		}
-		return (Country) list.get(0);
+		return c;
 	}
 
 }

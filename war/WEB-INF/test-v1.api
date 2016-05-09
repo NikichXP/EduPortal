@@ -25,6 +25,21 @@
     "maxAge" : 0
   },
   "methods" : {
+    "test.testAPI.test" : {
+      "path" : "test",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.test",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "test.testAPI.getCountry" : {
       "path" : "getCountry",
       "httpMethod" : "GET",
@@ -161,6 +176,11 @@
       }
     },
     "methods" : {
+      "eduportal.api.TestAPI.test" : {
+        "response" : {
+          "$ref" : "_anyCollection"
+        }
+      },
       "eduportal.api.TestAPI.getCountry" : {
         "response" : {
           "$ref" : "_anyCollection"

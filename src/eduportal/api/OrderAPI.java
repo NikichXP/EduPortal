@@ -8,6 +8,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
+import eduportal.util.IdUtils;
 
 @Api(name = "order", version = "v1")
 public class OrderAPI {
@@ -28,20 +29,13 @@ public class OrderAPI {
 		return OrderDAO.getAll();
 	}
 	
-	@ApiMethod (path = "create", httpMethod = "GET")
+	@ApiMethod (path = "createorder", httpMethod = "GET")
 	public Text createOrder (
 			@Named ("product_id") String productId,
-			@Named ("client_id") String clientId) {
+			@Named ("client_id") String clientId,
+			@Named ("token") String token) {		//Token to identify creator
 		Order o = new Order ();
-		try {
-		o.setProductid(Long.parseLong(productId));
-		} catch (Exception e) {
-			try {
-				o.setProductid(Long.parseLong(productId, 16));
-			} catch (Exception ex) {
-				return new Text ("Error in ID");
-			}
-		}
+		o.setProductid(IdUtils.convertString(productId));
 		o.setProduct(ProductDAO.get(productId));
 		return new Text ("");
 	}

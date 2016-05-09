@@ -17,35 +17,43 @@ public class City {
 	
 	public City () {
 		do {
-			this.id = new Random().nextLong();
+			this.id = new Random().nextInt(100_000);
 		} while (this.id < 0);
 	}
-	
+
 	public long getId() {
 		return id;
 	}
-	public Country getCountry() {
-		return country;
-	}
-	public long getCountryId() {
-		return countryId;
-	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
+	public Country getCountry() {
+		return country;
+	}
+
 	public void setCountry(Country country) {
+		this.countryId = country.getId();
 		this.country = country;
 	}
+
+	public long getCountryId() {
+		return countryId;
+	}
+
 	public void setCountryId(long countryId) {
 		this.countryId = countryId;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String city) {
-		this.name = city;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,37 +61,40 @@ public class City {
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + (int) (countryId ^ (countryId >>> 32));
 		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof City)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		City other = (City) obj;
 		if (country == null) {
-			if (other.country != null) {
+			if (other.country != null)
 				return false;
-			}
-		} else if (!country.equals(other.country)) {
+		} else if (!country.equals(other.country))
 			return false;
-		}
-		if (countryId != other.countryId) {
+		if (countryId != other.countryId)
 			return false;
-		}
-		if (id != other.id) {
+		if (id != other.id)
 			return false;
-		}
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", country=" + country + ", countryId=" + countryId + "]";
+		return "City [id=" + id + ", country=" + country + ", countryId=" + countryId + ", name=" + name + "]";
 	}
+	
+	
 }

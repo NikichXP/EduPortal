@@ -4,6 +4,8 @@ import java.util.*;
 
 import com.googlecode.objectify.annotation.*;
 
+import eduportal.util.IdUtils;
+
 @Entity
 public class Order {
 
@@ -24,6 +26,8 @@ public class Order {
 	private String createdBy;
 	@Index
 	private String clientName;
+	
+	protected final int maxIdValue = Integer.MAX_VALUE;
 
 	public Order() {
 		do {
@@ -32,15 +36,7 @@ public class Order {
 	}
 
 	public String getIdKey() {
-		StringBuffer sb = new StringBuffer();
-		int i = 0;
-		for (char c : Long.toHexString(id).toCharArray()) {
-			if (i != 0 & i++ % 4 == 0) {
-				sb.append('-');
-			}
-			sb.append(c);
-		}
-		return sb.toString();
+		return IdUtils.convertId(this.id);
 	}
 	
 	public boolean isDonePaid () {

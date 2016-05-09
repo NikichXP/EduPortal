@@ -36,10 +36,12 @@ public class AuthContainer {
 	 * @return String token if login and pass are true; null if bad credentials
 	 */
 	public static AuthToken authenticate(String login, String pass) {
+		System.out.println("Getting user creds");
 		UserEntity user = UserDAO.get(login, pass);
 		if (user == null) {
 			return null;
 		}
+		System.out.println("1");
 		if (users.contains(user.getId()) == false) {
 			users.add(user.getId());
 		} else {
@@ -49,9 +51,11 @@ public class AuthContainer {
 				}
 			}
 		}
+		System.out.println("2");
 		String token = UUID.randomUUID().toString();
 		AuthSession session = new AuthSession(user);
 		sessions.put(token, session);
+		System.out.println("3");
 		AuthToken ret = new AuthToken();
 		ret.setSessionId(token);
 		ret.setTimeoutTimestamp(System.currentTimeMillis() + SESSION_TIME);
@@ -106,4 +110,5 @@ public class AuthContainer {
 			sessions.get(token).setTimeout(System.currentTimeMillis() + SESSION_TIME);
 		}
 	}
+
 }

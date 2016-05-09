@@ -27,6 +27,7 @@ public class UserAPI {
 
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
 	public Text create(UserEntity user) {
+		System.out.println(user.toString());
 		if (user.hasNull()) {
 			return new Text("One of fields are not filled");
 		}
@@ -37,9 +38,12 @@ public class UserAPI {
 			return new Text("Phone is invalid");
 		}
 		user.setAccessGroup(0);
-		user.setId(new Random().nextLong());
-		UserDAO.create(user);
+		UserEntity u = UserDAO.create(user);
+		if (u == null) {
+			return new Text("User is probably registered");
+		}
 		return new Text("SID=" + AuthContainer.authenticate(user.getLogin(), user.getPass()).getSessionId());
+
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")

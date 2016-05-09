@@ -8,20 +8,20 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.*;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
-import eduportal.model.AuthContainer;
+import eduportal.model.*;
 
 @Api(name = "admin", title = "Admin API", version = "v1")
 public class AdminAPI {
 	
 	// Init Objectify
+	
+	public final static Class<?>[] objectifiedClasses = {UserEntity.class, DeletedUser.class, 
+			Product.class, Country.class, City.class, Order.class};
 	static {
 		ObjectifyService.begin();
-		ObjectifyService.register(UserEntity.class);
-		ObjectifyService.register(DeletedUser.class);
-		ObjectifyService.register(Product.class);
-		ObjectifyService.register(Country.class);
-		ObjectifyService.register(City.class);
-		ObjectifyService.register(Order.class);
+		for (Class<?> c : objectifiedClasses) {
+			ObjectifyService.register(c);
+		}
 	}
 
 	@ApiMethod(name = "createCity", httpMethod = "GET", path = "create/city")
@@ -43,39 +43,47 @@ public class AdminAPI {
 			@Named("cityid") String cityname) {
 		City city = GeoDAO.getCityById(cityname);
 		if (city == null) {
-			return new Text("No such city exist");
+			city = GeoDAO.getCity(cityname);
+			if (city == null) {
+				return new Text("No such city exist");
+			}
 		}
 		Product p = new Product(title, descr, city);
 		ProductDAO.save(p);
-		return new Text("");
+		return new Text(p.toString());
 	}
 	
+	// Shit below just got serious: TODO remove costyl
 	@ApiMethod(name = "setInactive", httpMethod = "GET", path = "product/inactive")
-	public Text setUnActualProduct (@Named ("id") String alias) {
-		if (alias == null) {
-			return new Text ("Alias is null");
+	public Text setUnActualProduct (@Named ("id") String id) {
+		if (id == null) {
+			return new Text ("No id sent");
 		}
-		Product p = (Product) ofy().load().kind("Product").filter("alias == ", alias).first().now();
-		if (p == null) {
-			return new Text ("Product is null");
+		for (Object el : ofy().load().kind("Product").list()) {
+			if ((((Product)el).getId()+"").equals(id)) {
+				((Product)el).setActual(true);
+				ofy().save().entity((Product)el).now();
+				return new Text (((Product)el).toString());
+			}
 		}
-		p.setActual(false);
-		ofy().deadline(5.0).save().entity(p);
-		return new Text (p.toString());
+		return new Text ("=(");
 	}
 	
+	//TODO Remove costyl
 	@ApiMethod(name = "setActive", httpMethod = "GET", path = "product/active")
-	public Text setActualProduct (@Named ("id") String alias) {
-		if (alias == null) {
-			return new Text ("Alias is null");
+	public Text setActualProduct (@Named ("id") String id) {
+		if (id == null) {
+			return new Text ("No id sent");
 		}
-		Product p = (Product) ofy().load().kind("Product").filter("alias == ", alias).first().now();
-		if (p == null) {
-			return new Text ("Product is null");
+		for (Object el : ofy().load().kind("Product").list()) {
+			if ((((Product)el).getId()+"").equals(id)) {
+				((Product)el).setActual(true);
+				ofy().save().entity((Product)el).now();
+				return new Text (((Product)el).toString());
+			}
 		}
-		p.setActual(true);
-		ofy().deadline(5.0).save().entity(p);
-		return new Text (p.toString());
+			
+		return new Text ("=(");
 	}
 	
 	//		<! ==== Users moderating below ===== !>
@@ -83,7 +91,7 @@ public class AdminAPI {
 	@ApiMethod(name = "promote", httpMethod = "GET", path = "promote")
 	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") String access) {
-		if (AuthContainer.getAccessGroup(token) != 0xBACC) {
+		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
 		}
 		UserEntity u = UserDAO.get(target);
@@ -103,6 +111,11 @@ public class AdminAPI {
 	@ApiMethod(name = "listSessions", path = "list/session", httpMethod = "GET")
 	public List<String> listSession() {
 		return AuthContainer.testMethod();
+	}
+	
+	@ApiMethod (name = "user.filter2", path = "user/search", httpMethod= "GET")
+	public List<UserEntity> listAnotherUserFilter (@Named ("data") String data) {
+		return UserDAO.searchUsers(data);
 	}
 
 	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")

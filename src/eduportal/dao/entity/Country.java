@@ -10,16 +10,15 @@ public class Country {
 	private long id;
 	@Index
 	private String name;
-	private City[] city;
 	
 	public Country () {
 		do {
-			this.id = new Random().nextLong();
+			this.id = new Random().nextInt(100_000);
 		} while (this.id < 0);
 	}
 	public Country (String title) {
 		do {
-			this.id = new Random().nextLong();
+			this.id = new Random().nextInt(100_000);
 		} while (this.id < 0);
 		this.name = title;
 	}
@@ -30,23 +29,16 @@ public class Country {
 	public String getName() {
 		return name;
 	}
-	public City[] getCity() {
-		return city;
-	}
 	public void setId(long id) {
 		this.id = id;
 	}
 	public void setName(String title) {
 		this.name = title;
 	}
-	public void setCity(City[] city) {
-		this.city = city;
-	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(city);
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -63,9 +55,6 @@ public class Country {
 			return false;
 		}
 		Country other = (Country) obj;
-		if (!Arrays.equals(city, other.city)) {
-			return false;
-		}
 		if (id != other.id) {
 			return false;
 		}
@@ -80,6 +69,6 @@ public class Country {
 	}
 	@Override
 	public String toString() {
-		return "Country [id=" + id + ", name=" + name + ", city=" + Arrays.toString(city) + "]";
+		return "Country [id=" + id + ", name=" + name + "]";
 	}
 }

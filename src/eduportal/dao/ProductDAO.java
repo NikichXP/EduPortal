@@ -32,6 +32,6 @@ public class ProductDAO {
 	}
 
 	public static void save(Product p) {
-		ofy().deadline(5.0).save().entity(p);
+		ofy().save().entity(p);
 	}
 }
