@@ -92,7 +92,7 @@ public class Order extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " [user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", start="
+		return this.getClass().getSimpleName() + " [id=" + id +", user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", start="
 				+ start + ", end=" + end + ", createdBy=" + createdBy + "]";
 	}
 	

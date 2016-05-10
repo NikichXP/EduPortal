@@ -8,7 +8,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
-import eduportal.util.IdUtils;
 
 @Api(name = "order", version = "v1")
 public class OrderAPI {

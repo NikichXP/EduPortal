@@ -28,9 +28,11 @@ public class TestAPI {
 //			System.out.println(((Order) obj).getProduct().toString());
 //			ret.add(obj);
 //		}
-		UserEntity u = ofy().load().type(UserEntity.class).first().now();
-		u.addOrder(ofy().load().type(Order.class).first().now());
-		ofy().save().entity(u).now();
+//		UserEntity u = ofy().load().type(UserEntity.class).first().now();
+//		u.addOrder(ofy().load().type(Order.class).first().now());
+//		ofy().save().entity(u).now();
+		Order order = OrderDAO.getOrder("543414316");
+		ret.add(order.toString());
 		ret.add("end");
 		return ret;
 	}

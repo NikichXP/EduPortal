@@ -5,13 +5,18 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.entity.*;
 
 public class OrderDAO {
+	
+	public static Order getOrder (String id) {
+		id = id.trim();
+		return ofy().load().type(Order.class).id(Long.parseLong(id)).now();
+	}
 
 	public static List<Order> getAllOrders() {
 		return ofy().load().type(Order.class).list();
 	}
 
 	public static List<Product> getAllProducts() {
-		return Arrays.asList((Product[]) ofy().load().kind("Product").list().toArray());
+		return ofy().load().type(Product.class).list();
 	}
 	
 	public static void saveOrder (Order o) {
