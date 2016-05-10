@@ -1,7 +1,9 @@
 package eduportal.dao.entity;
 
 import java.security.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
@@ -21,8 +23,12 @@ public class UserEntity extends AbstractEntity {
 	private String name;
 	@Index
 	private String surname;
-
-	private Order[] orders;
+	@Ignore
+	private ArrayList<Long> ordersId;
+	
+	public void addOrder (Order ord) {
+		ordersId.add(ord.getId());
+	}
 
 	public boolean hasNull() {
 		if (login == null) {
@@ -44,6 +50,7 @@ public class UserEntity extends AbstractEntity {
 
 	public UserEntity() {
 		super();
+		this.ordersId = new ArrayList<>();
 	}
 
 	public UserEntity(String login, String pass, String name, String surname, String phone, String mail) {
@@ -66,6 +73,7 @@ public class UserEntity extends AbstractEntity {
 		}
 		this.pass = sb.toString();
 		this.accessGroup = 0;
+		this.ordersId = new ArrayList<>();
 	}
 
 	public String getLogin() {
@@ -111,10 +119,6 @@ public class UserEntity extends AbstractEntity {
 		this.pass = sb.toString();
 	}
 
-//	public void setAccessGroup(int accessGroup) {
-//		this.accessGroup = accessGroup;
-//	}
-
 	public UserEntity setAccessGroup(int accessGroup) {
 		this.accessGroup = accessGroup;
 		return this;
@@ -142,6 +146,17 @@ public class UserEntity extends AbstractEntity {
 
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	
+	public ArrayList<Long> getOrdersId() {
+		return this.ordersId;
+	}
+
+	public void setOrders(Order[] orders) {
+		this.ordersId.ensureCapacity(orders.length);
+		for (Order ord : orders) {
+			this.ordersId.add(ord.getId());
+		}
 	}
 
 	@Override
@@ -224,8 +239,9 @@ public class UserEntity extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", login=" + login + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail
-				+ ", accessGroup=" + accessGroup + ", name=" + name + ", surname=" + surname + "]";
+		return "UserEntity [login=" + login + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail
+				+ ", accessGroup=" + accessGroup + ", name=" + name + ", surname=" + surname + ", ordersId=" + ordersId
+				+ "]";
 	}
 
 }

@@ -1,36 +1,24 @@
 package eduportal.dao.entity;
 
-import java.util.*;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-public class Country {
+public class Country extends AbstractEntity {
 	
-	@Id
-	private long id;
 	@Index
 	private String name;
+	protected final int maxIdValue = 99_999;
 	
 	public Country () {
-		do {
-			this.id = new Random().nextInt(100_000);
-		} while (this.id < 0);
+		super();
 	}
 	public Country (String title) {
-		do {
-			this.id = new Random().nextInt(100_000);
-		} while (this.id < 0);
+		super();
 		this.name = title;
-	}
+	}	
 	
-	public long getId() {
-		return id;
-	}
 	public String getName() {
 		return name;
-	}
-	public void setId(long id) {
-		this.id = id;
 	}
 	public void setName(String title) {
 		this.name = title;

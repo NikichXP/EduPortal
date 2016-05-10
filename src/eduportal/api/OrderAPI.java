@@ -26,7 +26,7 @@ public class OrderAPI {
 //		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
 //			return null;
 //		}
-		return OrderDAO.getAll();
+		return OrderDAO.getAllOrders();
 	}
 	
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET") 
@@ -43,7 +43,6 @@ public class OrderAPI {
 			@Named ("client_id") String clientId,
 			@Named ("token") String token) {		//Token to identify creator
 		Order o = new Order ();
-		o.setProductid(IdUtils.convertString(productId));
 		o.setProduct(ProductDAO.get(productId));
 		return new Text ("");
 	}

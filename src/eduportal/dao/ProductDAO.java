@@ -31,7 +31,8 @@ public class ProductDAO {
 		return ofy().load().kind("Product").filter("cityid", city.getId()).list();
 	}
 
-	public static void save(Product p) {
-		ofy().save().entity(p);
+	public static void save(Product... p) {
+		ofy().save().entities(p).now();
+		return;
 	}
 }

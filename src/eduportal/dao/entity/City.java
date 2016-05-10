@@ -1,49 +1,22 @@
 package eduportal.dao.entity;
 
-import java.util.Random;
-
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-public class City {
+public class City extends AbstractEntity {
 	
-	@Id
-	private long id;
-	@Ignore
-	private Country country;
-	private long countryId;
+	private Ref<Country> country;
 	@Index
 	private String name;
-	
-	public City () {
-		do {
-			this.id = new Random().nextInt(100_000);
-		} while (this.id < 0);
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+	protected final int maxIdValue = 999_999;
 
 	public Country getCountry() {
-		return country;
+		return country.get();
 	}
 
 	public void setCountry(Country country) {
-		this.countryId = country.getId();
-		this.country = country;
-	}
-
-	public long getCountryId() {
-		return countryId;
-	}
-
-	public void setCountryId(long countryId) {
-		this.countryId = countryId;
+		this.country = Ref.create(country);
 	}
 
 	public String getName() {
@@ -58,8 +31,7 @@ public class City {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + (int) (countryId ^ (countryId >>> 32));
+		result = prime * result + ((country == null) ? 0 : country.get().hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -79,8 +51,6 @@ public class City {
 				return false;
 		} else if (!country.equals(other.country))
 			return false;
-		if (countryId != other.countryId)
-			return false;
 		if (id != other.id)
 			return false;
 		if (name == null) {
@@ -93,7 +63,7 @@ public class City {
 
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", country=" + country + ", countryId=" + countryId + ", name=" + name + "]";
+		return "City [id=" + id + ", country=" + country.get() + ", name=" + name + "]";
 	}
 	
 	

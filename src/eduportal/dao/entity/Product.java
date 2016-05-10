@@ -1,22 +1,16 @@
 package eduportal.dao.entity;
 
-import java.util.Random;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-public class Product {
-
-	@Id
-	private long id;
+public class Product extends AbstractEntity {
+	
 	@Index
 	private String title;
 	private String description;
 	@Index
-	private long cityId;
-	@Ignore
-	private City city;
-	@Index
-	private long counrtyid;
+	private Ref<City> city;
 	@Index
 	private boolean actual;
 	@Index
@@ -27,22 +21,12 @@ public class Product {
 	}
 	
 	public Product (String name, String descr, City c) {
-		do {
-			this.id = new Random().nextInt(100_000);
-		} while (this.id < 0);
+		super();
 		this.title = name;
 		this.description = descr;
-		this.city = c;
-		this.cityId = c.getId();
-		this.counrtyid = c.getCountryId();
+		this.city = Ref.create(c);
 	}
 	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -55,23 +39,11 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public long getCityId() {
-		return cityId;
-	}
-	public void setCityId(long cityId) {
-		this.cityId = cityId;
-	}
 	public City getCity() {
-		return city;
+		return city.get();
 	}
 	public void setCity(City city) {
-		this.city = city;
-	}
-	public long getCounrtyid() {
-		return counrtyid;
-	}
-	public void setCounrtyid(long counrtyid) {
-		this.counrtyid = counrtyid;
+		this.city = Ref.create(city);
 	}
 	public boolean isActual() {
 		return actual;
@@ -84,8 +56,9 @@ public class Product {
 		return defaultPrice;
 	}
 
-	public void setDefaultPrice(double defaultPrice) {
+	public Product setDefaultPrice(double defaultPrice) {
 		this.defaultPrice = defaultPrice;
+		return this;
 	}
 
 	@Override
@@ -93,9 +66,7 @@ public class Product {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (actual ? 1231 : 1237);
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result + (int) (cityId ^ (cityId >>> 32));
-		result = prime * result + (int) (counrtyid ^ (counrtyid >>> 32));
+		result = prime * result + ((city == null) ? 0 : city.get().hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
@@ -117,10 +88,6 @@ public class Product {
 				return false;
 		} else if (!city.equals(other.city))
 			return false;
-		if (cityId != other.cityId)
-			return false;
-		if (counrtyid != other.counrtyid)
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -134,6 +101,12 @@ public class Product {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", title=" + title + ", description=" + description + ", city=" + city
+				+ ", actual=" + actual + ", defaultPrice=" + defaultPrice + "]";
 	}
 	
 }

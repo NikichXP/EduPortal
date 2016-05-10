@@ -10,7 +10,6 @@ public class GeoDAO {
 		City city = new City();
 		city.setName(name);
 		city.setCountry(c);
-		city.setCountryId(c.getId());
 		ofy().save().entity(city);
 		return city;
 	}
@@ -24,7 +23,6 @@ public class GeoDAO {
 		Country c = getCountry(country);
 		city.setName(name);
 		city.setCountry(c);
-		city.setCountryId(c.getId());
 		ofy().save().entity(city);
 		return city;
 	}
