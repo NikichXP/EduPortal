@@ -85,7 +85,7 @@ body {
 	width: 90%;
 	/* border: 1px solid #d9e0e7; */
 	margin: auto;
-	margin-top: 10px;
+	margin-top: 0px;
 }
 
 #div-right {
@@ -100,28 +100,22 @@ body {
 	width: 15%;
 	height: 100%;
 	background-color: #fff;
-	border: 1px solid #d9e0e7;
-	border-right: none;
 	position:relative;
 	float:left;
 }
 
-#div-logout-button {
-	height: 40px;
-	width: 80px;
-	background-color: #688bb0;
-	color: #fff;
-	text-align: center;
-	line-height: 40px;
+#ul-side-menu {
+	padding: 0;
+}
+
+#ul-side-menu li {
+	list-style: none;
+	line-height: 30px;
+	padding-left: 10px;
 	cursor: pointer;
 }
 
-#div-showses-button {
-	height: 40px;
-	width: 80px;
+#ul-side-menu li:hover {
+	list-style: none;
 	background-color: #688bb0;
-	color: #fff;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
 }

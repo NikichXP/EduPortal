@@ -11,11 +11,11 @@ $(function(){
 			window.location = "auth.html";
 	
 	
-	$('#div-showses-button').on('click', function(){
+	$('#menu-showses').on('click', function(){
 		$resDiv.append("TokenId = " + getCookie("sesToken") + "; tokenTO = " + getCookie("sesTO"));	
 	});
 	
-	$('#div-logout-button').on('click', function(){
+	$('#menu-logout').on('click', function(){
 		deleteCookie("sesToken");	
 		deleteCookie("sesTO");	
 		window.location = "auth.html";
