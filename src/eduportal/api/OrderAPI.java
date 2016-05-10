@@ -20,7 +20,7 @@ public class OrderAPI {
 	 */
 	
 
-	@ApiMethod(name = "getAllOrders", path = "all", httpMethod = "GET") 
+	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET") 
 	public List<Order> getAllOrders (@Named ("token") String token) {
 //		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
 //			return null;

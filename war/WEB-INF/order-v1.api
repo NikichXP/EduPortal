@@ -109,7 +109,7 @@
       }
     },
     "order.getAllOrders" : {
-      "path" : "all",
+      "path" : "allOrders",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],

@@ -23,10 +23,15 @@ public class UserEntity extends AbstractEntity {
 	private String name;
 	@Index
 	private String surname;
-	@Ignore
 	private ArrayList<Long> ordersId;
 	
 	public void addOrder (Order ord) {
+		long id = ord.getId();
+		for (long l : ordersId) {
+			if (l == id) {
+				return;
+			}
+		}
 		ordersId.add(ord.getId());
 	}
 
