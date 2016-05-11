@@ -31,16 +31,15 @@
 			for (var i = 0; i < resData.items.length; i++)
 			{
 				$('#table-orders').append("<tr>" +
-						"<td>" + i + "</td>" +
+						"<td>" + (i + 1) + "</td>" +
 						"<td>" + resData.items[i].id + "</td>" +
 						"<td>" + resData.items[i].user.name + " " + resData.items[i].user.surname + "</td>" +
 						"<td>" + resData.items[i].product.title + "</td>" +
 						"<td>" + resData.items[i].createdBy.name + " " + resData.items[i].createdBy.surname + "</td>" +
 						"<td>" + checkBool(resData.items[i].donePaid) + "</td>" +
 					"</tr>");	
-				countOrders = i + 1;
 			}
-			$('#li-open-orders').append(" " + count)
+			$('#li-open-orders').append(" " + i)
 			
 		},
 	});			

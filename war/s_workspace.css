@@ -66,12 +66,13 @@ body {
 
 #ul-side-menu {
 	padding: 0;
+	width: 120px;
+	float: right;
 }
 
 #ul-side-menu li {
 	list-style: none;
 	width: 110px;
-	float: right;
 	line-height: 20px;
 	font-size: 12px;
 	padding-left: 10px;
