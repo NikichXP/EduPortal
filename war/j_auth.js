@@ -34,7 +34,6 @@ $(function(){
 				sID = resData.sessionId;
 				setCookie("sesToken", sID);
 				setCookie("sesTO", sTO);
-				$resDiv.html('<p>sessionId=' + sID + '</p>' + '<p>sessionTO=' + sTO + '</p>');
 				window.location = "workspace.html";
 			},
 			error: $resDiv.html('<p>Authorisation faild</p>')
@@ -42,7 +41,4 @@ $(function(){
 
 	});
 	
-	$('#div-logout-button').on('click', function(){
-		$resDiv.append("TokenId = " + getCookie("sesToken") + "; tokenTO = " + getCookie("sesTO"));	
-	});
 });

@@ -13,57 +13,12 @@ body {
 	opacity: 0.5;
 	z-index: 500;
 }
-#div-auth {
-	position: absolute;
-	height: 200px;
-	width: 350px;
-	background-color: #fff;
-	border: 1px solid #d9e0e7;
-	left: 50%;
-	top: 50%;
-	margin-left: -251px; 
-    margin-top: -200px;
-	z-index: 520;
-}
-
-#div-auth-text-block {
-	height: 40px;
-	width: 100%;
-	background-color: #688bb0;
-	text-align: center;
-	line-height: 40px;
-}
-#div-auth-text-block H2 {
-	color: #fff;
-	margin: 0px;
-}
-
-#div-send-button {
-	height: 40px;
-	width: 80px;
-	background-color: #688bb0;
-	color: #fff;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
-}
-
-#div-form {
-	margin: auto;
-	margin-top: 10px;
-	width: 100%;
-	text-align: center;
-}
-
-#div-send-button {
-	margin: auto;
-	margin-top: 10px;
-}
 
 
 #header {
 	height: 80px;
 	width: 100%;
+	min-width: 930px;
 	background-color: #fff;
 }
 
@@ -72,17 +27,20 @@ body {
 	width: 95%;
 	background-color: #688bb0;
 	margin: auto;
-	border-radius: 0 0 20px 20px; 
+	border-radius: 0 0 20px 20px;
 }
 
 #header-main H1 {
 	color: #fff;
 	margin: 0px;
+	line-height: 70px;
+	margin-left: 20px;
 }
 
 #main {
-	height: 500px;
+	height: 700px;
 	width: 90%;
+	min-width: 732px;
 	/* border: 1px solid #d9e0e7; */
 	margin: auto;
 	margin-top: 0px;
@@ -90,18 +48,20 @@ body {
 
 #div-right {
 	height: 100%;
-	width: 60%;
+	width: 70%;
+	min-width: 600px;
 	border: 1px solid #d9e0e7;
-	position:relative;
-	float:left;
+	position: relative;
+	float: left;
 }
 
 #div-side-menu {
 	width: 15%;
+	min-width: 130px;
 	height: 100%;
 	background-color: #fff;
-	position:relative;
-	float:left;
+	position: relative;
+	float: left;
 }
 
 #ul-side-menu {
@@ -110,7 +70,10 @@ body {
 
 #ul-side-menu li {
 	list-style: none;
-	line-height: 30px;
+	width: 110px;
+	float: right;
+	line-height: 20px;
+	font-size: 12px;
 	padding-left: 10px;
 	cursor: pointer;
 }
@@ -118,4 +81,50 @@ body {
 #ul-side-menu li:hover {
 	list-style: none;
 	background-color: #688bb0;
+	color: #fff;
 }
+
+#p-greeting {
+	margin: auto;
+	margin-top: 10px;
+	width: 300px;
+	text-align: center;
+}
+
+#ul-stats {
+	padding: 0;
+}
+
+#ul-stats li {
+	margin-left: 15px;
+	list-style: none;
+	padding-left: 10px;
+	font-size: 11px;
+}
+
+#div-order-table {
+	height: 300px;
+	width: 95%;
+	margin: auto;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	}
+
+#table-orders {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	width: 100%;
+	font-size: 11px
+}
+
+#table-orders td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#table-orders-header {
+	background-color: #d9e0e7;
+}
+
