@@ -84,6 +84,9 @@ public class TestAPI {
 		} else {
 			o = new Order[20];
 		}
+		for (int ptr = 0; ptr < o.length; ptr++) {
+			o[ptr] = new Order();
+		}
 		int i = 0;
 		for (Order ord : o) {
 			i++;
