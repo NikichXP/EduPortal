@@ -13,6 +13,9 @@ public class UserEntity extends AbstractEntity {
 	@Index
 	private String login;
 	@Index
+	/**
+	 * Pass is always encoded
+	 */
 	private String pass;
 	@Index
 	private String phone;
@@ -55,6 +58,25 @@ public class UserEntity extends AbstractEntity {
 			return false;
 		}
 	}
+	
+	private static MessageDigest mDigest = null;
+	static {
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** Encodes password with SHA-512 */
+	public static String encodePass (String pass) {
+		byte[] result = mDigest.digest(pass.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		return sb.toString();
+	}
 
 	public UserEntity() {
 		super();
@@ -68,18 +90,7 @@ public class UserEntity extends AbstractEntity {
 		this.login = login;
 		this.mail = mail;
 		this.phone = phone;
-		MessageDigest mDigest = null;
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		byte[] result = mDigest.digest(pass.getBytes());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < result.length; i++) {
-			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-		}
-		this.pass = sb.toString();
+		
 		this.accessGroup = 0;
 		this.ordersId = new ArrayList<>();
 	}
@@ -113,18 +124,7 @@ public class UserEntity extends AbstractEntity {
 			this.pass = null;
 			return;
 		}
-		MessageDigest mDigest = null;
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		byte[] result = mDigest.digest(pass.getBytes());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < result.length; i++) {
-			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-		}
-		this.pass = sb.toString();
+		this.pass = encodePass(pass);
 	}
 
 	public UserEntity setAccessGroup(int accessGroup) {

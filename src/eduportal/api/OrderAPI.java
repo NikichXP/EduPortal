@@ -1,6 +1,9 @@
 package eduportal.api;
 
 import java.util.*;
+
+import javax.inject.Inject;
+
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.cmd.*;
@@ -19,10 +22,12 @@ public class OrderAPI {
 	 3.: 
 	 */
 	
+	@Inject
+	private static AuthContainer auth;
 
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET") 
 	public List<Order> getAllOrders (@Named ("token") String token) {
-		UserEntity u = AuthContainer.getUser(token);
+		UserEntity u = auth.getUser(token);
 //		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
 //			return null;
 //		}

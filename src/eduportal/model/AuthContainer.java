@@ -1,16 +1,19 @@
 package eduportal.model;
 
 import java.util.*;
+
+import com.google.api.server.spi.config.*;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.util.AuthToken;
 
+@Singleton
 public class AuthContainer {
 
-	private static HashMap<String, AuthSession> sessions = new HashMap<>();
-	private static HashSet<Long> users = new HashSet<>();
+	private HashMap<String, AuthSession> sessions = new HashMap<>();
+	private HashSet<Long> users = new HashSet<>();
 
-	public static ArrayList<String> testMethod() {
+	public ArrayList<String> testMethod() {
 		ArrayList<String> ret = new ArrayList<>();
 		for (String s : sessions.keySet()) {
 			ret.add("Session: " + s + "  ==  " + sessions.get(s).getUser());
@@ -35,7 +38,7 @@ public class AuthContainer {
 	 *            - user's pass
 	 * @return String token if login and pass are true; null if bad credentials
 	 */
-	public static AuthToken authenticate(String login, String pass) {
+	public AuthToken authenticate(String login, String pass) {
 		System.out.println("Getting user creds");
 		UserEntity user = UserDAO.get(login, pass);
 		if (user == null) {
@@ -62,7 +65,7 @@ public class AuthContainer {
 		return ret;
 	}
 
-	public static boolean checkReq(String token, int acclvl) {
+	public boolean checkReq(String token, int acclvl) {
 		if (sessions.get(token).getAccessLevel() >= acclvl) {
 			return true;
 		} else {
@@ -77,7 +80,7 @@ public class AuthContainer {
 	 *            - session id
 	 * @return - User
 	 */
-	public static UserEntity getUser(String token) {
+	public UserEntity getUser(String token) {
 		UserEntity u = null;
 		try {
 			u = sessions.get(token).getUser();
@@ -95,7 +98,7 @@ public class AuthContainer {
 		return null;
 	}
 
-	public static int getAccessGroup(String token) {
+	public int getAccessGroup(String token) {
 		return sessions.get(token).getAccessLevel();
 	}
 
@@ -105,7 +108,7 @@ public class AuthContainer {
 	 * @param token
 	 *            - sessionID to update
 	 */
-	public static void updateTimeout(String token) {
+	public void updateTimeout(String token) {
 		if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
 			sessions.get(token).setTimeout(System.currentTimeMillis() + SESSION_TIME);
 		}

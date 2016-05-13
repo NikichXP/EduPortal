@@ -2,23 +2,28 @@ package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
+
+import javax.inject.Inject;
+import javax.servlet.http.*;
+
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.*;
 
-@Api(name = "test", version = "v1")
+@Api(name = "test", version = "v1", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE))
 public class TestAPI {
+	
+	@Inject
+	private static AuthContainer auth;
 
 	@ApiMethod(path = "test", httpMethod = "GET")
-	public ArrayList<Object> test() {
+	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		Key<UserEntity> k = Ref.create(ofy().load().type(UserEntity.class).id(1100593105).now()).getKey();
-		for (UserEntity u : ofy().load().type(UserEntity.class).filter("creator", k).list()) {
-			ret.add(u);
+		for (String s : auth.testMethod()) {
+			ret.add(s);
 		}
 		ret.add("end");
 		return ret;
@@ -123,7 +128,7 @@ public class TestAPI {
 				ret.add(o.toString());
 			}
 		}
-		ret.addAll(AuthContainer.testMethod());
+		ret.addAll(auth.testMethod());
 		return ret;
 	}
 	
@@ -135,7 +140,7 @@ public class TestAPI {
 				ret.add(o);
 			}
 		}
-		ret.addAll(AuthContainer.testMethod());
+		ret.addAll(auth.testMethod());
 		return ret;
 	}
 

@@ -4,7 +4,7 @@
   "root" : "https://eduportal-1277.appspot.com/_ah/api",
   "name" : "user",
   "version" : "v1",
-  "title" : "API for user-accounts section",
+  "title" : "User API",
   "defaultVersion" : false,
   "discovery" : [ "PUBLIC" ],
   "adapter" : {
@@ -13,7 +13,7 @@
     "type" : "lily"
   },
   "auth" : {
-    "allowCookieAuth" : false
+    "allowCookieAuth" : true
   },
   "frontendLimits" : {
     "unregisteredUserQps" : -1,
@@ -129,21 +129,21 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "user.deleteUser" : {
-      "path" : "delete",
-      "httpMethod" : "delete",
+    "user.changePassword" : {
+      "path" : "changepass",
+      "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.userDelete",
+      "rosyMethod" : "eduportal.api.UserAPI.changePass",
       "request" : {
         "parameters" : {
-          "target" : {
+          "exist" : {
             "type" : "string",
             "required" : true
           },
-          "token" : {
+          "new" : {
             "type" : "string",
             "required" : true
           }
@@ -166,21 +166,46 @@
         "parameters" : {
           "name" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "token" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "surname" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "mail" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "phone" : {
+            "type" : "string",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.deleteUser" : {
+      "path" : "delete",
+      "httpMethod" : "delete",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.userDelete",
+      "request" : {
+        "parameters" : {
+          "target" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
             "type" : "string",
             "required" : true
           }
@@ -263,10 +288,10 @@
               "$ref" : "Order"
             }
           },
-          "idString" : {
+          "idHexString" : {
             "type" : "string"
           },
-          "idHexString" : {
+          "idString" : {
             "type" : "string"
           }
         }
@@ -317,10 +342,10 @@
           "donePaid" : {
             "type" : "boolean"
           },
-          "idString" : {
+          "idHexString" : {
             "type" : "string"
           },
-          "idHexString" : {
+          "idString" : {
             "type" : "string"
           }
         }
@@ -359,7 +384,7 @@
           "$ref" : "AuthToken"
         }
       },
-      "eduportal.api.UserAPI.userDelete" : {
+      "eduportal.api.UserAPI.changePass" : {
         "response" : {
           "$ref" : "Text"
         }
@@ -367,6 +392,11 @@
       "eduportal.api.UserAPI.updateUserInfo" : {
         "response" : {
           "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.UserAPI.userDelete" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }

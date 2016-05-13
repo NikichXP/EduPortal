@@ -12,7 +12,7 @@
     "type" : "lily"
   },
   "auth" : {
-    "allowCookieAuth" : false
+    "allowCookieAuth" : true
   },
   "frontendLimits" : {
     "unregisteredUserQps" : -1,

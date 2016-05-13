@@ -1,28 +1,30 @@
 package eduportal.api;
 
-import java.util.Random;
-
+import javax.inject.Inject;
+import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
-import eduportal.model.AccessSettings;
-import eduportal.model.AuthContainer;
+import eduportal.model.*;
 import eduportal.util.AuthToken;
 
-@Api(name = "user", version = "v1", title = "API for user-accounts section")
+@Api(name = "user", version = "v1", title = "User API", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE))
 public class UserAPI {
+	
+	@Inject
+	private static AuthContainer auth;
 
 	@ApiMethod(name = "auth", httpMethod = "GET", path = "auth")
 	public AuthToken auth(@Named("login") String login, @Named("pass") String pass) {
-		return AuthContainer.authenticate(login, pass);
+		return auth.authenticate(login, pass);
 	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
 	public AuthToken register(@Named("name") String name, @Named("pass") String pass, @Named("login") String login,
 			@Named("surname") String surname, @Named("phone") String phone, @Named("mail") String mail) {
 		UserDAO.create(login, pass, name, surname, phone, mail);
-		return AuthContainer.authenticate(login, pass);
+		return auth.authenticate(login, pass);
 	}
 
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
@@ -42,13 +44,26 @@ public class UserAPI {
 		if (u == null) {
 			return new Text("User is probably registered");
 		}
-		return new Text("SID=" + AuthContainer.authenticate(user.getLogin(), user.getPass()).getSessionId());
+		return new Text("SID=" + auth.authenticate(user.getLogin(), user.getPass()).getSessionId());
 
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
-	public Dummy getName(@Named("token") String token) {
-		final UserEntity u = AuthContainer.getUser(token);
+	public Dummy getName(@Named("token") String token, HttpServletRequest req) {
+		String token_ = null;
+		for (Cookie c : req.getCookies()) {
+			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
+				token_ = c.getValue();
+				break;
+			}
+		}
+		if (token_ == null) {
+			return null;
+		}
+		final UserEntity u = auth.getUser(token_);
+		if (u == null) {
+			return null;
+		}
 		@SuppressWarnings("unused")
 		Dummy o = new Dummy() {
 			private String name = u.getName(), surname = u.getSurname();
@@ -73,9 +88,9 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "updateUser", httpMethod = "GET", path = "update")
-	public UserEntity updateUserInfo(@Named("name") String name, @Named("token") String token,
-			@Named("surname") String surname, @Named("mail") String mail, @Named("phone") String phone) {
-		UserEntity u = AuthContainer.getUser(token);
+	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("token") @Nullable String token,
+			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone) {
+		UserEntity u = auth.getUser(token);
 		if (u == null) {
 			return null;
 		}
@@ -101,10 +116,34 @@ public class UserAPI {
 		u.setPass(null);
 		return u;
 	}
+	
+	@ApiMethod (name = "changePassword", httpMethod = "GET", path = "changepass")
+	public Text changePass (HttpServletRequest req, @Named ("exist") String exist, @Named ("new") String newpass) {
+		String token = null;
+		UserEntity u = null;
+		for (Cookie c : req.getCookies()) {
+			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
+				token = c.getValue();
+				break;
+			}
+		}
+		try {
+			u = auth.getUser(token);
+			if (u.getPass().equals(UserEntity.encodePass(exist))) {
+				u.setPass(newpass);
+				UserDAO.update(u);
+				return new Text ("Done successfully");
+			} else {
+				return new Text ("Wrong password");
+			}
+		} catch (Exception e){
+			return new Text ("No suitable token recieved");
+		}
+	}
 
 	@ApiMethod(name = "deleteUser", httpMethod = "delete", path = "delete")
 	public Text userDelete(@Named("target") String target, @Named("token") String token) {
-		if (AuthContainer.getAccessGroup(token) >= AccessSettings.MIN_MODERATOR_LVL) {
+		if (auth.getAccessGroup(token) >= AccessSettings.MIN_MODERATOR_LVL) {
 			UserDAO.delete(target);
 			return new Text("Success");
 		}
