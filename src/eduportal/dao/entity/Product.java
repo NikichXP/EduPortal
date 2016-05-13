@@ -1,6 +1,6 @@
 package eduportal.dao.entity;
 
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
@@ -10,7 +10,7 @@ public class Product extends AbstractEntity {
 	private String title;
 	private String description;
 	@Index
-	private Ref<City> city;
+	private Key<City> city;
 	@Index
 	private boolean actual;
 	@Index
@@ -24,7 +24,7 @@ public class Product extends AbstractEntity {
 		super();
 		this.title = name;
 		this.description = descr;
-		this.city = Ref.create(c);
+		this.city = Ref.create(c).getKey();
 	}
 	
 	public String getTitle() {
@@ -40,10 +40,10 @@ public class Product extends AbstractEntity {
 		this.description = description;
 	}
 	public City getCity() {
-		return city.get();
+		return Ref.create(city).get();
 	}
 	public void setCity(City city) {
-		this.city = Ref.create(city);
+		this.city = Ref.create(city).getKey();
 	}
 	public boolean isActual() {
 		return actual;
@@ -66,7 +66,7 @@ public class Product extends AbstractEntity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (actual ? 1231 : 1237);
-		result = prime * result + ((city == null) ? 0 : city.get().hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((title == null) ? 0 : title.hashCode());

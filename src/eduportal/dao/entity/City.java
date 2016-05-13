@@ -1,22 +1,22 @@
 package eduportal.dao.entity;
 
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
 public class City extends AbstractEntity {
 	
-	private Ref<Country> country;
+	private Key<Country> country;
 	@Index
 	private String name;
 	protected final int maxIdValue = 999_999;
 
 	public Country getCountry() {
-		return country.get();
+		return Ref.create(country).get();
 	}
 
 	public void setCountry(Country country) {
-		this.country = Ref.create(country);
+		this.country = Ref.create(country).getKey();
 	}
 
 	public String getName() {
@@ -31,7 +31,7 @@ public class City extends AbstractEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.get().hashCode());
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -63,7 +63,7 @@ public class City extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", country=" + country.get() + ", name=" + name + "]";
+		return "City [id=" + id + ", country=" + country + ", name=" + name + "]";
 	}
 	
 	

@@ -4,7 +4,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.*;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
@@ -12,13 +14,14 @@ import eduportal.model.*;
 
 @Api(name = "admin", title = "Admin API", version = "v1")
 public class AdminAPI {
-	
+
 	// Init Objectify
-	
-	public final static Class<?>[] objectifiedClasses = {UserEntity.class, DeletedUser.class, 
-			Product.class, Country.class, City.class, Order.class};
-	public final static String[] objectifiedClassesNames = {"UserEntity", "DeletedUser",
-			"Product", "Country", "City", "Order"};
+
+	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
+			Country.class, City.class, Order.class };
+	public final static String[] objectifiedClassesNames = { "UserEntity", "DeletedUser", "Product", "Country", "City",
+			"Order" };
+
 	static {
 		ObjectifyService.begin();
 		for (Class<?> c : objectifiedClasses) {
@@ -54,42 +57,46 @@ public class AdminAPI {
 		ProductDAO.save(p);
 		return new Text(p.toString());
 	}
-	
-	// Shit below just got serious: TODO remove costyl
+
 	@ApiMethod(name = "setInactive", httpMethod = "GET", path = "product/inactive")
-	public Text setUnActualProduct (@Named ("id") String id) {
+	public Text setUnActualProduct(@Named("id") String id) {
 		if (id == null) {
-			return new Text ("No id sent");
+			return new Text("No id sent");
 		}
-		for (Object el : ofy().load().kind("Product").list()) {
-			if ((((Product)el).getId()+"").equals(id)) {
-				((Product)el).setActual(true);
-				ofy().save().entity((Product)el).now();
-				return new Text (((Product)el).toString());
-			}
+		Product p = ofy().load().type(Product.class).id(Long.parseLong(id)).now();
+		if (p != null) {
+			p.setActual(false);
+			ofy().save().entity(p).now();
 		}
-		return new Text ("=(");
+		return new Text("=(");
 	}
-	
-	//TODO Remove costyl
+
 	@ApiMethod(name = "setActive", httpMethod = "GET", path = "product/active")
-	public Text setActualProduct (@Named ("id") String id) {
+	public Text setActualProduct(@Named("id") String id) {
 		if (id == null) {
-			return new Text ("No id sent");
+			return new Text("No id sent");
 		}
-		for (Object el : ofy().load().kind("Product").list()) {
-			if ((((Product)el).getId()+"").equals(id)) {
-				((Product)el).setActual(true);
-				ofy().save().entity((Product)el).now();
-				return new Text (((Product)el).toString());
-			}
+		Product p = ofy().load().type(Product.class).id(Long.parseLong(id)).now();
+		if (p != null) {
+			p.setActual(true);
+			ofy().save().entity(p).now();
 		}
-			
-		return new Text ("=(");
+		return new Text("=(");
 	}
+
+	// <! ==== Users moderating below ===== !>
 	
-	//		<! ==== Users moderating below ===== !>
-	
+	@ApiMethod (name = "getCreatedUsers", httpMethod = "GET", path = "getCreatedUsers")
+	public List<UserEntity> getCreatedUsers (@Named("token") String token) {
+		UserEntity admin = AuthContainer.getUser(token);
+		ArrayList<UserEntity> ret = new ArrayList<>();
+		Key<UserEntity> k = Ref.create(ofy().load().type(UserEntity.class).id(admin.getId()).now()).getKey();
+		for (UserEntity u : ofy().load().type(UserEntity.class).filter("creator", k).list()) {
+			ret.add(u);
+		}
+		return ret;
+	}
+
 	@ApiMethod(name = "promote", httpMethod = "GET", path = "promote")
 	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") String access) {
@@ -114,9 +121,9 @@ public class AdminAPI {
 	public List<String> listSession() {
 		return AuthContainer.testMethod();
 	}
-	
-	@ApiMethod (name = "user.filter2", path = "user/search", httpMethod= "GET")
-	public List<UserEntity> listAnotherUserFilter (@Named ("data") String data) {
+
+	@ApiMethod(name = "user.filter2", path = "user/search", httpMethod = "GET")
+	public List<UserEntity> listAnotherUserFilter(@Named("data") String data) {
 		return UserDAO.searchUsers(data);
 	}
 

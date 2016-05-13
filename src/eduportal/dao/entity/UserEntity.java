@@ -3,6 +3,7 @@ package eduportal.dao.entity;
 import java.security.*;
 import java.util.ArrayList;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.*;
 
@@ -23,6 +24,8 @@ public class UserEntity extends AbstractEntity {
 	private String name;
 	@Index
 	private String surname;
+	@Index
+	private Key<UserEntity> creator;
 	private ArrayList<Long> ordersId;
 	
 	public void addOrder (Order ord) {
@@ -162,6 +165,19 @@ public class UserEntity extends AbstractEntity {
 		for (Order ord : orders) {
 			this.ordersId.add(ord.getId());
 		}
+	}
+
+	public long getCreator() {
+		return creator.getId();
+	}
+	
+	public UserEntity creatorEntity() {
+		return Ref.create(creator).get();
+	}
+
+	public UserEntity setCreator(UserEntity creator) {
+		this.creator = Ref.create(creator).getKey();
+		return this;
 	}
 
 	@Override

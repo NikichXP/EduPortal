@@ -22,6 +22,7 @@ public class OrderAPI {
 
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET") 
 	public List<Order> getAllOrders (@Named ("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
 //		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
 //			return null;
 //		}
@@ -47,7 +48,7 @@ public class OrderAPI {
 	}
 	
 	@ApiMethod (name = "filter", path = "filter", httpMethod = "GET")
-	public List<Order> filterObjects (										//TODO Add security!
+	public List<Order> filterOrders (										//TODO Add security!
 			@Named ("client_name") String clientName, 
 			@Named ("client_id") String clientId, 
 			@Named ("is_paid") String isPaid, 

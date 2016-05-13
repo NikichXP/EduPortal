@@ -246,6 +246,10 @@
           "surname" : {
             "type" : "string"
           },
+          "creator" : {
+            "type" : "string",
+            "format" : "int64"
+          },
           "ordersId" : {
             "type" : "array",
             "items" : {
@@ -259,10 +263,10 @@
               "$ref" : "Order"
             }
           },
-          "idHexString" : {
+          "idString" : {
             "type" : "string"
           },
-          "idString" : {
+          "idHexString" : {
             "type" : "string"
           }
         }
@@ -276,10 +280,12 @@
             "format" : "int64"
           },
           "user" : {
-            "$ref" : "UserEntity"
+            "type" : "string",
+            "format" : "int64"
           },
           "product" : {
-            "$ref" : "Product"
+            "type" : "string",
+            "format" : "int64"
           },
           "price" : {
             "type" : "number"
@@ -296,87 +302,25 @@
             "format" : "date-time"
           },
           "createdBy" : {
-            "$ref" : "UserEntity"
+            "type" : "string",
+            "format" : "int64"
+          },
+          "clientName" : {
+            "type" : "string"
+          },
+          "productName" : {
+            "type" : "string"
+          },
+          "creatorName" : {
+            "type" : "string"
           },
           "donePaid" : {
             "type" : "boolean"
           },
-          "idHexString" : {
-            "type" : "string"
-          },
           "idString" : {
-            "type" : "string"
-          }
-        }
-      },
-      "Product" : {
-        "id" : "Product",
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "title" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "city" : {
-            "$ref" : "City"
-          },
-          "actual" : {
-            "type" : "boolean"
-          },
-          "defaultPrice" : {
-            "type" : "number"
-          },
-          "idHexString" : {
-            "type" : "string"
-          },
-          "idString" : {
-            "type" : "string"
-          }
-        }
-      },
-      "City" : {
-        "id" : "City",
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "country" : {
-            "$ref" : "Country"
-          },
-          "name" : {
             "type" : "string"
           },
           "idHexString" : {
-            "type" : "string"
-          },
-          "idString" : {
-            "type" : "string"
-          }
-        }
-      },
-      "Country" : {
-        "id" : "Country",
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "name" : {
-            "type" : "string"
-          },
-          "idHexString" : {
-            "type" : "string"
-          },
-          "idString" : {
             "type" : "string"
           }
         }

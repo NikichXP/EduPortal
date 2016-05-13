@@ -70,21 +70,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.ping" : {
-      "path" : "ping",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.ping",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "test.rebuild__DB" : {
       "path" : "rebuildDB",
       "httpMethod" : "GET",
@@ -100,6 +85,36 @@
             "required" : true
           }
         },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.testAPI.getAllObj" : {
+      "path" : "getAllObj",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.getAllObj",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.ping" : {
+      "path" : "ping",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.ping",
+      "request" : {
         "body" : "empty"
       },
       "response" : {
@@ -163,14 +178,19 @@
           "$ref" : "StringCollection"
         }
       },
-      "eduportal.api.TestAPI.ping" : {
-        "response" : {
-          "$ref" : "Text"
-        }
-      },
       "eduportal.api.TestAPI.rebuildDB" : {
         "response" : {
           "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.TestAPI.getAllObj" : {
+        "response" : {
+          "$ref" : "_anyCollection"
+        }
+      },
+      "eduportal.api.TestAPI.ping" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }

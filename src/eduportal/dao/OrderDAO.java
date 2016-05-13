@@ -6,6 +6,8 @@ import eduportal.dao.entity.*;
 
 public class OrderDAO {
 	
+	
+	
 	public static Order getOrder (String id) {
 		id = id.trim();
 		return ofy().load().type(Order.class).id(Long.parseLong(id)).now();
@@ -37,5 +39,9 @@ public class OrderDAO {
 		Product p = new Product(title, description, c).setDefaultPrice(defaultPrice);
 		ofy().save().entity(p).now();
 		return true;
+	}
+
+	public static Product getProduct(long product) {
+		return ofy().load().type(Product.class).id(product).now();
 	}
 }

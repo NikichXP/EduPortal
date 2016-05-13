@@ -9,14 +9,17 @@ import com.googlecode.objectify.annotation.*;
 public class Order extends AbstractEntity {
 	
 	@Index
-	private Ref<UserEntity> user;
+	private Key<UserEntity> user;
 	@Index
-	private Ref<Product> product;
+	private Key<Product> product;
 	private double price;
 	private double paid;
 	private Date start;
 	private Date end;
-	private Ref<UserEntity> createdBy;
+	@Index
+	private Key<UserEntity> createdBy;
+	
+	//		<!--- For frontend-only! ---!>
 	
 	protected final int maxIdValue = Integer.MAX_VALUE;
 
@@ -33,12 +36,20 @@ public class Order extends AbstractEntity {
 		return false;
 	}
 
-	public UserEntity getUser() {
-		return user.get();
+	public long getUser() {
+		return user.getId();
+	}
+	
+	public UserEntity userEntity() {
+		return Ref.create(user).get();
 	}
 
-	public Product getProduct() {
-		return product.get();
+	public long getProduct() {
+		return product.getId();
+	}
+	
+	public Product productEntity() {
+		return Ref.create(product).get();
 	}
 
 	public double getPrice() {
@@ -57,16 +68,22 @@ public class Order extends AbstractEntity {
 		return end;
 	}
 
-	public UserEntity getCreatedBy() {
-		return createdBy.get();
+	public long getCreatedBy() {
+		return createdBy.getId();
+	}
+	
+	public UserEntity createdByEntity() {
+		return Ref.create(createdBy).get();
 	}
 
 	public void setUser(UserEntity user) {
-		this.user = Ref.create(user);
+		this.user = Ref.create(user).getKey();
+		this.clientName = user.getSurname() + " " + user.getName();
 	}
 
 	public Order setProduct(Product product) {
-		this.product = Ref.create(product);
+		this.product = Ref.create(product).getKey();
+		this.productName = product.getTitle();
 		return this;
 	}
 
@@ -86,8 +103,9 @@ public class Order extends AbstractEntity {
 		this.end = end;
 	}
 
-	public void setCreatedBy(UserEntity createdBy) {
-		this.createdBy = Ref.create(createdBy);
+	public void setCreatedBy(UserEntity user) {
+		this.createdBy = Ref.create(user).getKey();
+		this.creatorName = user.getSurname() + " " + user.getName();
 	}
 
 	@Override
@@ -95,5 +113,37 @@ public class Order extends AbstractEntity {
 		return this.getClass().getSimpleName() + " [id=" + id +", user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", start="
 				+ start + ", end=" + end + ", createdBy=" + createdBy + "]";
 	}
+	
+//	<!--- For frontend-only! ---!>
+	
+	private String clientName;
+	private String productName;
+	private String creatorName;
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public void setProductName(String orderName) {
+		this.productName = orderName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+	
+	
 	
 }
