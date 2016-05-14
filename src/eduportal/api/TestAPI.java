@@ -22,9 +22,14 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		for (String s : auth.testMethod()) {
-			ret.add(s);
-		}
+		UserEntity moder = ofy().load().type(UserEntity.class).filter("login", "user24").first().now();
+		Object[] arr1 = OrderDAO.getOrdersByUser(moder).toArray();
+		Object[] arr2 = OrderDAO.getSelfOrdersByUser(moder).toArray();
+		Object[] arr3 = OrderDAO.getCreatedOrdersByUser(moder).toArray();
+		ret.add(arr1);
+		ret.add(arr2);
+		ret.add(arr3);
+		
 		ret.add("end");
 		return ret;
 	}

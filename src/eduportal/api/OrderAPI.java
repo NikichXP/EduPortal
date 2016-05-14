@@ -3,7 +3,7 @@ package eduportal.api;
 import java.util.*;
 
 import javax.inject.Inject;
-
+import javax.servlet.http.HttpServletRequest;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.cmd.*;
@@ -11,6 +11,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
+import eduportal.util.UserUtils;
 
 @Api(name = "order", version = "v1")
 public class OrderAPI {
@@ -25,13 +26,13 @@ public class OrderAPI {
 	@Inject
 	private static AuthContainer auth;
 
+	/**
+	 * @return Orders associated with user
+	 */
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET") 
-	public List<Order> getAllOrders (@Named ("token") String token) {
-		UserEntity u = auth.getUser(token);
-//		if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL) == false) {
-//			return null;
-//		}
-		return OrderDAO.getAllOrders();
+	public List<Order> getAllOrders (HttpServletRequest req) {
+		UserEntity u = UserUtils.getUser(req);
+		return ((u == null) ? null : OrderDAO.getOrdersByUser(u));
 	}
 	
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET") 

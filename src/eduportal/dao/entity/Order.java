@@ -19,8 +19,6 @@ public class Order extends AbstractEntity {
 	@Index
 	private Key<UserEntity> createdBy;
 	
-	//		<!--- For frontend-only! ---!>
-	
 	protected final int maxIdValue = Integer.MAX_VALUE;
 
 	public Order() {

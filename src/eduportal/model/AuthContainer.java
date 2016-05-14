@@ -11,7 +11,16 @@ import eduportal.util.AuthToken;
 public class AuthContainer {
 
 	private HashMap<String, AuthSession> sessions = new HashMap<>();
-	private HashSet<Long> users = new HashSet<>();
+	private HashSet<Long> users;
+	
+	private static AuthContainer instance = new AuthContainer();
+	public static AuthContainer getInstance () {
+		return instance;
+	}
+	private AuthContainer () {
+		sessions = new HashMap<>();
+		users = new HashSet<>();
+	}
 
 	public ArrayList<String> testMethod() {
 		ArrayList<String> ret = new ArrayList<>();
@@ -44,7 +53,6 @@ public class AuthContainer {
 		if (user == null) {
 			return null;
 		}
-		System.out.println("1");
 		if (users.contains(user.getId()) == false) {
 			users.add(user.getId());
 		} else {
@@ -54,11 +62,9 @@ public class AuthContainer {
 				}
 			}
 		}
-		System.out.println("2");
 		String token = UUID.randomUUID().toString();
 		AuthSession session = new AuthSession(user);
 		sessions.put(token, session);
-		System.out.println("3");
 		AuthToken ret = new AuthToken();
 		ret.setSessionId(token);
 		ret.setTimeoutTimestamp(System.currentTimeMillis() + SESSION_TIME);
@@ -81,6 +87,7 @@ public class AuthContainer {
 	 * @return - User
 	 */
 	public UserEntity getUser(String token) {
+		if (token == null) return null;
 		UserEntity u = null;
 		try {
 			u = sessions.get(token).getUser();

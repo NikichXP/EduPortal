@@ -29,7 +29,7 @@ public class UserUtils {
 		return sb.toString();
 	}
 	
-	public static UserEntity getUserByCookie (HttpServletRequest req) {
+	public static UserEntity getUser (HttpServletRequest req) {
 		String token = null;
 		for (Cookie c : req.getCookies()) {
 			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
@@ -37,7 +37,18 @@ public class UserUtils {
 				break;
 			}
 		}
-		return (auth.getUser(token));
+		return auth.getUser(token);
 	}
-	
+
+	public static int getAccessLvl(HttpServletRequest req) {
+		String token = null;
+		for (Cookie c : req.getCookies()) {
+			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
+				token = c.getValue();
+				break;
+			}
+		}
+		return (auth.getAccessGroup(token));
+	}
+
 }

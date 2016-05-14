@@ -1,12 +1,32 @@
 package eduportal.dao;
 
 import java.util.*;
+
+import com.googlecode.objectify.*;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.entity.*;
 
 public class OrderDAO {
 	
+	/** Generic method */
+	public static List<Order> getOrdersByUser (UserEntity u) {
+		List<Order> ret = new ArrayList<>();
+		Key<UserEntity> key = Ref.create(u).key();
+		ret = ofy().load().type(Order.class).filter("user", key).list();
+		ret.addAll(ofy().load().type(Order.class).filter("createdBy", key).list());
+		return ret;
+	}
 	
+	public static List<Order> getCreatedOrdersByUser (UserEntity u) {
+		Key<UserEntity> key = Ref.create(u).key();
+		return ofy().load().type(Order.class).filter("createdBy", key).list();
+	}
+	
+	public static List<Order> getSelfOrdersByUser (UserEntity u) {
+		Key<UserEntity> key = Ref.create(u).key();
+		return ofy().load().type(Order.class).filter("user", key).list();
+	}
 	
 	public static Order getOrder (String id) {
 		id = id.trim();

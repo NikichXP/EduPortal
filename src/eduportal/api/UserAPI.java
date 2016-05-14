@@ -14,7 +14,7 @@ import eduportal.util.UserUtils;
 public class UserAPI {
 
 	@Inject
-	private static AuthContainer auth;
+	private static AuthContainer auth = AuthContainer.getInstance();
 
 	@ApiMethod(name = "auth", httpMethod = "GET", path = "auth")
 	public AuthToken auth(@Named("login") String login, @Named("pass") String pass) {
@@ -49,8 +49,8 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
-	public Dummy getName(@Named("token") String token, HttpServletRequest req) {
-		final UserEntity u = UserUtils.getUserByCookie(req);
+	public Dummy getName(HttpServletRequest req) {
+		final UserEntity u = UserUtils.getUser(req);
 		if (u == null) {
 			return null;
 		}
@@ -81,7 +81,7 @@ public class UserAPI {
 	public UserEntity updateUserInfo(@Named("name") @Nullable String name, HttpServletRequest req,
 			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail,
 			@Named("phone") @Nullable String phone) {
-		UserEntity u = UserUtils.getUserByCookie(req);
+		UserEntity u = UserUtils.getUser(req);
 		if (u == null) {
 			return null;
 		}
@@ -110,7 +110,7 @@ public class UserAPI {
 
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
 	public Text changePass(HttpServletRequest req, @Named("exist") String exist, @Named("new") String newpass) {
-		UserEntity u = UserUtils.getUserByCookie(req);
+		UserEntity u = UserUtils.getUser(req);
 		if (u == null) {
 			return new Text("No suitable token recieved");
 		}
