@@ -46,17 +46,17 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "order.filter" : {
-      "path" : "filter",
+    "order.orderAPI.createOrder" : {
+      "path" : "createorder",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.filterOrders",
+      "rosyMethod" : "eduportal.api.OrderAPI.createOrder",
       "request" : {
         "parameters" : {
-          "client_name" : {
+          "product_id" : {
             "type" : "string",
             "required" : true
           },
@@ -64,11 +64,7 @@
             "type" : "string",
             "required" : true
           },
-          "is_paid" : {
-            "type" : "string",
-            "required" : true
-          },
-          "created_by" : {
+          "token" : {
             "type" : "string",
             "required" : true
           }
@@ -100,17 +96,17 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "order.orderAPI.createOrder" : {
-      "path" : "createorder",
+    "order.filter" : {
+      "path" : "filter",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.createOrder",
+      "rosyMethod" : "eduportal.api.OrderAPI.filterOrders",
       "request" : {
         "parameters" : {
-          "product_id" : {
+          "client_name" : {
             "type" : "string",
             "required" : true
           },
@@ -118,7 +114,11 @@
             "type" : "string",
             "required" : true
           },
-          "token" : {
+          "is_paid" : {
+            "type" : "string",
+            "required" : true
+          },
+          "created_by" : {
             "type" : "string",
             "required" : true
           }
@@ -195,6 +195,15 @@
             "items" : {
               "$ref" : "Order"
             }
+          }
+        }
+      },
+      "Text" : {
+        "id" : "Text",
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
           }
         }
       },
@@ -281,15 +290,6 @@
             }
           }
         }
-      },
-      "Text" : {
-        "id" : "Text",
-        "type" : "object",
-        "properties" : {
-          "value" : {
-            "type" : "string"
-          }
-        }
       }
     },
     "methods" : {
@@ -298,9 +298,9 @@
           "$ref" : "OrderCollection"
         }
       },
-      "eduportal.api.OrderAPI.filterOrders" : {
+      "eduportal.api.OrderAPI.createOrder" : {
         "response" : {
-          "$ref" : "OrderCollection"
+          "$ref" : "Text"
         }
       },
       "eduportal.api.OrderAPI.getAllProducts" : {
@@ -308,9 +308,9 @@
           "$ref" : "ProductCollection"
         }
       },
-      "eduportal.api.OrderAPI.createOrder" : {
+      "eduportal.api.OrderAPI.filterOrders" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "OrderCollection"
         }
       }
     }

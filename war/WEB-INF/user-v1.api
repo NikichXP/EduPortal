@@ -168,10 +168,6 @@
             "type" : "string",
             "required" : false
           },
-          "token" : {
-            "type" : "string",
-            "required" : false
-          },
           "surname" : {
             "type" : "string",
             "required" : false

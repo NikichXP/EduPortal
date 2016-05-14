@@ -8,10 +8,11 @@ import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.*;
 import eduportal.util.AuthToken;
+import eduportal.util.UserUtils;
 
-@Api(name = "user", version = "v1", title = "User API", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE))
+@Api(name = "user", version = "v1", title = "User API", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE) )
 public class UserAPI {
-	
+
 	@Inject
 	private static AuthContainer auth;
 
@@ -29,7 +30,6 @@ public class UserAPI {
 
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
 	public Text create(UserEntity user) {
-		System.out.println(user.toString());
 		if (user.hasNull()) {
 			return new Text("One of fields are not filled");
 		}
@@ -50,17 +50,7 @@ public class UserAPI {
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
 	public Dummy getName(@Named("token") String token, HttpServletRequest req) {
-		String token_ = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
-				token_ = c.getValue();
-				break;
-			}
-		}
-		if (token_ == null) {
-			return null;
-		}
-		final UserEntity u = auth.getUser(token_);
+		final UserEntity u = UserUtils.getUserByCookie(req);
 		if (u == null) {
 			return null;
 		}
@@ -88,9 +78,10 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "updateUser", httpMethod = "GET", path = "update")
-	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("token") @Nullable String token,
-			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone) {
-		UserEntity u = auth.getUser(token);
+	public UserEntity updateUserInfo(@Named("name") @Nullable String name, HttpServletRequest req,
+			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail,
+			@Named("phone") @Nullable String phone) {
+		UserEntity u = UserUtils.getUserByCookie(req);
 		if (u == null) {
 			return null;
 		}
@@ -116,28 +107,19 @@ public class UserAPI {
 		u.setPass(null);
 		return u;
 	}
-	
-	@ApiMethod (name = "changePassword", httpMethod = "GET", path = "changepass")
-	public Text changePass (HttpServletRequest req, @Named ("exist") String exist, @Named ("new") String newpass) {
-		String token = null;
-		UserEntity u = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
-				token = c.getValue();
-				break;
-			}
+
+	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
+	public Text changePass(HttpServletRequest req, @Named("exist") String exist, @Named("new") String newpass) {
+		UserEntity u = UserUtils.getUserByCookie(req);
+		if (u == null) {
+			return new Text("No suitable token recieved");
 		}
-		try {
-			u = auth.getUser(token);
-			if (u.getPass().equals(UserEntity.encodePass(exist))) {
-				u.setPass(newpass);
-				UserDAO.update(u);
-				return new Text ("Done successfully");
-			} else {
-				return new Text ("Wrong password");
-			}
-		} catch (Exception e){
-			return new Text ("No suitable token recieved");
+		if (u.getPass().equals(UserUtils.encodePass(exist))) {
+			u.setPass(newpass);
+			UserDAO.update(u);
+			return new Text("Done successfully");
+		} else {
+			return new Text("Wrong password");
 		}
 	}
 

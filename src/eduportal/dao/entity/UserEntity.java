@@ -1,11 +1,10 @@
 package eduportal.dao.entity;
 
-import java.security.*;
 import java.util.ArrayList;
-
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
+
+import eduportal.util.UserUtils;
 
 @Entity
 public class UserEntity extends AbstractEntity {
@@ -58,25 +57,6 @@ public class UserEntity extends AbstractEntity {
 			return false;
 		}
 	}
-	
-	private static MessageDigest mDigest = null;
-	static {
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** Encodes password with SHA-512 */
-	public static String encodePass (String pass) {
-		byte[] result = mDigest.digest(pass.getBytes());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < result.length; i++) {
-			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-		}
-		return sb.toString();
-	}
 
 	public UserEntity() {
 		super();
@@ -124,7 +104,7 @@ public class UserEntity extends AbstractEntity {
 			this.pass = null;
 			return;
 		}
-		this.pass = encodePass(pass);
+		this.pass = UserUtils.encodePass(pass);
 	}
 
 	public UserEntity setAccessGroup(int accessGroup) {
