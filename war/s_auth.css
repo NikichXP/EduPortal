@@ -29,7 +29,7 @@ body {
 #div-auth-text-block {
 	height: 40px;
 	width: 100%;
-	background-color: #688bb0;
+	background-color: #435ea4;
 	text-align: center;
 	line-height: 40px;
 }
@@ -41,7 +41,7 @@ body {
 #div-send-button {
 	height: 40px;
 	width: 80px;
-	background-color: #688bb0;
+	background-color: #5269b1;
 	color: #fff;
 	text-align: center;
 	line-height: 40px;
@@ -70,7 +70,7 @@ body {
 #header-main {
 	height: 100%;
 	width: 95%;
-	background-color: #688bb0;
+	background-color: #435ea4;
 	margin: auto;
 	border-radius: 0 0 20px 20px;
 }

@@ -29,10 +29,75 @@ body {
 	z-index: 501;
 }
 
+#order-client-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+	cursor: pointer;
+}
+
+#button-client-edit {
+	height: 40px;
+	width: 80px;
+	background-color: #5269b1;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+#client-list {
+	margin: auto;
+	left: 35%;
+	top: 19%;
+	background-color: #f1f1f1;
+	display: none;
+	position: absolute;
+	z-index: 502;
+}
+
+#client-list-head {
+	width: 100%;
+	background-color: #435ea4;
+	text-align: center;
+	color: #fff;
+	line-height: 20px;
+	margin: 0;
+}
+
+#table-client-list {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	width: 100%;
+	font-size: 11px
+}
+
+#table-client-list td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#table-client-list thead {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+	background-color: #82a8bc;
+}
+
+.td-client-list:hover {
+	cursor: pointer;
+	background-color: #82a8bc;
+}
+
 #order-edit-text-block {
 	height: 40px;
 	width: 100%;
-	background-color: #688bb0;
+	background-color: #435ea4;
 	text-align: center;
 	line-height: 40px;
 }
@@ -48,7 +113,6 @@ body {
 	text-align: center;
 }
 
-
 #header {
 	height: 80px;
 	width: 100%;
@@ -59,7 +123,7 @@ body {
 #header-main {
 	height: 100%;
 	width: 95%;
-	background-color: #688bb0;
+	background-color: /* #688bb0; */ #435ea4;
 	margin: auto;
 	border-radius: 0 0 20px 20px;
 }
@@ -115,7 +179,7 @@ body {
 
 #ul-side-menu li:hover {
 	list-style: none;
-	background-color: #688bb0;
+	background-color: #5269b1;
 	color: #fff;
 }
 
@@ -138,7 +202,7 @@ body {
 }
 
 #div-order-table {
-	height: 492px;
+	height: 505px;
 	width: 95%;
 	margin: auto;
 	overflow-y: scroll;
@@ -159,11 +223,13 @@ body {
 	text-align: center;
 }
 .tr-order:hover {
+	background-color: #82a8bc;
+}
+.td-order-edit:hover {
 	cursor: pointer;
-	background-color: #ccc;
 }
 
 #table-orders-header {
-	background-color: #d9e0e7;
+	background-color: #82a8bc;
 }
 
