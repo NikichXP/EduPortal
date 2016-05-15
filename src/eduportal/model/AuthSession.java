@@ -12,7 +12,7 @@ class AuthSession {
 
 	public AuthSession(UserEntity u) {
 		this.user = u;
-		this.accessLevel = u.getAccessGroup();
+		this.accessLevel = u.getAccessLevel().getAccessGroup();
 		this.timeout = System.currentTimeMillis() + AuthContainer.SESSION_TIME;
 	}
 

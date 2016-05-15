@@ -79,15 +79,15 @@ public class TestAPI {
 		}
 		UserEntity[] users = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
-						.setAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
+						.defineAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
 				new UserEntity("order", "order", "New", "Order", "+123456789015", "kelly@neworder.org")
-						.setAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
 				new UserEntity("adminus", "adminus", "Adminus", "Maximus", "+123456789016", "virto@asus.com")
-						.setAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
 				new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now")
-						.setAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
 				new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")
-						.setAccessGroup(AccessSettings.MIN_MODERATOR_LVL) };
+						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL) };
 		for (UserEntity user : users) {
 			user.setCreator(users[0]);
 		}

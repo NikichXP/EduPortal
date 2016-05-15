@@ -75,7 +75,7 @@ public class UserDAO {
 	}
 
 	public static UserEntity get(String login, String pass) {
-		if (pass.length() != 128) {
+		if (pass.length() != UserUtils.CRYPTOLENGTH) {
 			pass = UserUtils.encodePass(pass);
 		}
 		UserEntity u = null;

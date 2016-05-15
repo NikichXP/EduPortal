@@ -58,7 +58,7 @@
         "parameters" : {
           "token" : {
             "type" : "string",
-            "required" : false
+            "required" : true
           }
         },
         "body" : "empty"
@@ -121,6 +121,39 @@
           "token" : {
             "type" : "string",
             "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "order.editOrder" : {
+      "path" : "editorder",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.editOrder",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "clientid" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "paid" : {
+            "type" : "string",
+            "required" : true
+          },
+          "value1" : {
+            "type" : "string",
+            "required" : false
           }
         },
         "body" : "empty"
@@ -309,6 +342,11 @@
         }
       },
       "eduportal.api.OrderAPI.createOrder" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.OrderAPI.editOrder" : {
         "response" : {
           "$ref" : "Text"
         }

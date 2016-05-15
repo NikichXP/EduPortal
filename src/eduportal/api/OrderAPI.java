@@ -1,8 +1,6 @@
 package eduportal.api;
 
 import java.util.*;
-
-import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.cmd.*;
@@ -23,7 +21,7 @@ public class OrderAPI {
 	 * @return Orders associated with user
 	 */
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET")
-	public List<Order> getAllOrders(@Named("token") @Nullable String token) {
+	public List<Order> getAllOrders(@Named("token") String token) {
 		UserEntity u = null;
 		if (token != null) {
 			u = AuthContainer.getUser(token);
@@ -32,8 +30,8 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
-	public Text editOrder(@Named("id") long id, @Named("value1") @Nullable String value1,
-			@Named("value1") @Nullable String value2, @Named("value1") @Nullable String value3) {
+	public Text editOrder(@Named("id") long id, @Named("clientid") long clientid,
+			@Named("paid") String paid, @Named("value1") @Nullable String value3) {
 		return new Text(id + "");
 	}
 

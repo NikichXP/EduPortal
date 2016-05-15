@@ -7,8 +7,8 @@ import com.googlecode.objectify.annotation.*;
 @Entity
 public class Permission extends AbstractEntity {
 	
-	/** 0 is user, 1 is agent, 2 is moderator, 48720 is admin */
-	private int category;
+	/** @see AccessSettings.class */
+	private int accessGroup; //is a accessGroup
 	private HashSet<Long> country;
 	private HashSet<Long> city;
 	@Index
@@ -16,7 +16,7 @@ public class Permission extends AbstractEntity {
 	
 	public Permission () {
 		super();
-		category = 0;
+		accessGroup = 0;
 		country = new HashSet<>();
 		city = new HashSet<>();
 	}
@@ -29,10 +29,6 @@ public class Permission extends AbstractEntity {
 		country.add(Ref.create(c).getKey().getId());
 	}
 
-	public int getCategory() {
-		return category;
-	}
-
 	public HashSet<Long> getCountry() {
 		return country;
 	}
@@ -43,10 +39,6 @@ public class Permission extends AbstractEntity {
 
 	public String getOrgName() {
 		return orgName;
-	}
-
-	public void setCategory(int category) {
-		this.category = category;
 	}
 
 	public void setCountry(HashSet<Long> country) {
@@ -72,10 +64,18 @@ public class Permission extends AbstractEntity {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
+	
+	public int getAccessGroup() {
+		return accessGroup;
+	}
+
+	public void setAccessGroup(int accessGroup) {
+		this.accessGroup = accessGroup;
+	}
 
 	@Override
 	public String toString() {
-		return "Permission [category=" + category + ", country=" + country + ", city=" + city + ", orgName=" + orgName
+		return "Permission [category=" + accessGroup + ", country=" + country + ", city=" + city + ", orgName=" + orgName
 				+ "]";
 	}
 
@@ -83,7 +83,7 @@ public class Permission extends AbstractEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + category;
+		result = prime * result + accessGroup;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + ((orgName == null) ? 0 : orgName.hashCode());
@@ -102,7 +102,7 @@ public class Permission extends AbstractEntity {
 			return false;
 		}
 		Permission other = (Permission) obj;
-		if (category != other.category) {
+		if (accessGroup != other.accessGroup) {
 			return false;
 		}
 		if (city == null) {

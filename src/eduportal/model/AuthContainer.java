@@ -22,7 +22,7 @@ public class AuthContainer {
 			ret.add("Session: " + s + "  ==  " + sessions.get(s).getUser());
 			ret.add("Token_t: " + s + "  ==  "
 					+ (((double) sessions.get(s).getTimeout() - System.currentTimeMillis()) / (1000 * 3600)));
-			ret.add("Access : " + s + "  ==  " + sessions.get(s).getAccessLevel());
+			ret.add("Access : " + s + "  ==  " + sessions.get(s).getUser().getAccessLevel().getAccessGroup());
 		}
 		return ret;
 	}

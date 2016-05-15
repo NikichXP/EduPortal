@@ -20,9 +20,7 @@ public class UserEntity extends AbstractEntity {
 	private String phone;
 	@Index
 	private String mail;
-	@Index
-	private int accessGroup = 0;
-	private Permission permission;
+	private Permission accessLevel;
 	@Index
 	private String name;
 	@Index
@@ -62,7 +60,7 @@ public class UserEntity extends AbstractEntity {
 	public UserEntity() {
 		super();
 		this.ordersId = new ArrayList<>();
-		this.permission = new Permission();
+		this.accessLevel = new Permission();
 	}
 
 	public UserEntity(String login, String pass, String name, String surname, String phone, String mail) {
@@ -73,9 +71,8 @@ public class UserEntity extends AbstractEntity {
 		this.mail = mail;
 		this.phone = phone;
 		this.pass = UserUtils.encodePass(pass);
-		this.accessGroup = 0;
+		this.accessLevel = new Permission();
 		this.ordersId = new ArrayList<>();
-		this.permission = new Permission();
 	}
 
 	public String getLogin() {
@@ -86,8 +83,8 @@ public class UserEntity extends AbstractEntity {
 		return pass;
 	}
 
-	public int getAccessGroup() {
-		return accessGroup;
+	public int accessGroup() {
+		return accessLevel.getAccessGroup();
 	}
 
 	public String getName() {
@@ -109,8 +106,8 @@ public class UserEntity extends AbstractEntity {
 		this.pass = UserUtils.encodePass(pass);
 	}
 
-	public UserEntity setAccessGroup(int accessGroup) {
-		this.accessGroup = accessGroup;
+	public UserEntity defineAccessGroup(int accessGroup) {
+		this.accessLevel.setAccessGroup(accessGroup);
 		return this;
 	}
 
@@ -162,23 +159,28 @@ public class UserEntity extends AbstractEntity {
 		return this;
 	}
 
-	public Permission getPermission() {
-		return permission;
+	public Permission getAccessLevel() {
+		return accessLevel;
 	}
 
-	public void setPermission(Permission permission) {
-		this.permission = permission;
+	public void setAccessLevel(Permission accessLevel) {
+		this.accessLevel = accessLevel;
+	}
+
+	public void setOrdersId(ArrayList<Long> ordersId) {
+		this.ordersId = ordersId;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + accessGroup;
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((accessLevel == null) ? 0 : accessLevel.hashCode());
+		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((ordersId == null) ? 0 : ordersId.hashCode());
 		result = prime * result + ((pass == null) ? 0 : pass.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
@@ -197,10 +199,18 @@ public class UserEntity extends AbstractEntity {
 			return false;
 		}
 		UserEntity other = (UserEntity) obj;
-		if (accessGroup != other.accessGroup) {
+		if (accessLevel == null) {
+			if (other.accessLevel != null) {
+				return false;
+			}
+		} else if (!accessLevel.equals(other.accessLevel)) {
 			return false;
 		}
-		if (id != other.id) {
+		if (creator == null) {
+			if (other.creator != null) {
+				return false;
+			}
+		} else if (!creator.equals(other.creator)) {
 			return false;
 		}
 		if (login == null) {
@@ -222,6 +232,13 @@ public class UserEntity extends AbstractEntity {
 				return false;
 			}
 		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (ordersId == null) {
+			if (other.ordersId != null) {
+				return false;
+			}
+		} else if (!ordersId.equals(other.ordersId)) {
 			return false;
 		}
 		if (pass == null) {
@@ -251,8 +268,8 @@ public class UserEntity extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "UserEntity [login=" + login + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail
-				+ ", accessGroup=" + accessGroup + ", name=" + name + ", surname=" + surname + ", ordersId=" + ordersId
-				+ "]";
+				+ ", accessLevel=" + accessLevel + ", name=" + name + ", surname=" + surname + ", creator=" + creator
+				+ ", ordersId=" + ordersId + "]";
 	}
-
+	
 }

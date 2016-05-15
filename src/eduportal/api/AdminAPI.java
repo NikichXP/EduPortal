@@ -97,7 +97,7 @@ public class AdminAPI {
 			return u;
 		}
 		try {
-			u.setAccessGroup(Integer.parseInt(access));
+			u.defineAccessGroup(Integer.parseInt(access));
 		} catch (Exception e) {
 			return null;
 		}

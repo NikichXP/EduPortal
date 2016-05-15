@@ -10,13 +10,7 @@ public class DeletedUser extends UserEntity{
 	private Date deleted; 
 	
 	public DeletedUser(UserEntity u) {
-		this.setId(u.getId());
-		this.setAccessGroup(u.getAccessGroup());
-		this.setName(u.getName());
-		this.setPass(u.getPass());
-		this.setLogin(u.getLogin());
-		this.deleted = new Date();
-		// TODO More fields!
+		//TODO Deleted User
 	}
 	
 	public Date getDeleted() { return deleted; }

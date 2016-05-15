@@ -46,7 +46,7 @@ public class UserAPI {
 		if (!user.getPhone().matches("[+]{0,1}[0-9]{10,12}")) {
 			return new Text("Phone is invalid");
 		}
-		user.setAccessGroup(0);
+		user.defineAccessGroup(0);
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
 			return new Text("User is probably registered");
