@@ -6,6 +6,7 @@ import eduportal.model.AccessSettings;
 
 public class UserUtils {
 	
+	public static final int CRYPTOLENGTH = 128;
 	private static MessageDigest mDigest = null;
 	static {
 		try {
@@ -28,7 +29,7 @@ public class UserUtils {
 	
 	
 	public UserEntity setModerator (UserEntity u) {
-		u.getPermission().setCategory(AccessSettings.MIN_MODERATOR_LVL);
+		u.getAccessLevel().setAccessGroup(AccessSettings.MIN_MODERATOR_LVL);
 		return u;
 	}
 	
