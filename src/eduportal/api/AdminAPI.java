@@ -3,13 +3,10 @@ package eduportal.api;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
 
-import javax.inject.Inject;
 
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.cmd.*;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
@@ -24,9 +21,6 @@ public class AdminAPI {
 			Country.class, City.class, Order.class };
 	public final static String[] objectifiedClassesNames = { "UserEntity", "DeletedUser", "Product", "Country", "City",
 			"Order" };
-	
-	@Inject
-	private static AuthContainer auth;
 
 	static {
 		ObjectifyService.begin();
@@ -91,22 +85,11 @@ public class AdminAPI {
 	}
 
 	// <! ==== Users moderating below ===== !>
-	
-	@ApiMethod (name = "getCreatedUsers", httpMethod = "GET", path = "getCreatedUsers")
-	public List<UserEntity> getCreatedUsers (@Named("token") String token) {
-		UserEntity admin = auth.getUser(token);
-		ArrayList<UserEntity> ret = new ArrayList<>();
-		Key<UserEntity> k = Ref.create(ofy().load().type(UserEntity.class).id(admin.getId()).now()).getKey();
-		for (UserEntity u : ofy().load().type(UserEntity.class).filter("creator", k).list()) {
-			ret.add(u);
-		}
-		return ret;
-	}
 
 	@ApiMethod(name = "promote", httpMethod = "GET", path = "promote")
 	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") String access) {
-		if (auth.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
+		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
 		}
 		UserEntity u = UserDAO.get(target);
@@ -125,7 +108,7 @@ public class AdminAPI {
 
 	@ApiMethod(name = "listSessions", path = "list/session", httpMethod = "GET")
 	public List<String> listSession() {
-		return auth.testMethod();
+		return AuthContainer.testMethod();
 	}
 
 	@ApiMethod(name = "user.filter2", path = "user/search", httpMethod = "GET")
@@ -134,8 +117,8 @@ public class AdminAPI {
 	}
 
 	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")
-	public List<UserEntity> listUserFilter(@Named("login") String login, @Named("phone") String phone,
-			@Named("name") String name, @Named("mail") String mail) {
+	public List<UserEntity> listUserFilter(@Named("login") @Nullable String login, @Named("phone") @Nullable String phone,
+			@Named("name") @Nullable String name, @Named("mail") @Nullable String mail) {
 		Query<UserEntity> q = ofy().load().kind("UserEntity");
 
 		List<UserEntity> ret = new ArrayList<>();

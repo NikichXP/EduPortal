@@ -1,29 +1,17 @@
 package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import java.security.*;
 import java.util.*;
-
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.cmd.Query;
 
 import eduportal.dao.entity.*;
+import eduportal.util.UserUtils;
 
 public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "login", "phone" };
-
-	// Cryptoengine
-	private static MessageDigest mDigest;
-	private static final int CRYPTOLENGTH = 128;
-
-	static {
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone) {
 		if (ofy().load().kind("UserEntity").filter("login == ", login).list().isEmpty() == false) {
 			return null;
@@ -87,13 +75,8 @@ public class UserDAO {
 	}
 
 	public static UserEntity get(String login, String pass) {
-		if (pass.length() != CRYPTOLENGTH) {
-			byte[] result = mDigest.digest(pass.getBytes());
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < result.length; i++) {
-				sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			pass = sb.toString();
+		if (pass.length() != 128) {
+			pass = UserUtils.encodePass(pass);
 		}
 		UserEntity u = null;
 		for (String par : credentialVariables) {
@@ -127,5 +110,10 @@ public class UserDAO {
 	public static UserEntity create(UserEntity user) {
 		ofy().save().entity(user).now();
 		return user;
+	}
+
+	public static List<UserEntity> getClients(UserEntity u) {
+		Key<UserEntity> key = Ref.create(u).getKey();
+		return ofy().load().type(UserEntity.class).filter("creator", key).list();
 	}
 }

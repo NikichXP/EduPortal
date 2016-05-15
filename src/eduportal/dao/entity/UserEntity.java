@@ -1,20 +1,20 @@
 package eduportal.dao.entity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
+
+import eduportal.util.UserUtils;
 
 @Entity
 public class UserEntity extends AbstractEntity {
 
 	@Index
-	private String login;
-	@Index
+	private String login;	
 	/**
 	 * Pass is always encoded
 	 */
+	@Index
 	private String pass;
 	@Index
 	private String phone;
@@ -22,6 +22,7 @@ public class UserEntity extends AbstractEntity {
 	private String mail;
 	@Index
 	private int accessGroup = 0;
+	private Permission permission;
 	@Index
 	private String name;
 	@Index
@@ -29,16 +30,7 @@ public class UserEntity extends AbstractEntity {
 	@Index
 	private Key<UserEntity> creator;
 	private ArrayList<Long> ordersId;
-	
-	private static MessageDigest mDigest = null;
-	static {
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-	}
-	
+		
 	public void addOrder (Order ord) {
 		long id = ord.getId();
 		for (long l : ordersId) {
@@ -70,6 +62,7 @@ public class UserEntity extends AbstractEntity {
 	public UserEntity() {
 		super();
 		this.ordersId = new ArrayList<>();
+		this.permission = new Permission();
 	}
 
 	public UserEntity(String login, String pass, String name, String surname, String phone, String mail) {
@@ -79,9 +72,10 @@ public class UserEntity extends AbstractEntity {
 		this.login = login;
 		this.mail = mail;
 		this.phone = phone;
-		this.pass = encodePass(pass);
+		this.pass = UserUtils.encodePass(pass);
 		this.accessGroup = 0;
 		this.ordersId = new ArrayList<>();
+		this.permission = new Permission();
 	}
 
 	public String getLogin() {
@@ -112,7 +106,7 @@ public class UserEntity extends AbstractEntity {
 		if (pass == null) {
 			return;
 		}
-		this.pass = encodePass(pass);
+		this.pass = UserUtils.encodePass(pass);
 	}
 
 	public UserEntity setAccessGroup(int accessGroup) {
@@ -168,14 +162,12 @@ public class UserEntity extends AbstractEntity {
 		return this;
 	}
 
-	/** Encodes password with SHA-512 */
-	public static String encodePass (String pass) {
-		byte[] result = mDigest.digest(pass.getBytes());
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < result.length; i++) {
-			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-		}
-		return sb.toString();
+	public Permission getPermission() {
+		return permission;
+	}
+
+	public void setPermission(Permission permission) {
+		this.permission = permission;
 	}
 
 	@Override

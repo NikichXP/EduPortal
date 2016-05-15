@@ -114,4 +114,17 @@ public class AuthContainer {
 		}
 	}
 	
+	public static boolean checkToken (String token) {
+		if (token == null) {
+			return false;
+		}
+		if (sessions.get(token) == null) {
+			return false;
+		}
+		if (sessions.get(token).getTimeout() <= System.currentTimeMillis()) {
+			return false;
+		}
+		return true;
+	}
+	
 }

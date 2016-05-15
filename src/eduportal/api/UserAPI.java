@@ -1,12 +1,13 @@
 package eduportal.api;
 
+import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.*;
-import eduportal.util.AuthToken;
+import eduportal.util.*;
 
 @Api(name = "user", version = "v1", title = "User API") //, auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE)
 public class UserAPI {
@@ -15,12 +16,23 @@ public class UserAPI {
 	public AuthToken auth(@Named("login") String login, @Named("pass") String pass) {
 		return AuthContainer.authenticate(login, pass);
 	}
+	
+	@ApiMethod(name = "checkToken", httpMethod = "GET", path = "checkToken") 
+	public Text checkToken (@Named ("token") String token) {
+		return ((AuthContainer.checkToken(token) == true) ? new Text ("true") : new Text ("false"));
+	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
 	public AuthToken register(@Named("name") String name, @Named("pass") String pass, @Named("login") String login,
 			@Named("surname") String surname, @Named("phone") String phone, @Named("mail") String mail) {
 		UserDAO.create(login, pass, name, surname, phone, mail);
 		return AuthContainer.authenticate(login, pass);
+	}
+	
+	@ApiMethod (name = "getMyClients", path = "getMyClients", httpMethod = "GET")
+	public List<UserEntity> getMyUsers (@Named("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
+		return ((u == null) ? null : UserDAO.getClients(u));
 	}
 
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
@@ -131,7 +143,7 @@ public class UserAPI {
 		if (u == null) {
 			return new Text("No suitable token recieved");
 		}
-		if (u.getPass().equals(UserEntity.encodePass(exist))) {
+		if (u.getPass().equals(UserUtils.encodePass(exist))) {
 			u.setPass(newpass);
 			UserDAO.update(u);
 			return new Text("Done successfully");

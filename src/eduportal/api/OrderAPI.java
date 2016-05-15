@@ -23,18 +23,18 @@ public class OrderAPI {
 	 * @return Orders associated with user
 	 */
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET")
-	public List<Order> getAllOrders(HttpServletRequest req, @Named("token") @Nullable String token) {
+	public List<Order> getAllOrders(@Named("token") @Nullable String token) {
 		UserEntity u = null;
-		if (token == null) {
-			for (Cookie c : req.getCookies()) {
-				if (c.getName().equals("sesToken")) {
-					u = AuthContainer.getUser(c.getValue());
-				}
-			}
-		} else {
+		if (token != null) {
 			u = AuthContainer.getUser(token);
 		}
 		return ((u == null) ? null : OrderDAO.getOrdersByUser(u));
+	}
+
+	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
+	public Text editOrder(@Named("id") long id, @Named("value1") @Nullable String value1,
+			@Named("value1") @Nullable String value2, @Named("value1") @Nullable String value3) {
+		return new Text(id + "");
 	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")
