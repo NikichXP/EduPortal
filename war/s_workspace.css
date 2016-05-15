@@ -2,16 +2,50 @@ body {
 	margin: 0px;
 	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
 	font-size: 14px; 
+	background-color: #f1f1f1;
+	z-index: 100;
 }
 
-#opacity{
+#opacity {
 	height: 100%;
 	width: 100%;
-	background-color: #fff;
+	background-color: #f1f1f1;
 	display: none;
 	position: absolute;
-	opacity: 0.5;
+	opacity: 0.8;
 	z-index: 500;
+}
+
+#order-edit-form {
+	margin: auto;
+	height: 600px;
+	width: 50%;
+	left: 25%;
+	top: 10%;
+	background-color: #f1f1f1;
+	border: 1px solid #d9e0e7;
+	display: none;
+	position: absolute;
+	z-index: 501;
+}
+
+#order-edit-text-block {
+	height: 40px;
+	width: 100%;
+	background-color: #688bb0;
+	text-align: center;
+	line-height: 40px;
+}
+#order-edit-text-block H2 {
+	color: #fff;
+	margin: 0px;
+}
+
+#order-edit-main {
+	margin: auto;
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
 }
 
 
@@ -19,7 +53,7 @@ body {
 	height: 80px;
 	width: 100%;
 	min-width: 930px;
-	background-color: #fff;
+	background-color: #f1f1f1;
 }
 
 #header-main {
@@ -59,7 +93,7 @@ body {
 	width: 15%;
 	min-width: 130px;
 	height: 100%;
-	background-color: #fff;
+	background-color: #f1f1f1;
 	position: relative;
 	float: left;
 }
@@ -104,12 +138,12 @@ body {
 }
 
 #div-order-table {
-	height: 300px;
+	height: 492px;
 	width: 95%;
 	margin: auto;
 	overflow-y: scroll;
 	overflow-x: hidden;
-	}
+}
 
 #table-orders {
 	border: 1px solid #d9e0e7;
@@ -123,6 +157,10 @@ body {
 	border-spacing: 0px;
 	padding: 10px 5px 10px 5px;
 	text-align: center;
+}
+.tr-order:hover {
+	cursor: pointer;
+	background-color: #ccc;
 }
 
 #table-orders-header {

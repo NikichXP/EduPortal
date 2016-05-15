@@ -12,11 +12,25 @@
 	
 	
 	<body>
-		<div id="opacity"></div>
+		<div id="opacity"></div>	
+		<div id="order-edit-form">
+			<div id="order-edit-text-block"><H2>Редактирование заказа</H2></div>
+				<div id="order-edit-main">	
+					<label for="order-id"></label><br/>
+					<label for="order-client-name">Клиент: </label><br/>
+					<input type="text" id="order-client-name" name="order-client-name"><br/>
+					<label for="order-product-name">Продукт: </label><br/>
+					<input type="text" id="order-product-name" name="order-product-name"><br/>
+					<label for="login">Оплата произведена: </label><br/>
+					<input type="radio" id="done-paid-yes" name="done-paid">Да<br/>
+					<input type="radio" id="done-paid-no" name="done-paid">Нет<br/>
+				</div>
+		</div>
+		
 		<div id="header">
 			<div id="header-main"><H1>EduPortal</H1></div>
 		</div>
-		
+
 		<div id="main">
 			<div id="div-side-menu">
 				<ul id="ul-side-menu">
@@ -49,6 +63,7 @@
 				</div>
 			</div>
 		</div>
+	
 		<div id="footer"></div>
 	</body>
 </html>
