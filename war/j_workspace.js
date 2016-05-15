@@ -87,6 +87,7 @@
 					"<td class='td-client-list'>" + resData.items[count].name + " " + resData.items[count].surname + "</td>"
 					);
 					count++;
+					if (count == imax) break;
 				}
 				$('#table-client-list').append("</tr>");				
 			}
