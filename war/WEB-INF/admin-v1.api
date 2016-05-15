@@ -26,29 +26,111 @@
     "maxAge" : 0
   },
   "methods" : {
-    "admin.addProduct" : {
-      "path" : "product/add",
+    "admin.createCity" : {
+      "path" : "create/city",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.addProduct",
+      "rosyMethod" : "eduportal.api.AdminAPI.addCity",
       "request" : {
         "parameters" : {
-          "title" : {
+          "city" : {
             "type" : "string",
             "required" : true
           },
-          "description" : {
-            "type" : "string",
-            "required" : true
-          },
-          "cityid" : {
+          "country" : {
             "type" : "string",
             "required" : true
           }
         },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "admin.setActive" : {
+      "path" : "product/active",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.setActualProduct",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "admin.getCreatedUsers" : {
+      "path" : "getCreatedUsers",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.getCreatedUsers",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "admin.promote" : {
+      "path" : "promote",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.promoteUser",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          },
+          "target" : {
+            "type" : "string",
+            "required" : true
+          },
+          "access" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "admin.listSessions" : {
+      "path" : "list/session",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.listSession",
+      "request" : {
         "body" : "empty"
       },
       "response" : {
@@ -88,103 +170,25 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "admin.listSessions" : {
-      "path" : "list/session",
+    "admin.addProduct" : {
+      "path" : "product/add",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.listSession",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "admin.promote" : {
-      "path" : "promote",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.promoteUser",
+      "rosyMethod" : "eduportal.api.AdminAPI.addProduct",
       "request" : {
         "parameters" : {
-          "token" : {
+          "title" : {
             "type" : "string",
             "required" : true
           },
-          "target" : {
+          "description" : {
             "type" : "string",
             "required" : true
           },
-          "access" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "admin.getCreatedUsers" : {
-      "path" : "getCreatedUsers",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.getCreatedUsers",
-      "request" : {
-        "parameters" : {
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "admin.setActive" : {
-      "path" : "product/active",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.setActualProduct",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "admin.user.filter2" : {
-      "path" : "user/search",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.listAnotherUserFilter",
-      "request" : {
-        "parameters" : {
-          "data" : {
+          "cityid" : {
             "type" : "string",
             "required" : true
           }
@@ -216,21 +220,17 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "admin.createCity" : {
-      "path" : "create/city",
+    "admin.user.filter2" : {
+      "path" : "user/search",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.addCity",
+      "rosyMethod" : "eduportal.api.AdminAPI.listAnotherUserFilter",
       "request" : {
         "parameters" : {
-          "city" : {
-            "type" : "string",
-            "required" : true
-          },
-          "country" : {
+          "data" : {
             "type" : "string",
             "required" : true
           }
@@ -387,29 +387,9 @@
       }
     },
     "methods" : {
-      "eduportal.api.AdminAPI.addProduct" : {
+      "eduportal.api.AdminAPI.addCity" : {
         "response" : {
           "$ref" : "Text"
-        }
-      },
-      "eduportal.api.AdminAPI.listUserFilter" : {
-        "response" : {
-          "$ref" : "UserEntityCollection"
-        }
-      },
-      "eduportal.api.AdminAPI.listSession" : {
-        "response" : {
-          "$ref" : "StringCollection"
-        }
-      },
-      "eduportal.api.AdminAPI.promoteUser" : {
-        "response" : {
-          "$ref" : "UserEntity"
-        }
-      },
-      "eduportal.api.AdminAPI.getCreatedUsers" : {
-        "response" : {
-          "$ref" : "UserEntityCollection"
         }
       },
       "eduportal.api.AdminAPI.setActualProduct" : {
@@ -417,9 +397,29 @@
           "$ref" : "Text"
         }
       },
-      "eduportal.api.AdminAPI.listAnotherUserFilter" : {
+      "eduportal.api.AdminAPI.getCreatedUsers" : {
         "response" : {
           "$ref" : "UserEntityCollection"
+        }
+      },
+      "eduportal.api.AdminAPI.promoteUser" : {
+        "response" : {
+          "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.AdminAPI.listSession" : {
+        "response" : {
+          "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.AdminAPI.listUserFilter" : {
+        "response" : {
+          "$ref" : "UserEntityCollection"
+        }
+      },
+      "eduportal.api.AdminAPI.addProduct" : {
+        "response" : {
+          "$ref" : "Text"
         }
       },
       "eduportal.api.AdminAPI.setUnActualProduct" : {
@@ -427,9 +427,9 @@
           "$ref" : "Text"
         }
       },
-      "eduportal.api.AdminAPI.addCity" : {
+      "eduportal.api.AdminAPI.listAnotherUserFilter" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "UserEntityCollection"
         }
       }
     }

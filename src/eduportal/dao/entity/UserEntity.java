@@ -1,10 +1,10 @@
 package eduportal.dao.entity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
-
-import eduportal.util.UserUtils;
 
 @Entity
 public class UserEntity extends AbstractEntity {
@@ -29,6 +29,15 @@ public class UserEntity extends AbstractEntity {
 	@Index
 	private Key<UserEntity> creator;
 	private ArrayList<Long> ordersId;
+	
+	private static MessageDigest mDigest = null;
+	static {
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void addOrder (Order ord) {
 		long id = ord.getId();
@@ -70,7 +79,7 @@ public class UserEntity extends AbstractEntity {
 		this.login = login;
 		this.mail = mail;
 		this.phone = phone;
-		
+		this.pass = encodePass(pass);
 		this.accessGroup = 0;
 		this.ordersId = new ArrayList<>();
 	}
@@ -101,10 +110,9 @@ public class UserEntity extends AbstractEntity {
 
 	public void setPass(String pass) {
 		if (pass == null) {
-			this.pass = null;
 			return;
 		}
-		this.pass = UserUtils.encodePass(pass);
+		this.pass = encodePass(pass);
 	}
 
 	public UserEntity setAccessGroup(int accessGroup) {
@@ -158,6 +166,16 @@ public class UserEntity extends AbstractEntity {
 	public UserEntity setCreator(UserEntity creator) {
 		this.creator = Ref.create(creator).getKey();
 		return this;
+	}
+
+	/** Encodes password with SHA-512 */
+	public static String encodePass (String pass) {
+		byte[] result = mDigest.digest(pass.getBytes());
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < result.length; i++) {
+			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		return sb.toString();
 	}
 
 	@Override

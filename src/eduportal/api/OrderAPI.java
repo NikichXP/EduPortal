@@ -2,7 +2,6 @@ package eduportal.api;
 
 import java.util.*;
 
-import javax.inject.Inject;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
@@ -11,7 +10,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
-import eduportal.util.UserUtils;
 
 @Api(name = "order", version = "v1")
 public class OrderAPI {
@@ -20,9 +18,6 @@ public class OrderAPI {
 	 * We need: 1.: List active products 2.: Assign product to user: moderator,
 	 * admin, partner 3.:
 	 */
-
-	@Inject
-	private static AuthContainer auth = AuthContainer.getInstance();
 
 	/**
 	 * @return Orders associated with user
@@ -33,11 +28,11 @@ public class OrderAPI {
 		if (token == null) {
 			for (Cookie c : req.getCookies()) {
 				if (c.getName().equals("sesToken")) {
-					u = auth.getUser(c.getValue());
+					u = AuthContainer.getUser(c.getValue());
 				}
 			}
 		} else {
-			u = auth.getUser(token);
+			u = AuthContainer.getUser(token);
 		}
 		return ((u == null) ? null : OrderDAO.getOrdersByUser(u));
 	}

@@ -1,41 +1,62 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
-
-import javax.inject.Inject;
 import javax.servlet.http.*;
-
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
-import com.googlecode.objectify.*;
 
-@Api(name = "test", version = "v1", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE))
+@Api(name = "test", version = "v1")
 public class TestAPI {
-	
-	@Inject
-	private static AuthContainer auth;
+
+	private static String[] credentialVariables = { "mail", "login", "phone" };
+	// Cryptoengine
+	private static MessageDigest mDigest;
+	private static final int CRYPTOLENGTH = 128;
+
+	static {
+		try {
+			mDigest = MessageDigest.getInstance("SHA-512");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		UserEntity moder = ofy().load().type(UserEntity.class).filter("login", "user24").first().now();
-		Object[] arr1 = OrderDAO.getOrdersByUser(moder).toArray();
-		Object[] arr2 = OrderDAO.getSelfOrdersByUser(moder).toArray();
-		Object[] arr3 = OrderDAO.getCreatedOrdersByUser(moder).toArray();
-		ret.add(arr1);
-		ret.add(arr2);
-		ret.add(arr3);
-		
+		String login = "user24";
+		String pass = "pass24";
+		if (pass.length() != CRYPTOLENGTH) {
+			byte[] result = mDigest.digest(pass.getBytes());
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < result.length; i++) {
+				sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			pass = sb.toString();
+		}
+		ret.add(pass);
+		ret.add("Pass crypted");
+		UserEntity u = null;
+		for (String par : credentialVariables) {
+			u = ofy().load().type(UserEntity.class).filter(par, login).first().now(); //.filter("pass == ", pass)
+			ret.add(u);
+			if (u != null) {
+				
+			}
+		}
 		ret.add("end");
 		return ret;
 	}
-	
-	@ApiMethod (path = "cookies", httpMethod = "GET")
-	public ArrayList<Object> testCookies (HttpServletRequest req) {
+
+	@ApiMethod(path = "cookies", httpMethod = "GET")
+	public ArrayList<Object> testCookies(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
 		for (Cookie c : req.getCookies()) {
 			ret.add(c.getName() + " " + c.getValue());
@@ -75,7 +96,7 @@ public class TestAPI {
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new UserEntity("user" + i, "pass" + i, clientName[2 * i], clientName[2 * i + 1],
 					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
-					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase()).setCreator(users[i%5]);
+					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase()).setCreator(users[i % 5]);
 		}
 		ofy().save().entities(users);
 		ofy().save().entities(clients);
@@ -121,7 +142,7 @@ public class TestAPI {
 		for (Order ord : o) {
 			i++;
 			ord.setUser(clients[i % clients.length]);
-			ord.setCreatedBy(users[i % 3]);
+			ord.setCreatedBy(users[i % users.length]);
 			ord.setProduct(p[i % p.length]);
 			ord.setPrice((double) Math.round(Math.random() * 10_000_00) / 100);
 			if (Math.random() > 0.5) {
@@ -142,10 +163,10 @@ public class TestAPI {
 				ret.add(o.toString());
 			}
 		}
-		ret.addAll(auth.testMethod());
+		ret.addAll(AuthContainer.testMethod());
 		return ret;
 	}
-	
+
 	@ApiMethod(path = "getAllObj", httpMethod = "GET")
 	public List<Object> getAllObj() {
 		List<Object> ret = new ArrayList<>();
@@ -154,7 +175,7 @@ public class TestAPI {
 				ret.add(o);
 			}
 		}
-		ret.addAll(auth.testMethod());
+		ret.addAll(AuthContainer.testMethod());
 		return ret;
 	}
 

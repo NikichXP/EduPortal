@@ -1,6 +1,5 @@
 package eduportal.api;
 
-import javax.inject.Inject;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
@@ -8,24 +7,20 @@ import eduportal.dao.UserDAO;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.*;
 import eduportal.util.AuthToken;
-import eduportal.util.UserUtils;
 
-@Api(name = "user", version = "v1", title = "User API", auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE) )
+@Api(name = "user", version = "v1", title = "User API") //, auth = @ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE)
 public class UserAPI {
-
-	@Inject
-	private static AuthContainer auth = AuthContainer.getInstance();
 
 	@ApiMethod(name = "auth", httpMethod = "GET", path = "auth")
 	public AuthToken auth(@Named("login") String login, @Named("pass") String pass) {
-		return auth.authenticate(login, pass);
+		return AuthContainer.authenticate(login, pass);
 	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
 	public AuthToken register(@Named("name") String name, @Named("pass") String pass, @Named("login") String login,
 			@Named("surname") String surname, @Named("phone") String phone, @Named("mail") String mail) {
 		UserDAO.create(login, pass, name, surname, phone, mail);
-		return auth.authenticate(login, pass);
+		return AuthContainer.authenticate(login, pass);
 	}
 
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
@@ -44,7 +39,7 @@ public class UserAPI {
 		if (u == null) {
 			return new Text("User is probably registered");
 		}
-		return new Text("SID=" + auth.authenticate(user.getLogin(), user.getPass()).getSessionId());
+		return new Text("SID=" + AuthContainer.authenticate(user.getLogin(), user.getPass()).getSessionId());
 
 	}
 
@@ -56,11 +51,11 @@ public class UserAPI {
 			System.out.println("token null");
 			for (Cookie c : req.getCookies()) {
 				if (c.getName().equals("sesToken")) {
-					t = auth.getUser(c.getValue());
+					t = AuthContainer.getUser(c.getValue());
 				}
 			}
 		} else {
-			t = auth.getUser(token);
+			t = AuthContainer.getUser(token);
 		}
 		u = t;
 		if (u == null) {
@@ -96,7 +91,7 @@ public class UserAPI {
 		UserEntity u = null;
 		for (Cookie c : req.getCookies()) {
 			if (c.getName().equals("sesToken")) {
-				u = auth.getUser(c.getValue());
+				u = AuthContainer.getUser(c.getValue());
 			}
 		}
 		if (u == null) {
@@ -130,13 +125,13 @@ public class UserAPI {
 		UserEntity u = null;
 		for (Cookie c : req.getCookies()) {
 			if (c.getName().equals("sesToken")) {
-				u = auth.getUser(c.getValue());
+				u = AuthContainer.getUser(c.getValue());
 			}
 		}
 		if (u == null) {
 			return new Text("No suitable token recieved");
 		}
-		if (u.getPass().equals(UserUtils.encodePass(exist))) {
+		if (u.getPass().equals(UserEntity.encodePass(exist))) {
 			u.setPass(newpass);
 			UserDAO.update(u);
 			return new Text("Done successfully");
@@ -147,7 +142,7 @@ public class UserAPI {
 
 	@ApiMethod(name = "deleteUser", httpMethod = "delete", path = "delete")
 	public Text userDelete(@Named("target") String target, @Named("token") String token) {
-		if (auth.getAccessGroup(token) >= AccessSettings.MIN_MODERATOR_LVL) {
+		if (AuthContainer.getAccessGroup(token) >= AccessSettings.MIN_MODERATOR_LVL) {
 			UserDAO.delete(target);
 			return new Text("Success");
 		}

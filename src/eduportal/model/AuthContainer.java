@@ -2,27 +2,21 @@ package eduportal.model;
 
 import java.util.*;
 
-import com.google.api.server.spi.config.*;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.util.AuthToken;
 
-@Singleton
 public class AuthContainer {
 
-	private HashMap<String, AuthSession> sessions = new HashMap<>();
-	private HashSet<Long> users;
+	private static HashMap<String, AuthSession> sessions;
+	private static HashSet<Long> users;
 	
-	private static AuthContainer instance = new AuthContainer();
-	public static AuthContainer getInstance () {
-		return instance;
-	}
-	private AuthContainer () {
+	static {
 		sessions = new HashMap<>();
 		users = new HashSet<>();
 	}
-
-	public ArrayList<String> testMethod() {
+	
+	public static ArrayList<String> testMethod() {
 		ArrayList<String> ret = new ArrayList<>();
 		for (String s : sessions.keySet()) {
 			ret.add("Session: " + s + "  ==  " + sessions.get(s).getUser());
@@ -47,8 +41,7 @@ public class AuthContainer {
 	 *            - user's pass
 	 * @return String token if login and pass are true; null if bad credentials
 	 */
-	public AuthToken authenticate(String login, String pass) {
-		System.out.println("Getting user creds");
+	public static AuthToken authenticate(String login, String pass) {
 		UserEntity user = UserDAO.get(login, pass);
 		if (user == null) {
 			return null;
@@ -71,7 +64,7 @@ public class AuthContainer {
 		return ret;
 	}
 
-	public boolean checkReq(String token, int acclvl) {
+	public static boolean checkReq(String token, int acclvl) {
 		if (sessions.get(token).getAccessLevel() >= acclvl) {
 			return true;
 		} else {
@@ -86,7 +79,7 @@ public class AuthContainer {
 	 *            - session id
 	 * @return - User
 	 */
-	public UserEntity getUser(String token) {
+	public static UserEntity getUser(String token) {
 		if (token == null) return null;
 		UserEntity u = null;
 		try {
@@ -105,7 +98,7 @@ public class AuthContainer {
 		return null;
 	}
 
-	public int getAccessGroup(String token) {
+	public static int getAccessGroup(String token) {
 		return sessions.get(token).getAccessLevel();
 	}
 
@@ -115,10 +108,10 @@ public class AuthContainer {
 	 * @param token
 	 *            - sessionID to update
 	 */
-	public void updateTimeout(String token) {
+	public static void updateTimeout(String token) {
 		if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
 			sessions.get(token).setTimeout(System.currentTimeMillis() + SESSION_TIME);
 		}
 	}
-
+	
 }
