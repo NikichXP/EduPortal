@@ -98,6 +98,18 @@
           "size" : {
             "type" : "string",
             "required" : true
+          },
+          "usersize" : {
+            "type" : "int32",
+            "required" : false
+          },
+          "ordersize" : {
+            "type" : "int32",
+            "required" : false
+          },
+          "shuffled" : {
+            "type" : "boolean",
+            "required" : false
           }
         },
         "body" : "empty"

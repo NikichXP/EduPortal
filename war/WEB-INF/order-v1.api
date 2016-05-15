@@ -141,15 +141,15 @@
         "parameters" : {
           "id" : {
             "type" : "int64",
-            "required" : true
+            "required" : false
           },
           "clientid" : {
             "type" : "int64",
-            "required" : true
+            "required" : false
           },
           "paid" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "value1" : {
             "type" : "string",

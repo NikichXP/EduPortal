@@ -45,10 +45,10 @@ public class TestAPI {
 		ret.add("Pass crypted");
 		UserEntity u = null;
 		for (String par : credentialVariables) {
-			u = ofy().load().type(UserEntity.class).filter(par, login).first().now(); //.filter("pass == ", pass)
+			u = ofy().load().type(UserEntity.class).filter(par, login).first().now(); 
 			ret.add(u);
 			if (u != null) {
-				
+
 			}
 		}
 		ret.add("end");
@@ -70,14 +70,15 @@ public class TestAPI {
 	}
 
 	@ApiMethod(name = "Rebuild__DB", path = "rebuildDB", httpMethod = "GET")
-	public List<String> rebuildDB(@Named("size") String size) {
-		ofy().cache(false).flush();
+	public List<String> rebuildDB(@Named("size") String size, @Named("usersize") @Nullable Integer usersize,
+			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled) {
+		ofy().cache(true).flush();
 		for (Class<?> clazz : AdminAPI.objectifiedClasses) {
 			for (Object u : ofy().load().kind(clazz.getSimpleName()).list()) {
 				ofy().delete().entity(u).now();
 			}
 		}
-		UserEntity[] users = {
+		UserEntity[] admins = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
 						.defineAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
 				new UserEntity("order", "order", "New", "Order", "+123456789015", "kelly@neworder.org")
@@ -88,17 +89,47 @@ public class TestAPI {
 						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
 				new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")
 						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL) };
-		for (UserEntity user : users) {
-			user.setCreator(users[0]);
+		for (UserEntity user : admins) {
+			user.setCreator(admins[0]);
 		}
-		UserEntity[] clients = new UserEntity[100];
+		UserEntity[] clients;
+		int dbsize;
+		switch (size) {
+		case "big":
+			dbsize = 100;
+			break;
+		case "large":
+			dbsize = 500;
+			break;
+		case "ultra":
+			dbsize = 1_000;
+			break;
+		case "mega":
+			dbsize = 10_000;
+			break;
+		case "fuck":
+			dbsize = 512_000;
+			break;
+		default:
+			dbsize = 20;
+			break;
+		}
+		clients = new UserEntity[100];
+		Order o[] = new Order[dbsize];
+		if (usersize != null) {
+			clients = new UserEntity[usersize];
+		}
+		if (ordersize != null) {
+			o = new Order[ordersize];
+		}
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new UserEntity("user" + i, "pass" + i, clientName[2 * i], clientName[2 * i + 1],
 					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
-					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase()).setCreator(users[i % 5]);
+					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase())
+							.setCreator(admins[i % 5]);
 		}
-		ofy().save().entities(users);
+		ofy().save().entities(admins);
 		ofy().save().entities(clients);
 		City[] c = { GeoDAO.createCity("Kiev", "Ukraine"), GeoDAO.createCity("Lvov", "Ukraine"),
 				GeoDAO.createCity("Prague", "Czech Republic"), GeoDAO.createCity("Budapest", "Hungary"),
@@ -112,38 +143,26 @@ public class TestAPI {
 				new Product("КПИ", "Как же без него?", c[0]), };
 
 		ProductDAO.save(p);
-		int ordersize;
-		switch (size) {
-		case "big":
-			ordersize = 100;
-			break;
-		case "large":
-			ordersize = 500;
-			break;
-		case "ultra":
-			ordersize = 1_000;
-			break;
-		case "mega":
-			ordersize = 10_000;
-			break;
-		case "fuck":
-			ordersize = 512_000;
-			break;
-		default:
-			ordersize = 20;
-			break;
-		}
-		Order o[] = new Order[ordersize];
+
 		for (int ptr = 0; ptr < o.length; ptr++) {
 			o[ptr] = new Order();
 		}
-
+		if (shuffled == null) {
+			shuffled = false;
+		}
+		Random r = new Random();
 		int i = 0;
 		for (Order ord : o) {
 			i++;
-			ord.setUser(clients[i % clients.length]);
-			ord.setCreatedBy(users[i % users.length]);
-			ord.setProduct(p[i % p.length]);
+			if (shuffled) {
+				ord.setUser(clients[r.nextInt(clients.length)]);
+				ord.setCreatedBy(admins[i % admins.length]);
+				ord.setProduct(p[r.nextInt(p.length)]);
+			} else {
+				ord.setUser(clients[i % clients.length]);
+				ord.setCreatedBy(admins[i % admins.length]);
+				ord.setProduct(p[i % p.length]);
+			}
 			ord.setPrice((double) Math.round(Math.random() * 10_000_00) / 100);
 			if (Math.random() > 0.5) {
 				ord.setPaid(ord.getPrice());

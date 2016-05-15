@@ -30,9 +30,8 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
-	public Text editOrder(@Named("id") long id, @Named("clientid") long clientid,
-			@Named("paid") String paid, @Named("value1") @Nullable String value3) {
-		return new Text(id + "");
+	public Text editOrder(@Named("id") @Nullable Long id, @Named("clientid") @Nullable Long clientid, @Named("paid") @Nullable String paid, @Named("value1") @Nullable String value3) {
+		return new Text(id+"");
 	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")

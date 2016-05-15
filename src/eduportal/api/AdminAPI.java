@@ -1,13 +1,11 @@
 package eduportal.api;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
+//
+//import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
-
 
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.*;
-import com.googlecode.objectify.cmd.*;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
@@ -59,14 +57,14 @@ public class AdminAPI {
 	}
 
 	@ApiMethod(name = "setInactive", httpMethod = "GET", path = "product/inactive")
-	public Text setUnActualProduct(@Named("id") String id) {
+	public Text setUnActualProduct(@Named("id") Long id) {
 		if (id == null) {
 			return new Text("No id sent");
 		}
-		Product p = ofy().load().type(Product.class).id(Long.parseLong(id)).now();
+		Product p = ProductDAO.get(id);
 		if (p != null) {
 			p.setActual(false);
-			ofy().save().entity(p).now();
+			ProductDAO.save(p);
 		}
 		return new Text("=(");
 	}
@@ -76,19 +74,19 @@ public class AdminAPI {
 		if (id == null) {
 			return new Text("No id sent");
 		}
-		Product p = ofy().load().type(Product.class).id(Long.parseLong(id)).now();
+		Product p = ProductDAO.get(id);
 		if (p != null) {
 			p.setActual(true);
-			ofy().save().entity(p).now();
+			ProductDAO.save(p);
 		}
 		return new Text("=(");
 	}
 
 	// <! ==== Users moderating below ===== !>
 
-	@ApiMethod(name = "promote", httpMethod = "GET", path = "promote")
-	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
-			@Named("access") String access) {
+	@ApiMethod(name = "setModerator", httpMethod = "GET", path = "setModerator")
+	public UserEntity promoteUser(@Named("token") String token, @Named("target") Long target,
+			@Named("access") Integer access) {
 		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
 		}
@@ -96,14 +94,23 @@ public class AdminAPI {
 		if (u == null) {
 			return u;
 		}
-		try {
-			u.defineAccessGroup(Integer.parseInt(access));
-		} catch (Exception e) {
-			return null;
-		}
+		u.defineAccessGroup(access);
 		UserDAO.update(u);
 		u.setPass(null);
 		return u;
+	}
+	
+	@ApiMethod (name = "allowCountry", httpMethod = "GET", path = "allowCountry")
+	public UserEntity allowCountry (@Named("token") String token, @Named("countryid") Long countryid, @Named("userid") Long userid) {
+		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
+			return null;
+		}
+		Country c = GeoDAO.getCountryById(countryid);
+		UserEntity user = UserDAO.get(userid);
+		user.getAccessLevel().addCountry(c);
+		UserDAO.update(user);
+		user.wipeSecData();
+		return user;
 	}
 
 	@ApiMethod(name = "listSessions", path = "list/session", httpMethod = "GET")
@@ -111,45 +118,5 @@ public class AdminAPI {
 		return AuthContainer.testMethod();
 	}
 
-	@ApiMethod(name = "user.filter2", path = "user/search", httpMethod = "GET")
-	public List<UserEntity> listAnotherUserFilter(@Named("data") String data) {
-		return UserDAO.searchUsers(data);
-	}
-
-	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")
-	public List<UserEntity> listUserFilter(@Named("login") @Nullable String login, @Named("phone") @Nullable String phone,
-			@Named("name") @Nullable String name, @Named("mail") @Nullable String mail) {
-		Query<UserEntity> q = ofy().load().kind("UserEntity");
-
-		List<UserEntity> ret = new ArrayList<>();
-		if (login != null) {
-			q = q.filter("login >=", login).filter("login <= ", login + "\uFFFD");
-		}
-		if (phone != null) {
-			q = q.filter("phone >=", phone).filter("phone <= ", phone + "\uFFFD");
-		}
-		if (mail != null) {
-			q = q.filter("mail >=", mail).filter("mail <= ", mail + "\uFFFD");
-		}
-		if (name != null) {
-			if (name.split(" ").length > 1) {
-				for (String key : name.split(" ")) {
-					for (UserEntity elem : q.iterable()) {
-						if (elem.getName().contains(key) || elem.getSurname().contains(key)) {
-							ret.add(elem);
-						}
-					}
-				}
-			} else {
-				Query<UserEntity> q1 = q.filter("name >=", name).filter("name <= ", name + "\uFFFD"),
-						q2 = q.filter("surname >=", name).filter("surname <= ", name + "\uFFFD");
-				ret = q1.list();
-				ret.addAll(q2.list());
-			}
-		}
-		if (ret.isEmpty()) {
-			ret = q.list();
-		}
-		return ret;
-	}
+	
 }

@@ -87,7 +87,7 @@ public class UserDAO {
 		}
 		return null;
 	}
-
+	
 	public static void update(UserEntity u) {
 		ofy().save().entity(u).now();
 	}
@@ -115,5 +115,39 @@ public class UserDAO {
 	public static List<UserEntity> getClients(UserEntity u) {
 		Key<UserEntity> key = Ref.create(u).getKey();
 		return ofy().load().type(UserEntity.class).filter("creator", key).list();
+	}
+
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login) {
+		Query<UserEntity> q = ofy().load().type(UserEntity.class);
+		List<UserEntity> ret = new ArrayList<>();
+		if (login != null) {
+			q = q.filter("login >=", login).filter("login <= ", login + "\uFFFD");
+		}
+		if (phone != null) {
+			q = q.filter("phone >=", phone).filter("phone <= ", phone + "\uFFFD");
+		}
+		if (mail != null) {
+			q = q.filter("mail >=", mail).filter("mail <= ", mail + "\uFFFD");
+		}
+		if (name != null) {
+			if (name.split(" ").length > 1) {
+				for (String key : name.split(" ")) {
+					for (UserEntity elem : q.iterable()) {
+						if (elem.getName().contains(key) || elem.getSurname().contains(key)) {
+							ret.add(elem);
+						}
+					}
+				}
+			} else {
+				Query<UserEntity> q1 = q.filter("name >=", name).filter("name <= ", name + "\uFFFD"),
+						q2 = q.filter("surname >=", name).filter("surname <= ", name + "\uFFFD");
+				ret = q1.list();
+				ret.addAll(q2.list());
+			}
+		}
+		if (ret.isEmpty()) {
+			ret = q.list();
+		}
+		return ret;
 	}
 }

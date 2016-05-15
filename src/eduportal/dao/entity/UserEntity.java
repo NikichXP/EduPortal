@@ -271,5 +271,9 @@ public class UserEntity extends AbstractEntity {
 				+ ", accessLevel=" + accessLevel + ", name=" + name + ", surname=" + surname + ", creator=" + creator
 				+ ", ordersId=" + ordersId + "]";
 	}
+
+	public void wipeSecData() {
+		this.pass = null;
+	}
 	
 }

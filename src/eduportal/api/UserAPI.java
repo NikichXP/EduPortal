@@ -34,7 +34,19 @@ public class UserAPI {
 		UserEntity u = AuthContainer.getUser(token);
 		return ((u == null) ? null : UserDAO.getClients(u));
 	}
+	
+	@ApiMethod(name = "user.filter.anyData", path = "user/search", httpMethod = "GET")
+	public List<UserEntity> listAnotherUserFilter(@Named("data") String data) {
+		return UserDAO.searchUsers(data);
+	}
 
+	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")
+	public List<UserEntity> listUserFilter(@Named("login") @Nullable String login,
+			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
+			@Named("mail") @Nullable String mail) {
+		return UserDAO.searchUsers(phone, name, mail, login);
+	}
+	
 	@ApiMethod(name = "create", httpMethod = "POST", path = "create")
 	public Text create(UserEntity user) {
 		if (user.hasNull()) {
