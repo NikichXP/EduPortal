@@ -107,7 +107,7 @@
 		data: tokenJson,
 		success: function(resData) { 
 			$('label[for="order-id"]').html("ID заказа: " + resData.items[rowIndex].id);
-			$('#order-client-name').append(resData.items[rowIndex].clientName);	
+			$('#order-client-name').html(resData.items[rowIndex].clientName);	
 			$('#order-product-name').val(resData.items[rowIndex].productName);	
 			
 			if (resData.items[rowIndex].donePaid == true) var radioChecked = "#done-paid-yes";
