@@ -49,19 +49,19 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
-	public Dummy getName(final HttpServletRequest req) {
+	public Dummy getName(final HttpServletRequest req, @Named("token") @Nullable String token) {
 		final UserEntity u;
 		UserEntity t = null;
-//		if (token == null) {
+		if (token == null) {
 			System.out.println("token null");
 			for (Cookie c : req.getCookies()) {
 				if (c.getName().equals("sesToken")) {
 					t = auth.getUser(c.getValue());
 				}
 			}
-//		} else {
-//			t = auth.getUser(token);
-//		}
+		} else {
+			t = auth.getUser(token);
+		}
 		u = t;
 		if (u == null) {
 			return null;
