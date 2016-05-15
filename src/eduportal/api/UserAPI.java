@@ -49,8 +49,20 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
-	public Dummy getName(HttpServletRequest req) {
-		final UserEntity u = UserUtils.getUser(req);
+	public Dummy getName(final HttpServletRequest req) {
+		final UserEntity u;
+		UserEntity t = null;
+//		if (token == null) {
+			System.out.println("token null");
+			for (Cookie c : req.getCookies()) {
+				if (c.getName().equals("sesToken")) {
+					t = auth.getUser(c.getValue());
+				}
+			}
+//		} else {
+//			t = auth.getUser(token);
+//		}
+		u = t;
 		if (u == null) {
 			return null;
 		}
@@ -81,7 +93,12 @@ public class UserAPI {
 	public UserEntity updateUserInfo(@Named("name") @Nullable String name, HttpServletRequest req,
 			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail,
 			@Named("phone") @Nullable String phone) {
-		UserEntity u = UserUtils.getUser(req);
+		UserEntity u = null;
+		for (Cookie c : req.getCookies()) {
+			if (c.getName().equals("sesToken")) {
+				u = auth.getUser(c.getValue());
+			}
+		}
 		if (u == null) {
 			return null;
 		}
@@ -110,7 +127,12 @@ public class UserAPI {
 
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
 	public Text changePass(HttpServletRequest req, @Named("exist") String exist, @Named("new") String newpass) {
-		UserEntity u = UserUtils.getUser(req);
+		UserEntity u = null;
+		for (Cookie c : req.getCookies()) {
+			if (c.getName().equals("sesToken")) {
+				u = auth.getUser(c.getValue());
+			}
+		}
 		if (u == null) {
 			return new Text("No suitable token recieved");
 		}

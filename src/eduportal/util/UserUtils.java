@@ -8,7 +8,7 @@ import eduportal.model.AuthContainer;
 
 public class UserUtils {
 	
-	@Inject private static AuthContainer auth;
+	@Inject private static AuthContainer auth = AuthContainer.getInstance();
 	
 	private static MessageDigest mDigest = null;
 	static {
@@ -27,28 +27,6 @@ public class UserUtils {
 			sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
 		}
 		return sb.toString();
-	}
-	
-	public static UserEntity getUser (HttpServletRequest req) {
-		String token = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
-				token = c.getValue();
-				break;
-			}
-		}
-		return auth.getUser(token);
-	}
-
-	public static int getAccessLvl(HttpServletRequest req) {
-		String token = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) { //XXX: name of cookie can be changed!
-				token = c.getValue();
-				break;
-			}
-		}
-		return (auth.getAccessGroup(token));
 	}
 
 }

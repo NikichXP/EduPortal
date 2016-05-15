@@ -33,6 +33,15 @@ public class TestAPI {
 		ret.add("end");
 		return ret;
 	}
+	
+	@ApiMethod (path = "cookies", httpMethod = "GET")
+	public ArrayList<Object> testCookies (HttpServletRequest req) {
+		ArrayList<Object> ret = new ArrayList<>();
+		for (Cookie c : req.getCookies()) {
+			ret.add(c.getName() + " " + c.getValue());
+		}
+		return ret;
+	}
 
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")
 	public Text ping() {
