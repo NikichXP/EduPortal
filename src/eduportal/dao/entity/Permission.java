@@ -12,7 +12,7 @@ public class Permission extends AbstractEntity {
 	private HashSet<Long> country;
 	private HashSet<Long> city;
 	@Index
-	private String orgName;
+	private Key<Corporation> corporation;
 	
 	public Permission () {
 		super();
@@ -37,8 +37,16 @@ public class Permission extends AbstractEntity {
 		return city;
 	}
 
-	public String getOrgName() {
-		return orgName;
+	public long getCorporation() {
+		return corporation.getId();
+	}
+
+	public void setCorporation(Corporation corporation) {
+		this.corporation = Ref.create(corporation).getKey();
+	}
+	
+	public Corporation corporationEntity () {
+		return Ref.create(corporation).get();
 	}
 
 	public void setCountry(HashSet<Long> country) {
@@ -60,10 +68,6 @@ public class Permission extends AbstractEntity {
 			city.add(c.getId());
 		}
 	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
 	
 	public int getAccessGroup() {
 		return accessGroup;
@@ -75,7 +79,7 @@ public class Permission extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Permission [category=" + accessGroup + ", country=" + country + ", city=" + city + ", orgName=" + orgName
+		return "Permission [category=" + accessGroup + ", country=" + country + ", city=" + city + ", orgName=" + corporation
 				+ "]";
 	}
 
@@ -86,7 +90,7 @@ public class Permission extends AbstractEntity {
 		result = prime * result + accessGroup;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((orgName == null) ? 0 : orgName.hashCode());
+		result = prime * result + ((corporation == null) ? 0 : corporation.hashCode());
 		return result;
 	}
 
@@ -119,11 +123,11 @@ public class Permission extends AbstractEntity {
 		} else if (!country.equals(other.country)) {
 			return false;
 		}
-		if (orgName == null) {
-			if (other.orgName != null) {
+		if (corporation == null) {
+			if (other.corporation != null) {
 				return false;
 			}
-		} else if (!orgName.equals(other.orgName)) {
+		} else if (!corporation.equals(other.corporation)) {
 			return false;
 		}
 		return true;

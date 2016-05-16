@@ -37,8 +37,8 @@ public class OrderDAO {
 		return ofy().load().type(Order.class).list();
 	}
 
-	public static List<Product> getAllProducts() {
-		return ofy().load().type(Product.class).list();
+	public static List<Product> getAllProducts(boolean isActual) {
+		return ofy().load().type(Product.class).filter("actual", isActual).list();
 	}
 	
 	public static void saveOrder (Order o) {
@@ -64,4 +64,10 @@ public class OrderDAO {
 	public static Product getProduct(long product) {
 		return ofy().load().type(Product.class).id(product).now();
 	}
+
+	public static Order getOrder(Long id) {
+		return ofy().load().type(Order.class).id(id).now();
+	}
+
+	
 }

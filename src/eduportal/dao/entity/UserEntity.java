@@ -156,6 +156,7 @@ public class UserEntity extends AbstractEntity {
 
 	public UserEntity setCreator(UserEntity creator) {
 		this.creator = Ref.create(creator).getKey();
+		this.accessLevel.setCorporation(creator.getAccessLevel().corporationEntity());
 		return this;
 	}
 

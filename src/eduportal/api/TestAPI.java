@@ -63,6 +63,14 @@ public class TestAPI {
 		}
 		return ret;
 	}
+	
+	@ApiMethod(name = "listSessions", path = "listsession", httpMethod = "GET")
+	public List<String> listSession(@Named ("token") String token) { //TODO 
+		if (!AccessLogic.canSeeTokens(token)) {
+			return null;
+		}
+		return AuthContainer.testMethod();
+	}
 
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")
 	public Text ping() {
@@ -73,27 +81,37 @@ public class TestAPI {
 	public List<String> rebuildDB(@Named("size") String size, @Named("usersize") @Nullable Integer usersize,
 			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled) {
 		ofy().cache(true).flush();
-		for (Class<?> clazz : AdminAPI.objectifiedClasses) {
+		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object u : ofy().load().kind(clazz.getSimpleName()).list()) {
 				ofy().delete().entity(u).now();
 			}
 		}
+		Corporation corp = new Corporation("Vedi Tour Group");
 		UserEntity[] admins = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
 						.defineAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
 				new UserEntity("order", "order", "New", "Order", "+123456789015", "kelly@neworder.org")
-						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("adminus", "adminus", "Adminus", "Maximus", "+123456789016", "virto@asus.com")
-						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now")
-						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL),
+						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")
-						.defineAccessGroup(AccessSettings.MIN_MODERATOR_LVL) };
+						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL) };
+		corp.setOwner(admins[0]);
+		ofy().save().entity(corp).now();
+		for (UserEntity user : admins) {
+			user.setAccessLevel(new Permission());
+			user.getAccessLevel().setCorporation(corp);
+		}
 		for (UserEntity user : admins) {
 			user.setCreator(admins[0]);
 		}
 		UserEntity[] clients;
 		int dbsize;
+		if (size == null) {
+			size = "norm";
+		}
 		switch (size) {
 		case "big":
 			dbsize = 100;
@@ -128,6 +146,7 @@ public class TestAPI {
 					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
 					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase())
 							.setCreator(admins[i % 5]);
+			clients[i].getAccessLevel().setCorporation(corp);
 		}
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);
@@ -141,7 +160,9 @@ public class TestAPI {
 				new Product("Высшая школа Лондона", "Описание программы", c[4]),
 				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
-
+		for (Product prod : p) {
+			prod.setActual(Math.random()>0.5);
+		}
 		ProductDAO.save(p);
 
 		for (int ptr = 0; ptr < o.length; ptr++) {
@@ -177,7 +198,7 @@ public class TestAPI {
 	@ApiMethod(path = "getAll", httpMethod = "GET")
 	public List<String> getAll() {
 		List<String> ret = new ArrayList<>();
-		for (Class<?> clazz : AdminAPI.objectifiedClasses) {
+		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object o : ofy().load().kind(clazz.getSimpleName()).list()) {
 				ret.add(o.toString());
 			}
@@ -189,7 +210,7 @@ public class TestAPI {
 	@ApiMethod(path = "getAllObj", httpMethod = "GET")
 	public List<Object> getAllObj() {
 		List<Object> ret = new ArrayList<>();
-		for (Class<?> clazz : AdminAPI.objectifiedClasses) {
+		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object o : ofy().load().kind(clazz.getSimpleName()).list()) {
 				ret.add(o);
 			}

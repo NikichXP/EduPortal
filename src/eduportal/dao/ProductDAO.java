@@ -23,6 +23,10 @@ public class ProductDAO {
 		return ofy().load().type(Product.class).list();
 	}
 	
+	public static List<Product> getAllProducts() {
+		return ofy().load().type(Product.class).list();
+	}
+	
 	public static List<Product> getActual() {
 		return ofy().load().type(Product.class).filter("actual", true).list();
 	}

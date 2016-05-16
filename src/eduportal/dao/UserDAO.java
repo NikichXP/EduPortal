@@ -6,13 +6,14 @@ import com.googlecode.objectify.*;
 import com.googlecode.objectify.cmd.Query;
 
 import eduportal.dao.entity.*;
+import eduportal.model.AccessSettings;
 import eduportal.util.UserUtils;
 
 public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "login", "phone" };
 	
-	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone) {
+	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone, UserEntity creator) {
 		if (ofy().load().kind("UserEntity").filter("login == ", login).list().isEmpty() == false) {
 			return null;
 		}
@@ -29,9 +30,13 @@ public class UserDAO {
 		u.setMail(mail);
 		u.setPhone(phone);
 		u.setSurname(surname);
+		u.setAccessLevel(new Permission());
+		u.getAccessLevel().setCorporation(creator.getAccessLevel().corporationEntity());
+		u.setCreator(creator);
 		ofy().save().entity(u).now();
 		return u;
 	}
+	
 
 	/**
 	 * Performs search through users DB
@@ -149,5 +154,28 @@ public class UserDAO {
 			ret = q.list();
 		}
 		return ret;
+	}
+	
+	public static void createCorp (Corporation... corp) {
+		ofy().save().entities(corp);
+	}
+	
+	public static Corporation getCorp (long id) {
+		return ofy().load().type(Corporation.class).id(id).now();
+	}
+	
+	public static Corporation getCorp (String name) {
+		return ofy().load().type(Corporation.class).filter("name", name).first().now();
+	}
+
+	public static Corporation noCorp() {
+		Corporation c = ofy().load().type(Corporation.class).filter("name", "noCorp").first().now();
+		if (c == null) {
+			c = new Corporation();
+			c.setOwner(ofy().load().type(UserEntity.class).filter("name", "admin").first().now());
+			c.setName("noCorp");
+			ofy().save().entity(c);
+		}
+		return c;
 	}
 }

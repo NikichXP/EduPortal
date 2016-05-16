@@ -29,7 +29,7 @@ public class UserUtils {
 	
 	
 	public UserEntity setModerator (UserEntity u) {
-		u.getAccessLevel().setAccessGroup(AccessSettings.MIN_MODERATOR_LVL);
+		u.getAccessLevel().setAccessGroup(AccessSettings.MODERATOR_LEVEL);
 		return u;
 	}
 	
