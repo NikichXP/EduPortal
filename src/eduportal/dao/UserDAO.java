@@ -4,9 +4,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.cmd.Query;
-
 import eduportal.dao.entity.*;
-import eduportal.model.AccessSettings;
 import eduportal.util.UserUtils;
 
 public class UserDAO {
