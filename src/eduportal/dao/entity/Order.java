@@ -14,6 +14,8 @@ public class Order extends AbstractEntity {
 	private Key<Product> product;
 	private double price;
 	private double paid;
+	@Index
+	private boolean donePaid;
 	private Date start;
 	private Date end;
 	@Index
@@ -25,15 +27,6 @@ public class Order extends AbstractEntity {
 		super();
 	}
 	
-	public boolean isDonePaid () {
-		if (price == paid) {
-			return true;
-		} else if (Math.abs((price-paid)) < 0.1) {
-			return true;
-		}
-		return false;
-	}
-
 	public long getUser() {
 		return user.getId();
 	}
@@ -87,10 +80,22 @@ public class Order extends AbstractEntity {
 
 	public void setPrice(double price) {
 		this.price = price;
+		if (price == paid) {
+			donePaid = true;
+		} else if (Math.abs((price-paid)) < 0.1) {
+			donePaid = true;
+		}
+		donePaid = false;
 	}
 
 	public void setPaid(double paid) {
 		this.paid = paid;
+		if (price == paid) {
+			donePaid = true;
+		} else if (Math.abs((price-paid)) < 0.1) {
+			donePaid = true;
+		}
+		donePaid = false;
 	}
 
 	public void setStart(Date start) {
@@ -104,6 +109,19 @@ public class Order extends AbstractEntity {
 	public void setCreatedBy(UserEntity user) {
 		this.createdBy = Ref.create(user).getKey();
 		this.creatorName = user.getSurname() + " " + user.getName();
+	}
+
+	public boolean getDonePaid() {
+		if (price == paid) {
+			return true;
+		} else if (Math.abs((price-paid)) < 0.1) {
+			return true;
+		}
+		return false;
+	}
+
+	public void setDonePaid(boolean donePaid) {
+		this.donePaid = donePaid;
 	}
 
 	@Override

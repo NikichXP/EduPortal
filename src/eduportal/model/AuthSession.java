@@ -10,10 +10,11 @@ class AuthSession {
 	public AuthSession() {
 	}
 
-	public AuthSession(UserEntity u) {
-		this.user = u;
-		this.accessLevel = u.getAccessLevel().getAccessGroup();
-		this.timeout = System.currentTimeMillis() + AuthContainer.SESSION_TIME;
+	public AuthSession(UserEntity user) {
+		this.user = user;
+		this.accessLevel = user.getAccessLevel();
+		this.timeout = System.currentTimeMillis() + ((user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL)
+				? AccessSettings.WORKER_SESSION_TIMEOUT : AccessSettings.USER_SESSION_TIMEOUT);
 	}
 
 	public AuthSession(UserEntity usr, long timeout2, int acclvl) {

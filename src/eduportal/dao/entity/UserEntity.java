@@ -10,7 +10,7 @@ import eduportal.util.UserUtils;
 public class UserEntity extends AbstractEntity {
 
 	@Index
-	private String login;	
+	private String login;
 	/**
 	 * Pass is always encoded
 	 */
@@ -20,7 +20,10 @@ public class UserEntity extends AbstractEntity {
 	private String phone;
 	@Index
 	private String mail;
-	private Permission accessLevel;
+	private Permission permission;
+	private int accessLevel;
+	@Index
+	private long corpId;
 	@Index
 	private String name;
 	@Index
@@ -28,8 +31,8 @@ public class UserEntity extends AbstractEntity {
 	@Index
 	private Key<UserEntity> creator;
 	private ArrayList<Long> ordersId;
-		
-	public void addOrder (Order ord) {
+
+	public void addOrder(Order ord) {
 		long id = ord.getId();
 		for (long l : ordersId) {
 			if (l == id) {
@@ -60,7 +63,7 @@ public class UserEntity extends AbstractEntity {
 	public UserEntity() {
 		super();
 		this.ordersId = new ArrayList<>();
-		this.accessLevel = new Permission();
+		this.permission = new Permission();
 	}
 
 	public UserEntity(String login, String pass, String name, String surname, String phone, String mail) {
@@ -71,7 +74,7 @@ public class UserEntity extends AbstractEntity {
 		this.mail = mail;
 		this.phone = phone;
 		this.pass = UserUtils.encodePass(pass);
-		this.accessLevel = new Permission();
+		this.permission = new Permission();
 		this.ordersId = new ArrayList<>();
 	}
 
@@ -81,10 +84,6 @@ public class UserEntity extends AbstractEntity {
 
 	public String getPass() {
 		return pass;
-	}
-
-	public int accessGroup() {
-		return accessLevel.getAccessGroup();
 	}
 
 	public String getName() {
@@ -106,8 +105,8 @@ public class UserEntity extends AbstractEntity {
 		this.pass = UserUtils.encodePass(pass);
 	}
 
-	public UserEntity defineAccessGroup(int accessGroup) {
-		this.accessLevel.setAccessGroup(accessGroup);
+	public UserEntity setAccessLevel(int accessGroup) {
+		this.accessLevel = accessGroup;
 		return this;
 	}
 
@@ -134,7 +133,7 @@ public class UserEntity extends AbstractEntity {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
+
 	public ArrayList<Long> getOrdersId() {
 		return this.ordersId;
 	}
@@ -149,34 +148,47 @@ public class UserEntity extends AbstractEntity {
 	public long getCreator() {
 		return creator.getId();
 	}
-	
+
 	public UserEntity creatorEntity() {
 		return Ref.create(creator).get();
 	}
 
 	public UserEntity setCreator(UserEntity creator) {
 		this.creator = Ref.create(creator).getKey();
-		this.accessLevel.setCorporation(creator.getAccessLevel().corporationEntity());
+		this.permission.setCorporation(creator.getPermission().corporationEntity());
+		this.corpId = creator.getPermission().corporationEntity().getId();
 		return this;
 	}
 
-	public Permission getAccessLevel() {
-		return accessLevel;
+	public Permission getPermission() {
+		return permission;
 	}
 
-	public void setAccessLevel(Permission accessLevel) {
-		this.accessLevel = accessLevel;
+	public void setPermission(Permission permission) {
+		this.permission = permission;
 	}
 
 	public void setOrdersId(ArrayList<Long> ordersId) {
 		this.ordersId = ordersId;
 	}
 
+	public long getCorpId() {
+		return this.permission.getCorporation();
+	}
+
+	public void setCorpId(long corpId) {
+		this.corpId = corpId;
+	}
+
+	public int getAccessLevel() {
+		return accessLevel;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((accessLevel == null) ? 0 : accessLevel.hashCode());
+		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
@@ -200,11 +212,11 @@ public class UserEntity extends AbstractEntity {
 			return false;
 		}
 		UserEntity other = (UserEntity) obj;
-		if (accessLevel == null) {
-			if (other.accessLevel != null) {
+		if (permission == null) {
+			if (other.permission != null) {
 				return false;
 			}
-		} else if (!accessLevel.equals(other.accessLevel)) {
+		} else if (!permission.equals(other.permission)) {
 			return false;
 		}
 		if (creator == null) {
@@ -268,13 +280,14 @@ public class UserEntity extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [login=" + login + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail
-				+ ", accessLevel=" + accessLevel + ", name=" + name + ", surname=" + surname + ", creator=" + creator
+		return "UserEntity [login=" + login + ", pass=" + ((pass.length() == 128) ? "..." : pass)
+				+ ", phone=" + phone + ", mail=" + mail + ", permission=" + permission + ", accessLevel=" + accessLevel
+				+ ", corpId=" + corpId + ", name=" + name + ", surname=" + surname + ", creator=" + creator
 				+ ", ordersId=" + ordersId + "]";
 	}
 
 	public void wipeSecData() {
 		this.pass = null;
 	}
-	
+
 }

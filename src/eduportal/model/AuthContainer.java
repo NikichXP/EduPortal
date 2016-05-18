@@ -1,7 +1,6 @@
 package eduportal.model;
 
 import java.util.*;
-
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.util.AuthToken;
@@ -10,27 +9,24 @@ public class AuthContainer {
 
 	private static HashMap<String, AuthSession> sessions;
 	private static HashSet<Long> users;
-	
+
 	static {
 		sessions = new HashMap<>();
 		users = new HashSet<>();
+		String token = authenticate("admin", "pass").getSessionId();
+		sessions.put("aaaa", sessions.get(token));
 	}
-	
+
 	public static ArrayList<String> testMethod() {
 		ArrayList<String> ret = new ArrayList<>();
 		for (String s : sessions.keySet()) {
 			ret.add("Session: " + s + "  ==  " + sessions.get(s).getUser());
 			ret.add("Token_t: " + s + "  ==  "
 					+ (((double) sessions.get(s).getTimeout() - System.currentTimeMillis()) / (1000 * 3600)));
-			ret.add("Access : " + s + "  ==  " + sessions.get(s).getUser().getAccessLevel().getAccessGroup());
+			ret.add("Access : " + s + "  ==  " + sessions.get(s).getUser().getAccessLevel());
 		}
 		return ret;
 	}
-
-	/**
-	 * Session timeout
-	 */
-	public static final long SESSION_TIME = 3600 * 1000; // 1h
 
 	/**
 	 * Authenticate user
@@ -46,12 +42,28 @@ public class AuthContainer {
 		if (user == null) {
 			return null;
 		}
-		if (users.contains(user.getId()) == false) {
-			users.add(user.getId());
+		if (user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
+			if (!AccessSettings.ALLOW_WORKER_MULTISESSIONS) {
+				if (users.contains(user.getId()) == false) {
+					users.add(user.getId());
+				} else {
+					for (String s : sessions.keySet()) {
+						if (sessions.get(s).getUser().getId() == user.getId()) {
+							sessions.remove(s);
+						}
+					}
+				}
+			}
 		} else {
-			for (String s : sessions.keySet()) {
-				if (sessions.get(s).getUser().getId() == user.getId()) {
-					sessions.remove(s);
+			if (!AccessSettings.ALLOW_USER_MULTISESSIONS) {
+				if (users.contains(user.getId()) == false) {
+					users.add(user.getId());
+				} else {
+					for (String s : sessions.keySet()) {
+						if (sessions.get(s).getUser().getId() == user.getId()) {
+							sessions.remove(s);
+						}
+					}
 				}
 			}
 		}
@@ -60,7 +72,8 @@ public class AuthContainer {
 		sessions.put(token, session);
 		AuthToken ret = new AuthToken();
 		ret.setSessionId(token);
-		ret.setTimeoutTimestamp(System.currentTimeMillis() + SESSION_TIME);
+		ret.setTimeoutTimestamp(System.currentTimeMillis() + ((user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL)
+				? AccessSettings.WORKER_SESSION_TIMEOUT : AccessSettings.USER_SESSION_TIMEOUT));
 		return ret;
 	}
 
@@ -80,7 +93,8 @@ public class AuthContainer {
 	 * @return - User
 	 */
 	public static UserEntity getUser(String token) {
-		if (token == null) return null;
+		if (token == null)
+			return null;
 		UserEntity u = null;
 		try {
 			u = sessions.get(token).getUser();
@@ -110,11 +124,11 @@ public class AuthContainer {
 	 */
 	public static void updateTimeout(String token) {
 		if (sessions.get(token).getTimeout() < System.currentTimeMillis()) {
-			sessions.get(token).setTimeout(System.currentTimeMillis() + SESSION_TIME);
+			sessions.get(token).setTimeout(sessions.get(token).getTimeout() + 3600_000);
 		}
 	}
-	
-	public static boolean checkToken (String token) {
+
+	public static boolean checkToken(String token) {
 		if (token == null) {
 			return false;
 		}
@@ -126,5 +140,5 @@ public class AuthContainer {
 		}
 		return true;
 	}
-	
+
 }

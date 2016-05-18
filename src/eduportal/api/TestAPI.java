@@ -1,9 +1,6 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
@@ -15,42 +12,12 @@ import eduportal.model.*;
 @Api(name = "test", version = "v1")
 public class TestAPI {
 
-	private static String[] credentialVariables = { "mail", "login", "phone" };
-	// Cryptoengine
-	private static MessageDigest mDigest;
-	private static final int CRYPTOLENGTH = 128;
-
-	static {
-		try {
-			mDigest = MessageDigest.getInstance("SHA-512");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		String login = "user24";
-		String pass = "pass24";
-		if (pass.length() != CRYPTOLENGTH) {
-			byte[] result = mDigest.digest(pass.getBytes());
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < result.length; i++) {
-				sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			pass = sb.toString();
-		}
-		ret.add(pass);
-		ret.add("Pass crypted");
-		UserEntity u = null;
-		for (String par : credentialVariables) {
-			u = ofy().load().type(UserEntity.class).filter(par, login).first().now(); 
-			ret.add(u);
-			if (u != null) {
-
-			}
-		}
+		ret.add("KEK");
+		ret.add(ofy().load().type(Order.class).filter("donePaid", false).list());
+		ret.add(ofy().load().type(Order.class).list());
 		ret.add("end");
 		return ret;
 	}
@@ -89,20 +56,20 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		UserEntity[] admins = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
-						.defineAccessGroup(AccessSettings.ADMIN_LEVEL + 1),
+						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
 				new UserEntity("order", "order", "New", "Order", "+123456789015", "kelly@neworder.org")
-						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("adminus", "adminus", "Adminus", "Maximus", "+123456789016", "virto@asus.com")
-						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now")
-						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL),
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
 				new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")
-						.defineAccessGroup(AccessSettings.MODERATOR_LEVEL) };
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		ofy().save().entity(corp).now();
 		for (UserEntity user : admins) {
-			user.setAccessLevel(new Permission());
-			user.getAccessLevel().setCorporation(corp);
+			user.setPermission(new Permission());
+			user.getPermission().setCorporation(corp);
 		}
 		for (UserEntity user : admins) {
 			user.setCreator(admins[0]);
@@ -146,7 +113,7 @@ public class TestAPI {
 					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
 					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase())
 							.setCreator(admins[i % 5]);
-			clients[i].getAccessLevel().setCorporation(corp);
+			clients[i].getPermission().setCorporation(corp);
 		}
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);

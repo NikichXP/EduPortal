@@ -28,8 +28,8 @@ public class UserDAO {
 		u.setMail(mail);
 		u.setPhone(phone);
 		u.setSurname(surname);
-		u.setAccessLevel(new Permission());
-		u.getAccessLevel().setCorporation(creator.getAccessLevel().corporationEntity());
+		u.setPermission(new Permission());
+		u.getPermission().setCorporation(creator.getPermission().corporationEntity());
 		u.setCreator(creator);
 		ofy().save().entity(u).now();
 		return u;
@@ -119,9 +119,22 @@ public class UserDAO {
 		Key<UserEntity> key = Ref.create(u).getKey();
 		return ofy().load().type(UserEntity.class).filter("creator", key).list();
 	}
+	
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login, Corporation corp) {
+		System.out.println(corp.getId());
+		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail, login) ;
+	}
+	
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login, long corp) {
+		System.out.println(corp);
+		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail, login) ;
+	}
 
 	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login) {
-		Query<UserEntity> q = ofy().load().type(UserEntity.class);
+		return userFilter (ofy().load().type(UserEntity.class), phone, name, mail, login) ;
+	}
+	
+	private static List<UserEntity> userFilter (Query<UserEntity> q, String phone, String name, String mail, String login) {
 		List<UserEntity> ret = new ArrayList<>();
 		if (login != null) {
 			q = q.filter("login >=", login).filter("login <= ", login + "\uFFFD");

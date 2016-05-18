@@ -12,55 +12,106 @@ import eduportal.model.*;
 @Api(name = "order", version = "v1", title = "Order/Product API")
 public class OrderAPI {
 
-	/*
-	 * We need: 1.: List active products 2.: Assign product to user: moderator,
-	 * admin, partner 3.:
-	 */
+	@ApiMethod(name = "getProducts", path = "products", httpMethod = "GET")
+	public List<Product> getActualProducts(@Named("token") String token) {
+		if (AccessLogic.canSeeProducts(token)) {
+			return ProductDAO.getAll();
+		}
+		return ProductDAO.getActual();
+	}
+
+	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")
+	public List<Product> getAllProducts(@Named("token") String token) {
+		if (AccessLogic.canSeeAllProducts(token)) {
+			return ProductDAO.getAll();
+		}
+		return null;
+	}
+
+	@ApiMethod(name = "setActivity", httpMethod = "GET", path = "productActivation")
+	public Text setUnActualProduct(@Named("id") Long id, @Named("token") String token,
+			@Named("actual") Boolean actual) {
+		if (AccessLogic.canActivateProduct(token)) {
+			try {
+				Product p = ProductDAO.get(id);
+				p.setActual(actual);
+				ProductDAO.save(p);
+				return new Text("Done");
+			} catch (Exception e) {
+				return new Text("No id sent");
+			}
+		} else {
+			return new Text("No permission");
+		}
+	}
+
+	@ApiMethod(path = "createorder", httpMethod = "GET")
+	public Text createOrder(@Named("productid") Long productid, @Named("clientid") Long clientid,
+			@Named("token") String token) { // Token to identify creator
+		UserEntity admin = AuthContainer.getUser(token);
+		if (admin == null) {
+			return new Text ("Wrong token");
+		}
+		Order o = new Order();
+		o.setProduct(ProductDAO.get(productid));
+		o.setCreatedBy(admin);
+		o.setUser(UserDAO.get(clientid));
+		OrderDAO.saveOrder(o);
+		return new Text("Done");
+	}
+
+	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
+	public Text editOrder(@Named("orderid") Long orderid, @Named("token") String token,
+			@Named("newclientid") @Nullable Long newclientid, @Named("paid") @Nullable Double paid) {
+		UserEntity admin = AuthContainer.getUser(token);
+		Order order = OrderDAO.getOrder(orderid);
+		if (AccessLogic.canEditOrder(admin, order) == false) {
+			return new Text("You cannot edit this order!");
+		}
+		boolean flag = false;
+		if (newclientid != null) {
+			order.setUser(UserDAO.get(newclientid));
+			flag = true;
+		}
+		if (paid != null) {
+			order.setPaid(paid);
+			flag = true;
+		}
+		if (flag) {
+			OrderDAO.saveOrder(order);
+		}
+		return new Text(order.toString());
+	}
 
 	/**
 	 * @return Orders associated with user
 	 */
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET")
 	public List<Order> getAllOrders(@Named("token") String token) {
-		UserEntity u = null;
-		if (token != null) {
-			u = AuthContainer.getUser(token);
-		}
+		UserEntity u = AuthContainer.getUser(token);
 		return ((u == null) ? null : OrderDAO.getOrdersByUser(u));
 	}
 
-	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
-	public Text editOrder(@Named("id") @Nullable Long id, @Named("token") String token,
-			@Named("clientid") @Nullable Long clientid, @Named("paid") @Nullable Double paid) {
-		UserEntity admin = AuthContainer.getUser(token);
-		Order order = OrderDAO.getOrder(id);
-		if (AccessLogic.canEditOrder(admin, order)) {
-			
-		}
-		return new Text(id + " " + clientid + " " + paid + " " + token);
+	@ApiMethod(name = "getCreatedOrders", path = "createdOrders", httpMethod = "GET")
+	public List<Order> getCreatedOrders(@Named("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
+		return ((u == null) ? null : OrderDAO.getCreatedOrdersByUser(u));
 	}
 
-	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")
-	public List<Product> getAllProducts(@Named("token") String token) {
-		// if (AuthContainer.checkReq(token, AccessSettings.MIN_MODERATOR_LVL)
-		// == false) {
-		// return null;
-		// }
-		return ProductDAO.getAllProducts();
+	@ApiMethod(name = "getMyOrders", path = "myOrders", httpMethod = "GET")
+	public List<Order> getMyOrders(@Named("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
+		return ((u == null) ? null : OrderDAO.getSelfOrdersByUser(u));
 	}
 
-	@ApiMethod(path = "createorder", httpMethod = "GET")
-	public Text createOrder(@Named("product_id") String productId, @Named("client_id") String clientId,
-			@Named("token") String token) { // Token to identify creator
-		Order o = new Order();
-		o.setProduct(ProductDAO.get(productId));
-		return new Text("");
-	}
-
-	@ApiMethod(name = "filter", path = "filter", httpMethod = "GET")
-	public List<Order> filterOrders( // TODO Add security!
+	@ApiMethod(name = "filter_through_all_orders", path = "filter", httpMethod = "GET")
+	public List<Order> filterOrders( // TODO Move to DAO
 			@Named("client_name") String clientName, @Named("client_id") String clientId,
-			@Named("is_paid") String isPaid, @Named("created_by") String createdBy) {
+			@Named("is_paid") Boolean isPaid, @Named("created_by") String createdBy, 
+			@Named("token") String token) {
+		if (!AccessLogic.canSeeAllOrders(token)) {
+			return null;
+		}
 		Query<Order> q = ofy().load().kind("Order");
 		if (clientName != null) {
 			q = q.filter("clientName = ", clientName);
@@ -68,12 +119,18 @@ public class OrderAPI {
 		if (clientId != null) {
 			q = q.filter("userid = ", clientId);
 		}
+		if (isPaid != null) {
+			q = q.filter("donePaid", isPaid);
+		}
 		List<Order> list = q.list();
 		return list;
 	}
-	
+
 	@ApiMethod(name = "createCity", httpMethod = "GET", path = "create/city")
-	public Text addCity(@Named("city") String cityname, @Named("country") String country) {
+	public Text addCity(@Named("city") String cityname, @Named("country") String country, @Named("token") String token) { 
+		if (!AccessLogic.canCreateCity(token)) {
+			return new Text("403 Forbidden");
+		}
 		if (GeoDAO.getCity(cityname) != null) {
 			return new Text(GeoDAO.getCity(cityname).toString() + " already exists");
 		}
@@ -88,7 +145,10 @@ public class OrderAPI {
 
 	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "product/add")
 	public Text addProduct(@Named("title") String title, @Named("description") String descr,
-			@Named("cityid") String cityname) {
+			@Named("cityid") String cityname, @Named ("token") String token) {
+		if (!AccessLogic.canAddProduct(token)) {
+			return new Text("403 Forbidden");
+		}
 		City city = GeoDAO.getCityById(cityname);
 		if (city == null) {
 			city = GeoDAO.getCity(cityname);
@@ -99,32 +159,6 @@ public class OrderAPI {
 		Product p = new Product(title, descr, city);
 		ProductDAO.save(p);
 		return new Text(p.toString());
-	}
-
-	@ApiMethod(name = "setInactive", httpMethod = "GET", path = "product/inactive")
-	public Text setUnActualProduct(@Named("id") Long id) {
-		if (id == null) {
-			return new Text("No id sent");
-		}
-		Product p = ProductDAO.get(id);
-		if (p != null) {
-			p.setActual(false);
-			ProductDAO.save(p);
-		}
-		return new Text("=(");
-	}
-
-	@ApiMethod(name = "setActive", httpMethod = "GET", path = "product/active")
-	public Text setActualProduct(@Named("id") String id) {
-		if (id == null) {
-			return new Text("No id sent");
-		}
-		Product p = ProductDAO.get(id);
-		if (p != null) {
-			p.setActual(true);
-			ProductDAO.save(p);
-		}
-		return new Text("=(");
 	}
 
 }

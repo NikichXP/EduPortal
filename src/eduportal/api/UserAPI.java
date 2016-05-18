@@ -12,10 +12,8 @@ import eduportal.dao.entity.*;
 import eduportal.model.*;
 import eduportal.util.*;
 
-@Api(name = "user", version = "v1", title = "User API") // , auth =
-														// @ApiAuth(allowCookieAuth
-														// =
-														// AnnotationBoolean.TRUE)
+@Api(name = "user", version = "v1", title = "User API") 
+//, auth =	@ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE)
 public class UserAPI {
 	
 	// Init Objectify
@@ -78,7 +76,7 @@ public class UserAPI {
 		user.setLogin(deploy.login);
 		user.setPass(deploy.pass);
 		user.setPhone(deploy.phone);
-		user.setAccessLevel(new Permission());
+		user.setPermission(new Permission());
 		user.setLogin(deploy.login);
 		user.setCreator(creator);
 		UserEntity u = UserDAO.create(user);
@@ -103,8 +101,19 @@ public class UserAPI {
 	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")
 	public List<UserEntity> listUserFilter(@Named("login") @Nullable String login,
 			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
-			@Named("mail") @Nullable String mail) {
-		return UserDAO.searchUsers(phone, name, mail, login);
+			@Named("mail") @Nullable String mail, @Named ("token") String token) {
+		return AccessLogic.listUsers(phone, name, mail, login, token);
+	}
+	
+	@ApiMethod(name = "user.filter.admin", path = "user/filterAll", httpMethod = "GET")
+	public List<UserEntity> listEveryUserFilter(@Named("login") @Nullable String login,
+			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
+			@Named("mail") @Nullable String mail, @Named ("token") String token) {
+		if (AccessLogic.canListAllUsers(token)) {
+			return UserDAO.searchUsers(phone, name, mail, login);
+		} else {
+			return null;
+		}
 	}
 	
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
@@ -138,15 +147,10 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "updateUser", httpMethod = "GET", path = "update")
-	public UserEntity updateUserInfo(@Named("name") @Nullable String name, HttpServletRequest req,
+	public UserEntity updateUserInfo(@Named("name") @Nullable String name,
 			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail,
-			@Named("phone") @Nullable String phone) {
-		UserEntity u = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) {
-				u = AuthContainer.getUser(c.getValue());
-			}
-		}
+			@Named("phone") @Nullable String phone, @Named ("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
 		if (u == null) {
 			return null;
 		}
@@ -212,7 +216,7 @@ public class UserAPI {
 		if (u == null) {
 			return u;
 		}
-		u.defineAccessGroup(access);
+		u.setAccessLevel(access);
 		UserDAO.update(u);
 		u.setPass(null);
 		return u;
@@ -225,7 +229,7 @@ public class UserAPI {
 		}
 		Country c = GeoDAO.getCountryById(countryid);
 		UserEntity user = UserDAO.get(userid);
-		user.getAccessLevel().addCountry(c);
+		user.getPermission().addCountry(c);
 		UserDAO.update(user);
 		user.wipeSecData();
 		return user;

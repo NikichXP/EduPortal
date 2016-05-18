@@ -8,7 +8,6 @@ import com.googlecode.objectify.annotation.*;
 public class Permission extends AbstractEntity {
 	
 	/** @see AccessSettings.class */
-	private int accessGroup; //is a accessGroup
 	private HashSet<Long> country;
 	private HashSet<Long> city;
 	@Index
@@ -16,7 +15,6 @@ public class Permission extends AbstractEntity {
 	
 	public Permission () {
 		super();
-		accessGroup = 0;
 		country = new HashSet<>();
 		city = new HashSet<>();
 	}
@@ -68,18 +66,10 @@ public class Permission extends AbstractEntity {
 			city.add(c.getId());
 		}
 	}
-	
-	public int getAccessGroup() {
-		return accessGroup;
-	}
-
-	public void setAccessGroup(int accessGroup) {
-		this.accessGroup = accessGroup;
-	}
 
 	@Override
 	public String toString() {
-		return "Permission [category=" + accessGroup + ", country=" + country + ", city=" + city + ", orgName=" + corporation
+		return "Permission [country=" + country + ", city=" + city + ", orgName=" + corporation
 				+ "]";
 	}
 
@@ -87,7 +77,6 @@ public class Permission extends AbstractEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + accessGroup;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + ((corporation == null) ? 0 : corporation.hashCode());
@@ -106,9 +95,6 @@ public class Permission extends AbstractEntity {
 			return false;
 		}
 		Permission other = (Permission) obj;
-		if (accessGroup != other.accessGroup) {
-			return false;
-		}
 		if (city == null) {
 			if (other.city != null) {
 				return false;
