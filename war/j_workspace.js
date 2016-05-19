@@ -37,7 +37,7 @@
 						"<td>" + resData.items[i].clientName + "</td>" +
 						"<td>" + resData.items[i].productName + "</td>" +
 						"<td>" + resData.items[i].creatorName + "</td>" +
-						"<td>" + checkBool(resData.items[i].donePaid) + "</td>" +
+						"<td class='td-order-payment-edit'>" + resData.items[i].paid + "</td>" +
 						"<td class='td-order-del'>Удалить</td>" +
 					"</tr>");	
 			}
@@ -59,6 +59,7 @@
 	$('#opacity').on('click', function(){
 		$(this).css('display', 'none');	
 		$('#order-edit-form').css('display', 'none');
+		$('#order-edit-payment').css('display', 'none');
 		$('#client-list').css('display', 'none');
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
@@ -135,7 +136,7 @@
 					count++;
 					if (count == imax) break;
 				}
-				$('#table-product-list').append("</tr>");				
+				$('#table-product-list tbody').append("</tr>");				
 			}
 			$('#product-list').css('display', 'block');
 			$('#lists-container').css('display', 'block');
@@ -144,16 +145,70 @@
 		
 	
 	});
-	//open order edit menu
-	$('#table-orders').on("click", "td.td-order-del", function() {
+	//open payment edit menu
+	$('#table-orders').on("click", "td.td-order-payment-edit", function() {
 		var $tr = $(this).closest('tr');
 		var rowIndex = parseInt($tr.index()) - 1;
+		$('#table-order-payment').html("<tbody>" + 
+			"<tr id='table-order-payment-header'>" + 
+			"<td>Клиент</td>" + 
+			"<td>Продукт</td>" +
+			"<td>Стоимость</td>" +
+			"<td>Внесенная оплата</td>" +
+			"<td>Осталось</td>" +
+		"</tbody>");
+		
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
 		data: tokenJson,
 		success: function(resData) { 
-			$('label[for="order-id"]').html("ID заказа: " + resData.items[rowIndex].id);
+			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
+			
+			$('#table-order-payment tbody').append("<tr>" + 
+				"<td>" + resData.items[rowIndex].clientName + "</td>" + 
+				"<td>" + resData.items[rowIndex].productName + "</td>" +
+				"<td>" + resData.items[rowIndex].price + "</td>" + 
+				"<td>" + resData.items[rowIndex].paid + "</td>" + 
+				"<td>" + (resData.items[rowIndex].price - resData.items[rowIndex].paid) + "</td>" + 
+			+ "</tr>");
+			
+			$('#input-order-Id').val(resData.items[rowIndex].id);
+			$('#opacity').css('display', 'block');
+			$('#order-edit-payment').css('display', 'block');
+		},
+		});	
+	});
+	//Send order payment
+	$('#div-send-button').on('click', function(){
+		
+		var paymentData = {
+			
+		};
+		
+		$.ajax({
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/editorder',
+			data: paymentData,
+			success: function(resData) {
+
+			},
+			
+		});		
+
+	});
+	
+	//open order edit menu
+	/* $('#table-orders').on("click", "td.td-order-edit-form", function() {
+		var $tr = $(this).closest('tr');
+		var rowIndex = parseInt($tr.index()) - 1;
+		
+		$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
+		data: tokenJson,
+		success: function(resData) { 
+			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
 			$('#order-client-name').html(resData.items[rowIndex].clientName);	
 			$('#order-product-name').html(resData.items[rowIndex].productName);	
 			
@@ -166,7 +221,7 @@
 			$('#order-edit-form').css('display', 'block');
 		},
 		});	
-	});
+	}); */
 	
 });
 

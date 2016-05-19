@@ -41,6 +41,8 @@ body {
 #div-send-button {
 	height: 40px;
 	width: 80px;
+	margin: auto;
+	margin-top: 10px;
 	background-color: #5269b1;
 	color: #fff;
 	text-align: center;
@@ -53,11 +55,6 @@ body {
 	margin-top: 10px;
 	width: 100%;
 	text-align: center;
-}
-
-#div-send-button {
-	margin: auto;
-	margin-top: 10px;
 }
 
 

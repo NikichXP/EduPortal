@@ -16,7 +16,29 @@
 	
 	<body>
 		<div id="opacity"></div>	
-		<div id="order-edit-form">
+		
+		<div id="order-edit-payment">
+			<div id="order-payment-text-block"></div>
+			<div id="order-payment-main">	
+				<table id="table-order-payment">
+					<tbody><tr id="table-order-payment-header">
+						<td>Клиент</td>
+						<td>Продукт</td>
+						<td>Стоимость</td>
+						<td>Внесенная оплата</td>
+						<td>Осталось</td>
+					</tr></tbody>
+				</table>
+				<div id="order-payment-edit">
+					<p>Внесите оплату:</p>
+					<input type="text" id="input-paid" name="paid" placeholder="0.00">
+				</div>
+				<div id="div-send-button">Внести</div>
+			</div>
+			<input type="hidden" id="input-order-Id">
+		</div>
+		
+		<!-- <div id="order-edit-form">
 			<div id="order-edit-text-block"><H2>Редактирование заказа</H2></div>
 				<div id="order-edit-main">	
 					<label for="order-id"></label><br/>
@@ -42,7 +64,7 @@
 					<tbody></tbody>
 				</table>
 			</div>
-		</div>
+		</div> -->
 		
 		<div id="header">
 			<div id="header-main"><H1>EduPortal</H1></div>

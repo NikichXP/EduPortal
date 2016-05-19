@@ -16,13 +16,7 @@ body {
 	z-index: 500;
 }
 
-#lists-container {
-	height: 100%;
-	width: 100%;
-	display: none;
-	position: absolute;
-	z-index: 504;
-}
+/* ORDER EDITING */
 
 #order-edit-form {
 	margin: auto;
@@ -37,6 +31,26 @@ body {
 	z-index: 501;
 }
 
+#order-edit-text-block {
+	height: 40px;
+	width: 100%;
+	background-color: #435ea4;
+	text-align: center;
+	line-height: 40px;
+}
+
+#order-edit-text-block H2 {
+	color: #fff;
+	margin: 0px;
+}
+
+#order-edit-main {
+	margin: auto;
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+
 #order-client-name {
 	margin: auto;
 	width: 200px;
@@ -46,15 +60,25 @@ body {
 	cursor: pointer;
 }
 
-#button-client-edit {
-	height: 40px;
-	width: 80px;
-	background-color: #5269b1;
-	color: #fff;
-	text-align: center;
+
+#order-product-name {
+	margin: auto;
+	width: 200px;
 	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
 	cursor: pointer;
 }
+
+#lists-container {
+	height: 100%;
+	width: 100%;
+	display: none;
+	position: absolute;
+	z-index: 504;
+}
+
+/* LIST OF CLIENTS FOR ORDER CREATION */
 
 #client-list {
 	margin: auto;
@@ -106,24 +130,7 @@ body {
 	background-color: #82a8bc;
 }
 
-#order-product-name {
-	margin: auto;
-	width: 200px;
-	line-height: 40px;
-	background-color: #fff;
-	border: 1px solid #d9e0e7;
-	cursor: pointer;
-}
-
-#button-product-edit {
-	height: 40px;
-	width: 80px;
-	background-color: #5269b1;
-	color: #fff;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
-}
+/* LIST OF PRODUCTS FOR ORDER CREATION */
 
 #product-list {
 	margin: auto;
@@ -176,7 +183,22 @@ body {
 	width: 100px;
 }
 
-#order-edit-text-block {
+/* ORDER PAYMENT */
+
+#order-edit-payment {
+	margin: auto;
+	height: 600px;
+	width: 50%;
+	left: 25%;
+	top: 10%;
+	background-color: #f1f1f1;
+	border: 1px solid #d9e0e7;
+	display: none;
+	position: absolute;
+	z-index: 501;
+}
+
+#order-payment-text-block {
 	height: 40px;
 	width: 100%;
 	background-color: #435ea4;
@@ -184,17 +206,70 @@ body {
 	line-height: 40px;
 }
 
-#order-edit-text-block H2 {
+#order-payment-text-block H2 {
 	color: #fff;
 	margin: 0px;
 }
 
-#order-edit-main {
+#order-payment-main {
 	margin: auto;
 	margin-top: 10px;
 	width: 100%;
 	text-align: center;
 }
+
+#order-payment-client-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+}
+
+#order-payment-product-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+}
+
+#table-order-payment {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	margin: auto;
+	width: 90%;
+	font-size: 11px
+}
+
+#table-order-payment-header {
+	background-color: #82a8bc;
+}
+
+#table-order-payment td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#input-paid {
+	text-align: center;
+}
+
+#div-send-button {
+	height: 40px;
+	width: 80px;
+	margin: auto;
+	margin-top: 10px;
+	background-color: #5269b1;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+/* HEADER */
 
 #header {
 	height: 80px;
@@ -218,6 +293,8 @@ body {
 	margin-left: 20px;
 }
 
+/* MAIN DIV */
+
 #main {
 	height: 700px;
 	width: 90%;
@@ -235,6 +312,8 @@ body {
 	position: relative;
 	float: left;
 }
+
+/* SIDE MENU STARTS HERE */
 
 #div-side-menu {
 	width: 15%;
@@ -284,8 +363,10 @@ body {
 	font-size: 11px;
 }
 
+/* DIV WITH TABLE OF ORDERS STARTS HERE */
+
 #div-order-table {
-	height: 505px;
+	max-height: 505px;
 	width: 95%;
 	margin: auto;
 	overflow-y: scroll;
@@ -299,22 +380,30 @@ body {
 	font-size: 11px
 }
 
+#table-orders-header {
+	background-color: #82a8bc;
+}
+
 #table-orders td {
 	border: 1px solid #d9e0e7;
 	border-spacing: 0px;
 	padding: 10px 5px 10px 5px;
 	text-align: center;
 }
+
 .tr-order:hover {
 	background-color: #82a8bc;
 }
+
 .td-order-del:hover {
 	cursor: pointer;
 	background-color: #b0473e;
 	color: #fff;
 }
 
-#table-orders-header {
-	background-color: #82a8bc;
+.td-order-payment-edit:hover {
+	cursor: pointer;
 }
+
+
 
