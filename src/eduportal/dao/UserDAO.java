@@ -182,15 +182,4 @@ public class UserDAO {
 	public static Corporation getOwnerCorp() {
 		return ofy().load().type(Corporation.class).filter("isOwnerCorp", true).first().now();
 	}
-
-	public static Corporation noCorp() {
-		Corporation c = ofy().load().type(Corporation.class).filter("name", "noCorp").first().now();
-		if (c == null) {
-			c = new Corporation();
-			c.setOwner(ofy().load().type(UserEntity.class).filter("name", "admin").first().now());
-			c.setName("noCorp");
-			ofy().save().entity(c);
-		}
-		return c;
-	}
 }

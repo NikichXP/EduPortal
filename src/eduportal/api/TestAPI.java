@@ -30,10 +30,7 @@ public class TestAPI {
 	}
 	
 	@ApiMethod(name = "listSessions", path = "listsession", httpMethod = "GET")
-	public List<String> listSession(@Named ("token") String token) { 
-		if (!AccessLogic.canSeeTokens(token)) {
-			return null;
-		}
+	public List<String> listSession() { 
 		return AuthContainer.testMethod();
 	}
 

@@ -94,12 +94,6 @@
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.TestAPI.listSession",
       "request" : {
-        "parameters" : {
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
         "body" : "empty"
       },
       "response" : {
