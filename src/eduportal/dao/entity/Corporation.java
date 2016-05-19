@@ -3,11 +3,15 @@ package eduportal.dao.entity;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
+import eduportal.model.AccessSettings;
+
 @Entity
 public class Corporation extends AbstractEntity {
 	
 	private String name;
 	private Ref<UserEntity> owner;
+	@Index
+	private boolean isOwnerCorp;
 	
 	public Corporation () {
 		super();
@@ -32,6 +36,14 @@ public class Corporation extends AbstractEntity {
 
 	public void setOwner(UserEntity owner) {
 		this.owner = Ref.create(owner);
+	}
+
+	public boolean isOwnerCorp() {
+		return isOwnerCorp;
+	}
+
+	public void setOwnerCorp(boolean isOwnerCorp) {
+		this.isOwnerCorp = AccessSettings.OWNERCORP_NAME.equals(this.name);
 	}
 
 	@Override

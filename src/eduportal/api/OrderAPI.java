@@ -15,9 +15,9 @@ public class OrderAPI {
 	@ApiMethod(name = "getProducts", path = "products", httpMethod = "GET")
 	public List<Product> getActualProducts(@Named("token") String token) {
 		if (AccessLogic.canSeeProducts(token)) {
-			return ProductDAO.getAll();
+			return ProductDAO.getActual();
 		}
-		return ProductDAO.getActual();
+		return null;
 	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")

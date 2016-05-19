@@ -56,6 +56,7 @@ public class AccessLogic {
 
 	public static boolean canSeeAllProducts(String token) {
 		UserEntity user = AuthContainer.getUser(token);
+		System.out.println(AccessSettings.OWNERCORP);
 		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP.getId()) {
 			if (user.getAccessLevel() >= AccessSettings.LIST_OFFLINE_PRODUCTS) {
 				return true;

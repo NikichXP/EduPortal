@@ -24,7 +24,7 @@ public class ProductDAO {
 	}
 	
 	public static List<Product> getActual() {
-		return ofy().load().type(Product.class).filter("actual", true).list();
+		return ofy().load().type(Product.class).filter("actual == ", true).list();
 	}
 	
 	public static List<Product> getAllByCounry(String countryid) {

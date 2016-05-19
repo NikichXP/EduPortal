@@ -15,9 +15,7 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add("KEK");
-		ret.add(ofy().load().type(Order.class).filter("donePaid", false).list());
-		ret.add(ofy().load().type(Order.class).list());
+		ret.add(ofy().load().type(Corporation.class).filter("isOwnerCorp", true).first().now());
 		ret.add("end");
 		return ret;
 	}
@@ -32,7 +30,7 @@ public class TestAPI {
 	}
 	
 	@ApiMethod(name = "listSessions", path = "listsession", httpMethod = "GET")
-	public List<String> listSession(@Named ("token") String token) { //TODO 
+	public List<String> listSession(@Named ("token") String token) { 
 		if (!AccessLogic.canSeeTokens(token)) {
 			return null;
 		}
@@ -54,6 +52,7 @@ public class TestAPI {
 			}
 		}
 		Corporation corp = new Corporation("Vedi Tour Group");
+		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
 				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
 						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),

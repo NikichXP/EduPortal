@@ -178,6 +178,10 @@ public class UserDAO {
 	public static Corporation getCorp (String name) {
 		return ofy().load().type(Corporation.class).filter("name", name).first().now();
 	}
+	
+	public static Corporation getOwnerCorp() {
+		return ofy().load().type(Corporation.class).filter("isOwnerCorp", true).first().now();
+	}
 
 	public static Corporation noCorp() {
 		Corporation c = ofy().load().type(Corporation.class).filter("name", "noCorp").first().now();
