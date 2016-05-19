@@ -187,7 +187,7 @@ body {
 
 #order-edit-payment {
 	margin: auto;
-	height: 600px;
+	height: 300px;
 	width: 50%;
 	left: 25%;
 	top: 10%;
@@ -393,15 +393,6 @@ body {
 
 .tr-order:hover {
 	background-color: #82a8bc;
-}
-
-.td-order-del:hover {
-	cursor: pointer;
-	background-color: #b0473e;
-	color: #fff;
-}
-
-.td-order-payment-edit:hover {
 	cursor: pointer;
 }
 

@@ -1,8 +1,5 @@
 $(function(){
 		
-	var $resDiv = $('#div-res');
-	var $login = $('#login');
-	var $pass = $('#pass');
 	var sesTimeOut;
 	var sID;
 	
@@ -21,8 +18,8 @@ $(function(){
 	$('#div-send-button').on('click', function(){
 		
 		var authData = {
-			login: $login.val(),
-			pass: $pass.val(),
+			login: $('#login').val(),
+			pass: $('#pass').val(),
 		};
 		
 		$.ajax({
@@ -36,7 +33,7 @@ $(function(){
 				setCookie("sesTO", sTO);
 				window.location = "workspace.html";
 			},
-			error: $resDiv.html('<p>Authorisation faild</p>')
+			error: $('#div-res').html('<p>Authorisation faild</p>')
 		});		
 
 	});

@@ -37,8 +37,7 @@
 						"<td>" + resData.items[i].clientName + "</td>" +
 						"<td>" + resData.items[i].productName + "</td>" +
 						"<td>" + resData.items[i].creatorName + "</td>" +
-						"<td class='td-order-payment-edit'>" + resData.items[i].paid + "</td>" +
-						"<td class='td-order-del'>Удалить</td>" +
+						"<td>" + resData.items[i].paid + "</td>" +
 					"</tr>");	
 			}
 			$('#li-open-orders').append(" " + i)
@@ -142,13 +141,12 @@
 			$('#lists-container').css('display', 'block');
 		},
 		});	
-		
-	
 	});
 	//open payment edit menu
-	$('#table-orders').on("click", "td.td-order-payment-edit", function() {
-		var $tr = $(this).closest('tr');
-		var rowIndex = parseInt($tr.index()) - 1;
+	$('#table-orders').on("click", "tr.tr-order", function() {
+		
+		var rowIndex = $(this).index() - 1;
+		
 		$('#table-order-payment').html("<tbody>" + 
 			"<tr id='table-order-payment-header'>" + 
 			"<td>Клиент</td>" + 
@@ -181,19 +179,22 @@
 	});
 	//Send order payment
 	$('#div-send-button').on('click', function(){
+
+		if ($('#input-paid').val() != "")	
+			var payment = Math.round($('#input-paid').val() * 100) / 100;
+		else var payment = 0;
 		
 		var paymentData = {
-			
+			token: authSesToken,
+			orderid: $('#input-order-Id').val(),
+			paid: payment,
 		};
 		
 		$.ajax({
 			type: 'GET',
 			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/editorder',
 			data: paymentData,
-			success: function(resData) {
-
-			},
-			
+			success: location.reload(),	
 		});		
 
 	});
