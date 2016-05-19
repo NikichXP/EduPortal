@@ -2,7 +2,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		
 		<link rel='stylesheet' type='text/css' href='s_workspace.css' />
+		
 		<script type="text/javascript" src="jquery-2.2.3.min.js"></script>
 		<script type="text/javascript" src="j_workspace.js"></script>
 		<script type="text/javascript" src="cookie_func.js"></script>
@@ -20,17 +23,25 @@
 					<label for="order-client-name">Клиент: </label><br/>
 					<div id="order-client-name"></div>
 					<label for="order-product-name">Продукт: </label><br/>
-					<input type="text" id="order-product-name" name="order-product-name"><br/>
-					<label for="login">Оплата произведена: </label><br/>
+					<div id="order-product-name"></div>
+					<label for="login">Внесите оплату: </label><br/>
 					<input type="radio" id="done-paid-yes" name="done-paid">Да<br/>
 					<input type="radio" id="done-paid-no" name="done-paid">Нет<br/>
 				</div>
 		</div>
-		<div id="client-list">
-			<p id='client-list-head'>Ваши клиенты</p>
-			<table id="table-client-list">
-				<tbody></tbody>
-			</table>
+		<div id="lists-container">
+			<div id="client-list">
+				<p id='client-list-head'>Ваши клиенты</p>
+				<table id="table-client-list">
+					<tbody></tbody>
+				</table>
+			</div>
+			<div id="product-list">
+				<p id='product-list-head'>Продукты</p>
+				<table id="table-product-list">
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 		
 		<div id="header">
@@ -41,7 +52,7 @@
 			<div id="div-side-menu">
 				<ul id="ul-side-menu">
 					<li id="menu-showses">Show cookie info</li>
-					<li>Menu item 2</li>
+					<li>Мои клиенты</li>
 					<li>Menu item 3</li>
 					<li>Menu item 4</li>
 					<li>Menu item 5</li>
@@ -63,8 +74,8 @@
 							<td>Клиент</td>
 							<td>Продукт</td>
 							<td>Оформил</td>
-							<td>Оплата <br /> произведена</td>
-							<td>Edit</td>
+							<td>Внесенная<br />оплата</td>
+							<td>Удалить<br />заказ</td>
 						</tr>
 					</table>
 				</div>

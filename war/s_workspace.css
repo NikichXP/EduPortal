@@ -16,6 +16,14 @@ body {
 	z-index: 500;
 }
 
+#lists-container {
+	height: 100%;
+	width: 100%;
+	display: none;
+	position: absolute;
+	z-index: 504;
+}
+
 #order-edit-form {
 	margin: auto;
 	height: 600px;
@@ -50,12 +58,11 @@ body {
 
 #client-list {
 	margin: auto;
-	left: 35%;
-	top: 19%;
+	margin-top: 185px;
+	width: 600px;
 	background-color: #f1f1f1;
 	display: none;
-	position: absolute;
-	z-index: 502;
+	z-index: 505;
 }
 
 #client-list-head {
@@ -89,9 +96,84 @@ body {
 	background-color: #82a8bc;
 }
 
+.td-client-list {
+	width: 100px;
+	background-color: #fff;
+}
+
 .td-client-list:hover {
 	cursor: pointer;
 	background-color: #82a8bc;
+}
+
+#order-product-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+	cursor: pointer;
+}
+
+#button-product-edit {
+	height: 40px;
+	width: 80px;
+	background-color: #5269b1;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+#product-list {
+	margin: auto;
+	margin-top: 245px;
+	width: 600px;
+	background-color: #f1f1f1;
+	display: none;
+	z-index: 505;
+}
+
+#product-list-head {
+	width: 100%;
+	background-color: #435ea4;
+	text-align: center;
+	color: #fff;
+	line-height: 20px;
+	margin: 0;
+}
+
+#table-product-list {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	width: 100%;
+	font-size: 11px
+}
+
+#table-product-list td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#table-product-list thead {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+	background-color: #82a8bc;
+}
+
+.td-product-list {
+	width: 100px;
+	background-color: #fff;
+} 
+
+.td-product-list:hover {
+	cursor: pointer;
+	background-color: #82a8bc;
+	width: 100px;
 }
 
 #order-edit-text-block {
@@ -101,6 +183,7 @@ body {
 	text-align: center;
 	line-height: 40px;
 }
+
 #order-edit-text-block H2 {
 	color: #fff;
 	margin: 0px;
@@ -225,8 +308,10 @@ body {
 .tr-order:hover {
 	background-color: #82a8bc;
 }
-.td-order-edit:hover {
+.td-order-del:hover {
 	cursor: pointer;
+	background-color: #b0473e;
+	color: #fff;
 }
 
 #table-orders-header {
