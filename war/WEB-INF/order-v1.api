@@ -26,6 +26,31 @@
     "maxAge" : 0
   },
   "methods" : {
+    "order.orderAPI.cancelOrder" : {
+      "path" : "cancelOrder",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.cancelOrder",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          },
+          "orderid" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "order.editOrder" : {
       "path" : "editorder",
       "httpMethod" : "GET",
@@ -44,12 +69,12 @@
             "type" : "string",
             "required" : true
           },
-          "newclientid" : {
-            "type" : "int64",
-            "required" : false
-          },
           "paid" : {
             "type" : "double",
+            "required" : false
+          },
+          "comment" : {
+            "type" : "string",
             "required" : false
           }
         },
@@ -370,6 +395,9 @@
             "type" : "string",
             "format" : "int64"
           },
+          "comment" : {
+            "type" : "string"
+          },
           "clientName" : {
             "type" : "string"
           },
@@ -485,6 +513,11 @@
       }
     },
     "methods" : {
+      "eduportal.api.OrderAPI.cancelOrder" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
       "eduportal.api.OrderAPI.editOrder" : {
         "response" : {
           "$ref" : "Text"

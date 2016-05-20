@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.*;
 
 @Entity
 public class Order extends AbstractEntity {
-	
+
 	@Index
 	private Key<UserEntity> user;
 	@Index
@@ -20,17 +20,19 @@ public class Order extends AbstractEntity {
 	private Date end;
 	@Index
 	private Key<UserEntity> createdBy;
+	private String comment;
 	
-	protected final int maxIdValue = Integer.MAX_VALUE;
+	protected final long maxIdValue = 0;
 
 	public Order() {
 		super();
+		comment = new String();
 	}
-	
+
 	public long getUser() {
 		return user.getId();
 	}
-	
+
 	public UserEntity userEntity() {
 		return Ref.create(user).get();
 	}
@@ -38,7 +40,7 @@ public class Order extends AbstractEntity {
 	public long getProduct() {
 		return product.getId();
 	}
-	
+
 	public Product productEntity() {
 		return Ref.create(product).get();
 	}
@@ -62,7 +64,7 @@ public class Order extends AbstractEntity {
 	public long getCreatedBy() {
 		return createdBy.getId();
 	}
-	
+
 	public UserEntity createdByEntity() {
 		return Ref.create(createdBy).get();
 	}
@@ -82,7 +84,7 @@ public class Order extends AbstractEntity {
 		this.price = price;
 		if (price == paid) {
 			donePaid = true;
-		} else if (Math.abs((price-paid)) < 0.1) {
+		} else if (Math.abs((price - paid)) < 0.1) {
 			donePaid = true;
 		}
 		donePaid = false;
@@ -92,7 +94,7 @@ public class Order extends AbstractEntity {
 		this.paid = paid;
 		if (price == paid) {
 			donePaid = true;
-		} else if (Math.abs((price-paid)) < 0.1) {
+		} else if (Math.abs((price - paid)) < 0.1) {
 			donePaid = true;
 		}
 		donePaid = false;
@@ -114,7 +116,7 @@ public class Order extends AbstractEntity {
 	public boolean getDonePaid() {
 		if (price == paid) {
 			return true;
-		} else if (Math.abs((price-paid)) < 0.1) {
+		} else if (Math.abs((price - paid)) < 0.1) {
 			return true;
 		}
 		return false;
@@ -124,14 +126,23 @@ public class Order extends AbstractEntity {
 		this.donePaid = donePaid;
 	}
 
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " [id=" + id +", user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", start="
-				+ start + ", end=" + end + ", createdBy=" + createdBy + "]";
+		return "Order [user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", donePaid="
+				+ donePaid + ", start=" + start + ", end=" + end + ", createdBy=" + createdBy + ", comment=" + comment
+				+ "]";
 	}
-	
-//	<!--- For frontend-only! ---!>
-	
+
+	// <!--- For frontend-only! ---!>
+
 	private String clientName;
 	private String productName;
 	private String creatorName;
@@ -159,7 +170,5 @@ public class Order extends AbstractEntity {
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
 	}
-	
-	
-	
+
 }

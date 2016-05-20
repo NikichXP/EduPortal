@@ -62,25 +62,35 @@ public class OrderAPI {
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
 	public Text editOrder(@Named("orderid") Long orderid, @Named("token") String token,
-			@Named("newclientid") @Nullable Long newclientid, @Named("paid") @Nullable Double paid) {
+			@Named("paid") @Nullable Double paid, @Named ("comment") @Nullable String comment) {
 		UserEntity admin = AuthContainer.getUser(token);
 		Order order = OrderDAO.getOrder(orderid);
 		if (AccessLogic.canEditOrder(admin, order) == false) {
 			return new Text("You cannot edit this order!");
 		}
 		boolean flag = false;
-		if (newclientid != null) {
-			order.setUser(UserDAO.get(newclientid));
+		if (paid != null) {
+			order.setPaid(order.getPaid()+paid);
 			flag = true;
 		}
-		if (paid != null) {
-			order.setPaid(paid);
+		if (comment != null) {
+			order.setComment(comment);
 			flag = true;
 		}
 		if (flag) {
 			OrderDAO.saveOrder(order);
 		}
 		return new Text(order.toString());
+	}
+	
+	@ApiMethod (path = "cancelOrder", httpMethod = "GET")
+	public Text cancelOrder (@Named("token") String token, @Named ("orderid") Long orderid) {
+		Order order = OrderDAO.getOrder(orderid);
+		if (!AccessLogic.canCancelOrder(token, order)) {
+			return new Text ("403 Forbidden");
+		}
+		OrderDAO.deleteOrder(order);
+		return new Text ("Order cancelled");
 	}
 
 	/**

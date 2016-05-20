@@ -609,6 +609,9 @@
             "type" : "string",
             "format" : "int64"
           },
+          "comment" : {
+            "type" : "string"
+          },
           "clientName" : {
             "type" : "string"
           },

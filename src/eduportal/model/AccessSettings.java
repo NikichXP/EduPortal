@@ -9,7 +9,8 @@ public class AccessSettings {
 	public static final int MODERATOR_LEVEL = 10;
 	public static final int ADMIN_LEVEL = 0xBACC;
 	
-	public static final Corporation OWNERCORP = UserDAO.getOwnerCorp();
+	public static final Corporation OWNERCORP() { if (ownercorp == null) { ownercorp = UserDAO.getOwnerCorp();} return ownercorp; }
+	private static Corporation ownercorp;
 	public static final String OWNERCORP_NAME = "Vedi Tour Group";
 	
 	public static final boolean ALLOW_USER_MULTISESSIONS = false;
@@ -26,6 +27,7 @@ public class AccessSettings {
 	public static final int DEACTIVATE_PRODUCTS = MODERATOR_LEVEL;
 	public static final int CREATE_CITY = ADMIN_LEVEL;
 	public static final int LIST_ALL_ORDERS = ADMIN_LEVEL;
+	public static final int CANCEL_ORDER = EDIT_ORDER;
 	
 	
 }

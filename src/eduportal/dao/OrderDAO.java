@@ -69,5 +69,7 @@ public class OrderDAO {
 		return ofy().load().type(Order.class).id(id).now();
 	}
 
-	
+	public static void deleteOrder (Order order) {
+		ofy().delete().entity(order);
+	}
 }

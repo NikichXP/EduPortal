@@ -25,7 +25,6 @@ public abstract class AbstractEntity {
 				id = new Random().nextLong();
 			} while (id <= 0);
 		}
-		
 	}
 	
 	public long getId() {
