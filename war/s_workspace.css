@@ -16,55 +16,19 @@ body {
 	z-index: 500;
 }
 
-/* ORDER EDITING */
 
-#order-edit-form {
-	margin: auto;
-	height: 600px;
-	width: 50%;
-	left: 25%;
-	top: 10%;
-	background-color: #f1f1f1;
-	border: 1px solid #d9e0e7;
-	display: none;
-	position: absolute;
-	z-index: 501;
-}
-
-#order-edit-text-block {
-	height: 40px;
-	width: 100%;
-	background-color: #435ea4;
-	text-align: center;
-	line-height: 40px;
-}
-
-#order-edit-text-block H2 {
-	color: #fff;
-	margin: 0px;
-}
-
-#order-edit-main {
-	margin: auto;
-	margin-top: 10px;
-	width: 100%;
-	text-align: center;
-}
 
 #order-client-name {
 	margin: auto;
 	width: 200px;
-	line-height: 40px;
 	background-color: #fff;
 	border: 1px solid #d9e0e7;
 	cursor: pointer;
 }
 
-
 #order-product-name {
 	margin: auto;
 	width: 200px;
-	line-height: 40px;
 	background-color: #fff;
 	border: 1px solid #d9e0e7;
 	cursor: pointer;
@@ -257,7 +221,91 @@ body {
 	text-align: center;
 }
 
-#div-send-button {
+/* ORDER CREATION*/
+
+#order-create {
+	margin: auto;
+	height: 300px;
+	width: 50%;
+	left: 25%;
+	top: 10%;
+	background-color: #f1f1f1;
+	border: 1px solid #d9e0e7;
+	display: none;
+	position: absolute;
+	z-index: 501;
+}
+
+#order-create-text-block {
+	height: 40px;
+	width: 100%;
+	background-color: #435ea4;
+	text-align: center;
+	line-height: 40px;
+}
+
+#order-create-text-block H2 {
+	color: #fff;
+	margin: 0px;
+}
+
+#order-create-main {
+	margin: auto;
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+
+#order-create-client-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+}
+
+#order-create-product-name {
+	margin: auto;
+	width: 200px;
+	line-height: 40px;
+	background-color: #fff;
+	border: 1px solid #d9e0e7;
+}
+
+#table-order-create {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	margin: auto;
+	width: 90%;
+	font-size: 11px
+}
+
+#table-order-create td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#create-input-paid {
+	width: 100%; 
+	text-align: center;
+	border: none;
+	background-color: #fff;
+}
+
+#create-input-paid:focus {
+	outline: none;
+	background-color: #fff;
+}
+
+td.order-create-td-res {
+	background-color: #fff;
+}
+
+
+
+.div-form-button {
 	height: 40px;
 	width: 80px;
 	margin: auto;

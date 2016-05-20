@@ -56,9 +56,12 @@
 						"<td>" + resData.items[i].creatorName + "</td>" +
 						"<td>" + resData.items[i].paid + "</td>" +
 					"</tr>");	
-			}
-			$('#li-open-orders').append(" " + i)
-			
+			};
+			$('#li-open-orders').append(" " + i);
+			var k = 0;
+			for (var i = 0; i < resData.items.length; i++)
+				if (resData.items[i].donePaid == false) k++;
+			$('#li-done-orders').append(" " + k);
 		},
 	});	
 	//debug button to get token	
@@ -79,6 +82,7 @@
 		$('#client-list').css('display', 'none');
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
+		$('#order-create').css('display', 'none');
 	});
 	//hide lists block
 	$('#lists-container').on('click', function(){
@@ -95,7 +99,11 @@
 	});
 	//get product name from table
 	$('#table-product-list').on("click", "td.td-product-list", function() {
-		$('#order-product-name').html($(this).html())
+		var chosenProduct = $(this).html();
+		var chosenProductId = $(this).children('input.inner-input-1').val();
+		var chosenProductPrice = $(this).children('input.inner-input-2').val();
+		
+		$('#order-product-name').html(chosenProduct);
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
 	});
@@ -147,7 +155,11 @@
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-product-list-' + (i + 1)).append(
-					"<td class='td-product-list'>" + resData.items[count].title + "</td>"
+					"<td class='td-product-list'>" + 
+					resData.items[count].title + 
+					"<input type='hidden' class='inner-input-1' value=" + resData.items[count].id + ">" +
+					"<input type='hidden' class='inner-input-2' value=" + resData.items[count].id + ">" //СЮДА ВСТАВИТЬ ЦЕНУ
+					+ "</td>"
 					);
 					count++;
 					if (count == imax) break;
@@ -195,7 +207,7 @@
 		});	
 	});
 	//Send order payment
-	$('#div-send-button').on('click', function(){
+	$('#order-edit-send').on('click', function(){
 
 		if ($('#input-paid').val() != "")	
 			var payment = Math.round($('#input-paid').val() * 100) / 100;
@@ -215,31 +227,36 @@
 		});		
 
 	});
-	
-	//open order edit menu
-	/* $('#table-orders').on("click", "td.td-order-edit-form", function() {
-		var $tr = $(this).closest('tr');
-		var rowIndex = parseInt($tr.index()) - 1;
+	//Delete order
+	$('#order-edit-del').on('click', function(){
+
+		var delData = {
+			token: authSesToken,
+			orderid: $('#input-order-Id').val(),
+		};
 		
 		$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
-		data: tokenJson,
-		success: function(resData) { 
-			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
-			$('#order-client-name').html(resData.items[rowIndex].clientName);	
-			$('#order-product-name').html(resData.items[rowIndex].productName);	
-			
-			if (resData.items[rowIndex].donePaid == true) var radioChecked = "#done-paid-yes";
-			else var radioChecked = "#done-paid-no";
-			
-			$(radioChecked).attr("checked", "checked");
-			
-			$('#opacity').css('display', 'block');
-			$('#order-edit-form').css('display', 'block');
-		},
-		});	
-	}); */
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/cancelOrder',
+			data: delData,
+			success: location.reload(),	
+		});		
+
+	});
+	//open order creation menu
+	$('#menu-create-order').on('click', function() {
+		
+		$('#order-create-text-block').html("<H2>Создание заказа</H2>");
+		/* $('#table-order-payment').html("<tbody>" +
+						"<tr><td>Клиент</td><td id='order-client-name'></td></tr>" +
+						"<tr><td>Продукт</td><td id='order-product-name'></td></tr>" +
+						"<tr><td>Стоимость</td><td></td></tr>" +
+						"<tr><td>Внесенная оплата</td><td></td></tr>" +
+					"</tbody>"); */
+		$('#opacity').css('display', 'block');
+		$('#order-create').css('display', 'block');
+	});
+
 	
 });
 

@@ -43,24 +43,41 @@
 					<p>Внесите оплату:</p>
 					<input type="text" id="input-paid" name="paid" placeholder="0.00">
 				</div>
-				<div id="div-send-button">Внести</div>
+				<div class="div-form-button" id="order-edit-send">Принять</div>
+				<div class="div-form-button" id="order-edit-del">Отменить заказ</div>
 			</div>
 			<input type="hidden" id="input-order-Id">
 		</div>
 		
-		<!-- <div id="order-edit-form">
-			<div id="order-edit-text-block"><H2>Редактирование заказа</H2></div>
-				<div id="order-edit-main">	
-					<label for="order-id"></label><br/>
-					<label for="order-client-name">Клиент: </label><br/>
-					<div id="order-client-name"></div>
-					<label for="order-product-name">Продукт: </label><br/>
-					<div id="order-product-name"></div>
-					<label for="login">Внесите оплату: </label><br/>
-					<input type="radio" id="done-paid-yes" name="done-paid">Да<br/>
-					<input type="radio" id="done-paid-no" name="done-paid">Нет<br/>
-				</div>
+		<div id="order-create">
+			<div id="order-create-text-block"></div>
+			<div id="order-create-main">	
+				<table id="table-order-create">
+					<tbody>
+						<tr>
+							<td>Клиент</td>
+							<td id='order-client-name'></td>
+						</tr>
+						<tr>
+							<td>Продукт</td>
+							<td id='order-product-name'></td>
+						</tr>
+						<tr>
+							<td>Стоимость</td>
+							<td class='order-create-td-res'></td>
+						</tr>
+						<tr>
+							<td>Внесенная оплата</td>
+							<td class='order-create-td-res'><input type="text" id="create-input-paid" placeholder="0.00"></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="div-form-button" id="order-edit-send">Принять</div>
+				<div class="div-form-button" id="order-edit-del">Отменить заказ</div>
+			</div>
+			<input type="hidden" id="input-order-Id">
 		</div>
+		
 		<div id="lists-container">
 			<div id="client-list">
 				<p id='client-list-head'>Ваши клиенты</p>
@@ -74,7 +91,7 @@
 					<tbody></tbody>
 				</table>
 			</div>
-		</div> -->
+		</div>
 		
 		<div id="header">
 			<div id="header-main"><H1>EduPortal</H1></div>
@@ -85,7 +102,7 @@
 				<ul id="ul-side-menu">
 					<li id="menu-showses">Show cookie info</li>
 					<li>Мои клиенты</li>
-					<li>Menu item 3</li>
+					<li id="menu-create-order">Оформить заказ</li>
 					<li>Menu item 4</li>
 					<li>Menu item 5</li>
 					<li>Menu item 6</li>
@@ -96,7 +113,7 @@
 				<p id="p-greeting"></p>
 				<ul id="ul-stats">
 					<li id="li-open-orders">Открытых заказов:</li>
-					<li>Неоплаченых заказов:</li>
+					<li id="li-done-orders">Неоплаченых заказов:</li>
 				</ul>
 				<div id="div-order-table">
 					<table id="table-orders">
