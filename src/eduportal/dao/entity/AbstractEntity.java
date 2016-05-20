@@ -1,11 +1,17 @@
 package eduportal.dao.entity;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3463460744465924474L;
 	
 	@Id
 	protected long id;

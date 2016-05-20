@@ -8,12 +8,11 @@ import eduportal.util.UserUtils;
 
 @Entity
 public class UserEntity extends AbstractEntity {
-
+	private static final long serialVersionUID = 1441712953568281477L;
+	
 	@Index
 	private String login;
-	/**
-	 * Pass is always encoded
-	 */
+	/** Pass is always encoded */
 	@Index
 	private String pass;
 	@Index

@@ -108,6 +108,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "user.auth" : {
+      "path" : "auth",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.auth",
+      "request" : {
+        "parameters" : {
+          "login" : {
+            "type" : "string",
+            "required" : true
+          },
+          "pass" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "user.checkToken" : {
       "path" : "checkToken",
       "httpMethod" : "GET",
@@ -116,6 +141,27 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.UserAPI.checkToken",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.getMyClients" : {
+      "path" : "getMyClients",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.getMyUsers",
       "request" : {
         "parameters" : {
           "token" : {
@@ -166,16 +212,32 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "user.getMyClients" : {
-      "path" : "getMyClients",
+    "user.updateUser" : {
+      "path" : "update",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.getMyUsers",
+      "rosyMethod" : "eduportal.api.UserAPI.updateUserInfo",
       "request" : {
         "parameters" : {
+          "name" : {
+            "type" : "string",
+            "required" : false
+          },
+          "surname" : {
+            "type" : "string",
+            "required" : false
+          },
+          "mail" : {
+            "type" : "string",
+            "required" : false
+          },
+          "phone" : {
+            "type" : "string",
+            "required" : false
+          },
           "token" : {
             "type" : "string",
             "required" : true
@@ -187,21 +249,21 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "user.auth" : {
-      "path" : "auth",
+    "user.changePassword" : {
+      "path" : "changepass",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.auth",
+      "rosyMethod" : "eduportal.api.UserAPI.changePass",
       "request" : {
         "parameters" : {
-          "login" : {
+          "exist" : {
             "type" : "string",
             "required" : true
           },
-          "pass" : {
+          "new" : {
             "type" : "string",
             "required" : true
           }
@@ -286,68 +348,6 @@
           },
           "userid" : {
             "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "user.updateUser" : {
-      "path" : "update",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.updateUserInfo",
-      "request" : {
-        "parameters" : {
-          "name" : {
-            "type" : "string",
-            "required" : false
-          },
-          "surname" : {
-            "type" : "string",
-            "required" : false
-          },
-          "mail" : {
-            "type" : "string",
-            "required" : false
-          },
-          "phone" : {
-            "type" : "string",
-            "required" : false
-          },
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "user.changePassword" : {
-      "path" : "changepass",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UserAPI.changePass",
-      "request" : {
-        "parameters" : {
-          "exist" : {
-            "type" : "string",
-            "required" : true
-          },
-          "new" : {
-            "type" : "string",
             "required" : true
           }
         },
@@ -661,14 +661,14 @@
           "$ref" : "Text"
         }
       },
+      "eduportal.api.UserAPI.auth" : {
+        "response" : {
+          "$ref" : "AuthToken"
+        }
+      },
       "eduportal.api.UserAPI.checkToken" : {
         "response" : {
           "$ref" : "Text"
-        }
-      },
-      "eduportal.api.UserAPI.listUserFilter" : {
-        "response" : {
-          "$ref" : "UserEntityCollection"
         }
       },
       "eduportal.api.UserAPI.getMyUsers" : {
@@ -676,9 +676,19 @@
           "$ref" : "UserEntityCollection"
         }
       },
-      "eduportal.api.UserAPI.auth" : {
+      "eduportal.api.UserAPI.listUserFilter" : {
         "response" : {
-          "$ref" : "AuthToken"
+          "$ref" : "UserEntityCollection"
+        }
+      },
+      "eduportal.api.UserAPI.updateUserInfo" : {
+        "response" : {
+          "$ref" : "UserEntity"
+        }
+      },
+      "eduportal.api.UserAPI.changePass" : {
+        "response" : {
+          "$ref" : "Text"
         }
       },
       "eduportal.api.UserAPI.userDelete" : {
@@ -694,16 +704,6 @@
       "eduportal.api.UserAPI.allowCountry" : {
         "response" : {
           "$ref" : "UserEntity"
-        }
-      },
-      "eduportal.api.UserAPI.updateUserInfo" : {
-        "response" : {
-          "$ref" : "UserEntity"
-        }
-      },
-      "eduportal.api.UserAPI.changePass" : {
-        "response" : {
-          "$ref" : "Text"
         }
       },
       "eduportal.api.UserAPI.listAnotherUserFilter" : {

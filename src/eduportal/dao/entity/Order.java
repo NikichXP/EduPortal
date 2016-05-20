@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.*;
 
 @Entity
 public class Order extends AbstractEntity {
-
+	private static final long serialVersionUID = -8893348970030751098L;
 	@Index
 	private Key<UserEntity> user;
 	@Index
@@ -23,10 +23,15 @@ public class Order extends AbstractEntity {
 	private String comment;
 	
 	protected final long maxIdValue = 0;
-
+	
 	public Order() {
 		super();
+	}
+
+	public Order(Product p) {
+		super();
 		comment = new String();
+		this.price = p.getDefaultPrice();
 	}
 
 	public long getUser() {
@@ -82,9 +87,7 @@ public class Order extends AbstractEntity {
 
 	public void setPrice(double price) {
 		this.price = price;
-		if (price == paid) {
-			donePaid = true;
-		} else if (Math.abs((price - paid)) < 0.1) {
+		if (price >= paid) {
 			donePaid = true;
 		}
 		donePaid = false;
@@ -92,9 +95,7 @@ public class Order extends AbstractEntity {
 
 	public void setPaid(double paid) {
 		this.paid = paid;
-		if (price == paid) {
-			donePaid = true;
-		} else if (Math.abs((price - paid)) < 0.1) {
+		if (price >= paid) {
 			donePaid = true;
 		}
 		donePaid = false;
@@ -114,9 +115,7 @@ public class Order extends AbstractEntity {
 	}
 
 	public boolean getDonePaid() {
-		if (price == paid) {
-			return true;
-		} else if (Math.abs((price - paid)) < 0.1) {
+		if (price >= paid) {
 			return true;
 		}
 		return false;

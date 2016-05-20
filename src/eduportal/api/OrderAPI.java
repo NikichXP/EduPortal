@@ -52,8 +52,7 @@ public class OrderAPI {
 		if (admin == null) {
 			return new Text ("Wrong token");
 		}
-		Order o = new Order();
-		o.setProduct(ProductDAO.get(productid));
+		Order o = new Order(ProductDAO.get(productid));
 		o.setCreatedBy(admin);
 		o.setUser(UserDAO.get(clientid));
 		OrderDAO.saveOrder(o);

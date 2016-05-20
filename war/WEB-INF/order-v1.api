@@ -26,31 +26,6 @@
     "maxAge" : 0
   },
   "methods" : {
-    "order.orderAPI.cancelOrder" : {
-      "path" : "cancelOrder",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.cancelOrder",
-      "request" : {
-        "parameters" : {
-          "token" : {
-            "type" : "string",
-            "required" : true
-          },
-          "orderid" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "order.editOrder" : {
       "path" : "editorder",
       "httpMethod" : "GET",
@@ -84,6 +59,60 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "order.orderAPI.createOrder" : {
+      "path" : "createorder",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.createOrder",
+      "request" : {
+        "parameters" : {
+          "productid" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "clientid" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "order.orderAPI.cancelOrder" : {
+      "path" : "cancelOrder",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.cancelOrder",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          },
+          "orderid" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "order.getCreatedOrders" : {
       "path" : "createdOrders",
       "httpMethod" : "GET",
@@ -105,14 +134,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "order.getMyOrders" : {
-      "path" : "myOrders",
+    "order.getAllOrders" : {
+      "path" : "allOrders",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.getMyOrders",
+      "rosyMethod" : "eduportal.api.OrderAPI.getAllOrders",
       "request" : {
         "parameters" : {
           "token" : {
@@ -126,14 +155,35 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "order.getAllOrders" : {
-      "path" : "allOrders",
+    "order.getAllProducts" : {
+      "path" : "allProducts",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.getAllOrders",
+      "rosyMethod" : "eduportal.api.OrderAPI.getAllProducts",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "order.getMyOrders" : {
+      "path" : "myOrders",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.OrderAPI.getMyOrders",
       "request" : {
         "parameters" : {
           "token" : {
@@ -171,56 +221,6 @@
           },
           "created_by" : {
             "type" : "string",
-            "required" : true
-          },
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "order.getAllProducts" : {
-      "path" : "allProducts",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.getAllProducts",
-      "request" : {
-        "parameters" : {
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "order.orderAPI.createOrder" : {
-      "path" : "createorder",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.OrderAPI.createOrder",
-      "request" : {
-        "parameters" : {
-          "productid" : {
-            "type" : "int64",
-            "required" : true
-          },
-          "clientid" : {
-            "type" : "int64",
             "required" : true
           },
           "token" : {
@@ -513,12 +513,17 @@
       }
     },
     "methods" : {
-      "eduportal.api.OrderAPI.cancelOrder" : {
+      "eduportal.api.OrderAPI.editOrder" : {
         "response" : {
           "$ref" : "Text"
         }
       },
-      "eduportal.api.OrderAPI.editOrder" : {
+      "eduportal.api.OrderAPI.createOrder" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.OrderAPI.cancelOrder" : {
         "response" : {
           "$ref" : "Text"
         }
@@ -528,17 +533,7 @@
           "$ref" : "OrderCollection"
         }
       },
-      "eduportal.api.OrderAPI.getMyOrders" : {
-        "response" : {
-          "$ref" : "OrderCollection"
-        }
-      },
       "eduportal.api.OrderAPI.getAllOrders" : {
-        "response" : {
-          "$ref" : "OrderCollection"
-        }
-      },
-      "eduportal.api.OrderAPI.filterOrders" : {
         "response" : {
           "$ref" : "OrderCollection"
         }
@@ -548,9 +543,14 @@
           "$ref" : "ProductCollection"
         }
       },
-      "eduportal.api.OrderAPI.createOrder" : {
+      "eduportal.api.OrderAPI.getMyOrders" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "OrderCollection"
+        }
+      },
+      "eduportal.api.OrderAPI.filterOrders" : {
+        "response" : {
+          "$ref" : "OrderCollection"
         }
       },
       "eduportal.api.OrderAPI.addCity" : {

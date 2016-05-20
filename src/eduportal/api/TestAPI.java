@@ -1,10 +1,12 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
+
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
@@ -15,7 +17,8 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add(ofy().load().type(Corporation.class).filter("isOwnerCorp", true).first().now());
+		UserEntity u = ofy().load().type(UserEntity.class).first().now();
+		ret.add(u);
 		ret.add("end");
 		return ret;
 	}
@@ -28,9 +31,9 @@ public class TestAPI {
 		}
 		return ret;
 	}
-	
+
 	@ApiMethod(name = "listSessions", path = "listsession", httpMethod = "GET")
-	public List<String> listSession() { 
+	public List<String> listSession() {
 		return AuthContainer.testMethod();
 	}
 
@@ -124,30 +127,29 @@ public class TestAPI {
 				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
 		for (Product prod : p) {
-			prod.setActual(Math.random()>0.5);
+			prod.setActual(Math.random() > 0.5);
+			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);
 		}
 		ProductDAO.save(p);
-
+		Random r = new Random();
 		for (int ptr = 0; ptr < o.length; ptr++) {
-			o[ptr] = new Order();
+			o[ptr] = new Order(p[r.nextInt(p.length)]);
 		}
 		if (shuffled == null) {
 			shuffled = false;
 		}
-		Random r = new Random();
+		
 		int i = 0;
 		for (Order ord : o) {
 			i++;
 			if (shuffled) {
 				ord.setUser(clients[r.nextInt(clients.length)]);
 				ord.setCreatedBy(admins[i % admins.length]);
-				ord.setProduct(p[r.nextInt(p.length)]);
 			} else {
 				ord.setUser(clients[i % clients.length]);
 				ord.setCreatedBy(admins[i % admins.length]);
 				ord.setProduct(p[i % p.length]);
 			}
-			ord.setPrice((double) Math.round(Math.random() * 10_000_00) / 100);
 			if (Math.random() > 0.5) {
 				ord.setPaid(ord.getPrice());
 			} else {

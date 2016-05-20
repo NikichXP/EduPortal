@@ -1,8 +1,10 @@
 package eduportal.model;
 
+import java.io.Serializable;
 import eduportal.dao.entity.UserEntity;
 
-class AuthSession {
+public class AuthSession implements Serializable {
+	private static final long serialVersionUID = -3213250756514680668L;
 	private UserEntity user;
 	private long timeout;
 	private int accessLevel;
