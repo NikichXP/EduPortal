@@ -41,7 +41,7 @@ public class AuthContainer {
 
 	private static void put(String key, AuthSession value) {
 		sessions.put(key, value);
-		cache.put(key, value);
+		cache.put(key, value, Expiration.byDeltaSeconds(3600*24)); //1 day
 	}
 
 	private static void remove(String token) {
