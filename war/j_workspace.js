@@ -5,15 +5,32 @@
 	
 	var authSesToken = getCookie("sesToken");
 	var authSesTO = getCookie("sesTO");
+
+	var ordersList = {};
+	var tokenJson = {
+		token: authSesToken,
+	};
+		
 	
 	if (authSesToken != null)
 		if(authSesTO - dateObj < 0)
 			window.location = "auth.html";
+
+	//check if session ok every 60 secs
+	setInterval(function() 
+	{ 
+		if (getCookie("sesToken") == null) window.location = "auth.html";
+		else 
+			$.ajax({
+				type: 'GET',
+				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/checkToken',
+				data: { token: getCookie("sesToken")},
+				success: function(resData) { 
+					if (resData.value == false) window.location = "auth.html";
+				},
+			});		
+	}, 60000);
 	
-	var ordersList = {};
-	var tokenJson = {
-			token: authSesToken,
-		};
 	//get user name	
 	$.ajax({
 		type: 'GET',

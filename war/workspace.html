@@ -6,9 +6,19 @@
 		
 		<link rel='stylesheet' type='text/css' href='s_workspace.css' />
 		
-		<script type="text/javascript" src="jquery-2.2.3.min.js"></script>
-		<script type="text/javascript" src="j_workspace.js"></script>
 		<script type="text/javascript" src="cookie_func.js"></script>
+		<script>
+			var authSesToken = getCookie("sesToken");
+			var authSesTO = getCookie("sesTO");
+			var dateObj = new Date();
+			
+			if (authSesToken != null)
+				if(authSesTO - dateObj < 0)
+					window.location = "auth.html";
+		</script>
+		
+		<script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="j_workspace.js"></script>	
 		
 		<title>EduPortal</title>
 	</head>
