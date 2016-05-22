@@ -98,6 +98,12 @@ public class OrderAPI {
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET")
 	public List<Order> getAllOrders(@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
+		return ((u == null) ? null : (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? OrderDAO.getCreatedOrdersByUser(u) : OrderDAO.getSelfOrdersByUser(u));
+	}
+	
+	@ApiMethod(name = "getEveryOrders", path = "everyOrders", httpMethod = "GET")
+	public List<Order> getEveryOrders(@Named("token") String token) {
+		UserEntity u = AuthContainer.getUser(token);
 		return ((u == null) ? null : OrderDAO.getOrdersByUser(u));
 	}
 
