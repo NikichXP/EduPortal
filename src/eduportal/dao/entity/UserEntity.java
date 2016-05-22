@@ -287,6 +287,9 @@ public class UserEntity extends AbstractEntity {
 
 	public void wipeSecData() {
 		this.pass = null;
+		this.ordersId = null;
+		this.permission = null;
+		
 	}
 
 }

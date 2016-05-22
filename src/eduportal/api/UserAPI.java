@@ -1,7 +1,6 @@
 package eduportal.api;
 
 import java.util.*;
-import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.ObjectifyService;
@@ -114,6 +113,17 @@ public class UserAPI {
 		} else {
 			return null;
 		}
+	}
+	
+	@ApiMethod (path = "getInfo", httpMethod = "GET")
+	public UserEntity getInfo (@Named ("token") String token) {
+		final UserEntity u;
+		u = AuthContainer.getUser(token);
+		if (u == null) {
+			return null;
+		}
+		u.wipeSecData();
+		return u;
 	}
 	
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
