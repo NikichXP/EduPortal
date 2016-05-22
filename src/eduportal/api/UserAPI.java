@@ -178,13 +178,8 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
-	public Text changePass(HttpServletRequest req, @Named("exist") String exist, @Named("new") String newpass) {
-		UserEntity u = null;
-		for (Cookie c : req.getCookies()) {
-			if (c.getName().equals("sesToken")) {
-				u = AuthContainer.getUser(c.getValue());
-			}
-		}
+	public Text changePass(@Named ("token") String token, @Named("exist") String exist, @Named("new") String newpass) {
+		UserEntity u = AuthContainer.getUser(token);
 		if (u == null) {
 			return new Text("No suitable token recieved");
 		}
