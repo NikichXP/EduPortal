@@ -26,12 +26,15 @@ public class Order extends AbstractEntity {
 	
 	public Order() {
 		super();
+		comment = "";
 	}
 
 	public Order(Product p) {
 		super();
+		this.product = Ref.create(p).getKey();
 		comment = new String();
 		this.price = p.getDefaultPrice();
+		this.productName = p.getTitle();
 	}
 
 	public long getUser() {

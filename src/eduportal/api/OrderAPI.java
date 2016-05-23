@@ -47,12 +47,15 @@ public class OrderAPI {
 
 	@ApiMethod(path = "createorder", httpMethod = "GET")
 	public Text createOrder(@Named("productid") Long productid, @Named("clientid") Long clientid,
-			@Named("token") String token) { // Token to identify creator
+			@Named("token") String token, @Named("paid") @Nullable Double paid) { // Token to identify creator
 		UserEntity admin = AuthContainer.getUser(token);
 		if (admin == null) {
 			return new Text ("Wrong token");
 		}
 		Order o = new Order(ProductDAO.get(productid));
+		if (paid != null) {
+			o.setPaid(paid);
+		}
 		o.setCreatedBy(admin);
 		o.setUser(UserDAO.get(clientid));
 		OrderDAO.saveOrder(o);

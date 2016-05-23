@@ -7,6 +7,7 @@ import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.util.AuthToken;
 import com.google.appengine.api.memcache.*;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class AuthContainer {
 
@@ -36,12 +37,22 @@ public class AuthContainer {
 		} catch (Exception e) {
 			return null;
 		}
-		return null;
+		AuthSession ret = ofy().load().type(AuthSession.class).id(key).now();
+		if (ret.getTimeout() > System.currentTimeMillis()) {
+			List<AuthSession> clearList = ofy().load().type(AuthSession.class).filter("timeout > ", System.currentTimeMillis()).list();
+			ofy().delete().entities(clearList);
+			ret = null;
+		}
+		if (ret != null) {
+			sessions.put(key, ret); //back-impl
+		}
+		return ret;
 	}
 
 	private static void put(String key, AuthSession value) {
 		sessions.put(key, value);
 		cache.put(key, value, Expiration.byDeltaSeconds(3600*24)); //1 day
+		ofy().save().entity(value.setToken(key));
 	}
 
 	private static void remove(String token) {
@@ -50,6 +61,7 @@ public class AuthContainer {
 		} catch (Exception e) {
 		}
 		cache.delete(token);
+		ofy().delete().type(AuthSession.class).id(token);
 	}
 
 	public static AuthToken authenticate(String login, String pass) {
@@ -64,66 +76,10 @@ public class AuthContainer {
 			AuthToken ret = new AuthToken();
 			ret.setSessionId(token);
 			ret.setTimeoutTimestamp(session.getTimeout());
+			ret.putAccessLevelInt(user.getAccessLevel());
 			return ret;
 		}
 	}
-
-	// BELOW IS FOR UNCACHED VERS
-
-	// /**
-	// * Authenticate user
-	// *
-	// * @param login
-	// * - user's login
-	// * @param pass
-	// * - user's pass
-	// * @return String token if login and pass are true; null if bad
-	// credentials
-	// */
-	// public static AuthToken authenticate(String login, String pass) {
-	// synchronized (sessions) {
-	// UserEntity user = UserDAO.get(login, pass);
-	// if (user == null) {
-	// return null;
-	// }
-	// if (user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
-	// if (!AccessSettings.ALLOW_WORKER_MULTISESSIONS) {
-	// if (users.contains(user.getId()) == false) {
-	// users.add(user.getId());
-	// } else {
-	// for (String s : sessions.keySet()) {
-	// if (sessions.get(s).getUser().getId() == user.getId()) {
-	// sessions.remove(s);
-	// }
-	// }
-	// }
-	// }
-	// } else {
-	// if (!AccessSettings.ALLOW_USER_MULTISESSIONS) {
-	// if (users.contains(user.getId()) == false) {
-	// users.add(user.getId());
-	// } else {
-	// for (String s : sessions.keySet()) {
-	// if (sessions.get(s).getUser().getId() == user.getId()) {
-	// sessions.remove(s);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// String token = UUID.randomUUID().toString();
-	// AuthSession session = new AuthSession(user);
-	// sessions.put(token, session);
-	// AuthToken ret = new AuthToken();
-	// ret.setSessionId(token);
-	// ret.setTimeoutTimestamp(
-	// System.currentTimeMillis() + ((user.getAccessLevel() >=
-	// AccessSettings.MODERATOR_LEVEL)
-	// ? AccessSettings.WORKER_SESSION_TIMEOUT :
-	// AccessSettings.USER_SESSION_TIMEOUT));
-	// return ret;
-	// }
-	// }
 
 	public static boolean checkReq(String token, int acclvl) {
 		synchronized (sessions) {
@@ -149,7 +105,7 @@ public class AuthContainer {
 			}
 			UserEntity u = null;
 			try {
-				u = get(token).getUser();
+				u = get(token).user();
 			} catch (Exception e) {
 				return null;
 			}
@@ -204,10 +160,10 @@ public class AuthContainer {
 		synchronized (sessions) {
 			ArrayList<String> ret = new ArrayList<>();
 			for (String s : keySet()) {
-				ret.add("Session: " + s + "  ==  " + sessions.get(s).getUser());
+				ret.add("Session: " + s + "  ==  " + sessions.get(s).user());
 				ret.add("Token_t: " + s + "  ==  "
 						+ (((double) sessions.get(s).getTimeout() - System.currentTimeMillis()) / (1000 * 3600)));
-				ret.add("Access : " + s + "  ==  " + sessions.get(s).getUser().getAccessLevel());
+				ret.add("Access : " + s + "  ==  " + sessions.get(s).user().getAccessLevel());
 			}
 			return ret;
 		}
