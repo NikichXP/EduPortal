@@ -93,17 +93,22 @@
 	});
 	//get client name from table
 	$('#table-client-list').on("click", "td.td-client-list", function() {
+		var chosenClientId = $(this).children('input.inner-client-input-1').val();
 		$('#order-client-name').html($(this).html())
 		$('#client-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
+		
+		$('#input-order-client-id').val(chosenClientId);
 	});
 	//get product name from table
 	$('#table-product-list').on("click", "td.td-product-list", function() {
 		var chosenProduct = $(this).html();
-		var chosenProductId = $(this).children('input.inner-input-1').val();
-		var chosenProductPrice = $(this).children('input.inner-input-2').val();
+		var chosenProductId = $(this).children('input.inner-product-input-1').val();
+		var chosenProductPrice = $(this).children('input.inner-product-input-2').val();
 		
 		$('#order-product-name').html(chosenProduct);
+		$('#order-product-price').html(chosenProductPrice);
+		$('#input-order-product-id').val(chosenProductId);
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
 	});
@@ -125,7 +130,9 @@
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-client-list-' + (i + 1)).append(
-					"<td class='td-client-list'>" + resData.items[count].name + " " + resData.items[count].surname + "</td>"
+					"<td class='td-client-list'>" + resData.items[count].name + " " + resData.items[count].surname + 
+					"<input type='hidden' class='inner-client-input-1' value=" + resData.items[count].id + ">" +
+					"</td>"
 					);
 					count++;
 					if (count == imax) break;
@@ -157,8 +164,8 @@
 					$('#tr-product-list-' + (i + 1)).append(
 					"<td class='td-product-list'>" + 
 					resData.items[count].title + 
-					"<input type='hidden' class='inner-input-1' value=" + resData.items[count].id + ">" +
-					"<input type='hidden' class='inner-input-2' value=" + resData.items[count].id + ">" //СЮДА ВСТАВИТЬ ЦЕНУ
+					"<input type='hidden' class='inner-product-input-1' value=" + resData.items[count].id + ">" +
+					"<input type='hidden' class='inner-product-input-2' value=" + resData.items[count].defaultPrice + ">" 
 					+ "</td>"
 					);
 					count++;
@@ -247,17 +254,37 @@
 	$('#menu-create-order').on('click', function() {
 		
 		$('#order-create-text-block').html("<H2>Создание заказа</H2>");
-		/* $('#table-order-payment').html("<tbody>" +
-						"<tr><td>Клиент</td><td id='order-client-name'></td></tr>" +
-						"<tr><td>Продукт</td><td id='order-product-name'></td></tr>" +
-						"<tr><td>Стоимость</td><td></td></tr>" +
-						"<tr><td>Внесенная оплата</td><td></td></tr>" +
-					"</tbody>"); */
+		
 		$('#opacity').css('display', 'block');
 		$('#order-create').css('display', 'block');
 	});
-
-	
+	//send new order
+	$('#order-create-send').on('click', function() {
+		
+		var pID = $('#input-order-product-id').val();
+		var cID = $('#input-order-client-id').val();
+		var paidSum = $('#create-input-paid').val();
+		
+		if (!$.isNumeric(paidSum)) paidSum = 0;
+		if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
+		else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
+		else
+		{
+			var orderData = {
+			token: authSesToken,
+			productid: pID,
+			clientid: cID,
+			paid: paidSum,
+			};
+			
+			$.ajax({
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
+			data: orderData,
+			success: location.reload(),	
+			});	
+		};		
+	});
 });
 
 function checkBool(data)
