@@ -303,7 +303,70 @@ td.order-create-td-res {
 	background-color: #fff;
 }
 
+/* CLIENT MENU */
 
+#client-menu {
+	margin: auto;
+	height: 250px;
+	width: 50%;
+	left: 25%;
+	top: 10%;
+	background-color: #f1f1f1;
+	border: 1px solid #d9e0e7;
+	display: none;
+	position: absolute;
+	z-index: 501;
+}
+
+#client-menu-text-block {
+	height: 40px;
+	width: 100%;
+	background-color: #435ea4;
+	text-align: center;
+	line-height: 40px;
+}
+
+#client-menu-text-block H2 {
+	color: #fff;
+	margin: 0px;
+}
+
+#client-menu-main {
+	margin: auto;
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+
+#table-client-menu {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	margin: auto;
+	width: 90%;
+	font-size: 11px
+}
+
+#table-client-menu td {
+	border: 1px solid #d9e0e7;
+	border-spacing: 0px;
+	padding: 10px 5px 10px 5px;
+	text-align: center;
+}
+
+#client-menu-create
+{
+	width: 200px;
+}
+
+
+#client-new {
+	margin: auto;
+	width: 100%;
+	text-align: center;
+	display: none;
+}
+
+/* BUTTON IN ALL MENUS */
 
 .div-form-button {
 	height: 40px;
