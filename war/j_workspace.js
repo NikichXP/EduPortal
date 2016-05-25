@@ -55,6 +55,7 @@
 						"<td>" + resData.items[i].productName + "</td>" +
 						"<td>" + resData.items[i].creatorName + "</td>" +
 						"<td>" + resData.items[i].paid + "</td>" +
+						"<td>" + checkFiles(resData.items[i]) + "</td>" +
 					"</tr>");	
 			};
 			$('#li-open-orders').append(" " + i);
@@ -63,10 +64,10 @@
 				if (resData.items[i].donePaid == false) k++;
 			$('#li-done-orders').append(" " + k);
 		},
-	});
+	});	
 	//debug button to get token	
 	$('#menu-showses').on('click', function(){
-		$resDiv.append("TokenId = " + getCookie("sesToken") + ";<br /> tokenTO = " + getCookie("sesTO") + ";<br /> AccessLevel = " + getCookie("accessLevel") + ";");	
+		$resDiv.append("TokenId = " + getCookie("sesToken") + "; tokenTO = " + getCookie("sesTO") + "; accessLevel = " + getCookie("accessLevel") + ";");	
 	});
 	//log out
 	$('#menu-logout').on('click', function(){
@@ -205,6 +206,7 @@
 			"<td>Стоимость</td>" +
 			"<td>Внесенная оплата</td>" +
 			"<td>Осталось</td>" +
+			"<td>Файлы</td>" +
 		"</tbody>");
 		
 		$.ajax({
@@ -220,6 +222,7 @@
 				"<td>" + resData.items[rowIndex].price + "</td>" + 
 				"<td>" + resData.items[rowIndex].paid + "</td>" + 
 				"<td>" + (resData.items[rowIndex].price - resData.items[rowIndex].paid) + "</td>" + 
+				"<td>" + checkFiles(resData.items[rowIndex]) + "</td>" + 
 			+ "</tr>");
 			
 			$('#input-order-Id').val(resData.items[rowIndex].id);
@@ -249,6 +252,18 @@
 		});		
 
 	});
+	
+	//Add order files 
+	$('#order-edit-file').on('click', function(){
+	
+		var url = "File.jsp?order=" + $('#input-order-Id').val();
+		var windowName = "File Upload";
+		var windowSize = ["width=500, height=500"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+
+	});
+	
 	//Delete order
 	$('#order-edit-del').on('click', function(){
 
@@ -275,27 +290,7 @@
 		$('#order-create').css('display', 'block');
 		$('#order-create-file-form').html("Приложить файлы");
 	});
-	
-	//order creation file uploading form
-	$('#order-create-file-form').on('click', function() {
-		var k = 1;
-		if ($('#order-create-file-upload').css('display') == 'block')
-		{
-			$('#order-create-file-upload').css('display', 'none');
-			$('#order-create-file-upload').html("");
-			$('#order-create-file-form').html("Приложить файлы");
-		}
-		else
-		{
-			for (var i = 1; i <= k; i++)
-			{
-				$('#order-create-file-upload').append("<br /><input type='file' id='myFile-" + i +"'>");
-			}	
-			$('#order-create-file-upload').css('display', 'block');
-			$('#order-create-file-form').html("Cпрятать");
-		}		
-	});
-	
+		
 	//send new order
 	$('#order-create-send').on('click', function() {
 		
@@ -314,39 +309,23 @@
 				clientid: cID,
 				paid: paidSum,
 			};
-			
+
 			$.ajax({
 				type: 'GET',
 				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
 				data: orderData,
-				/* success: location.reload(),	 */
+				success: function(resData) { 
+					if ($('#file-upload-chb').is(':checked'))
+					{
+						var url = "File.jsp?order=" + resData.id;
+						var windowName = "File Upload";
+						var windowSize = ["width=500, height=500"];
+						window.open(url, windowName, windowSize);
+						event.preventDefault();
+					}
+				},
 			});	
 			
-			$.ajax({
-			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getBlobPath',
-			success: function(resData) { 
-				var files;
-				$('input[type=file]#myFile-1').change(function(){
-					files = this.files;
-				});
-				var clData = new FormData();  
-				
-				clData.append('myFile', files);
-				clData.append('token', getCookie("sesToken"));
-				
-				$.ajax({
-					type: 'POST',
-					url: resData.value,
-					data: clData,
-					cache: false,
-					dataType: 'json'
-					processData: false,
-					contentType: false,
-					/* success: location.reload(),	 */
-				});	
-			},
-			});	
 		};	
 			
 	});
@@ -438,5 +417,11 @@ function checkBool(data)
 	if (data == true)
 		return "Да";
 	else return "Нет";
+};
+
+function checkFiles(data)
+{
+	if (data.files == null) return 0;
+	else return data.files.length;
 };
 
