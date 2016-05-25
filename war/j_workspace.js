@@ -91,8 +91,11 @@
 		$('#order-create').css('display', 'none');
 		
 		$('#client-menu').css('display', 'none');
-		$('#client-menu').css('height', '250px');
+		$('#client-menu').css('height', '322px');
 		$('#client-menu-create').html("Добавить клиента");
+		
+		$('#order-create-file-upload').css('display', 'none');
+		$('#order-create-file-upload').html("");
 	});
 	//hide lists block
 	$('#lists-container').on('click', function(){
@@ -262,6 +265,7 @@
 		});		
 
 	});
+	
 	//open order creation menu
 	$('#menu-create-order').on('click', function() {
 		
@@ -269,7 +273,29 @@
 		
 		$('#opacity').css('display', 'block');
 		$('#order-create').css('display', 'block');
+		$('#order-create-file-form').html("Приложить файлы");
 	});
+	
+	//order creation file uploading form
+	$('#order-create-file-form').on('click', function() {
+		var k = 1;
+		if ($('#order-create-file-upload').css('display') == 'block')
+		{
+			$('#order-create-file-upload').css('display', 'none');
+			$('#order-create-file-upload').html("");
+			$('#order-create-file-form').html("Приложить файлы");
+		}
+		else
+		{
+			for (var i = 1; i <= k; i++)
+			{
+				$('#order-create-file-upload').append("<br /><input type='file' id='myFile-" + i +"'>");
+			}	
+			$('#order-create-file-upload').css('display', 'block');
+			$('#order-create-file-form').html("Cпрятать");
+		}		
+	});
+	
 	//send new order
 	$('#order-create-send').on('click', function() {
 		
@@ -283,19 +309,39 @@
 		else
 		{
 			var orderData = {
-			token: authSesToken,
-			productid: pID,
-			clientid: cID,
-			paid: paidSum,
+				token: authSesToken,
+				productid: pID,
+				clientid: cID,
+				paid: paidSum,
 			};
 			
 			$.ajax({
-			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
-			data: orderData,
-			success: location.reload(),	
+				type: 'GET',
+				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
+				data: orderData,
+				/* success: location.reload(),	 */
 			});	
-		};		
+			
+			$.ajax({
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getBlobPath',
+			success: function(resData) { 
+				var clData = new FormData();    
+				clData.append('myFile', $('#myFile-1').val());
+				clData.append('token', getCookie("sesToken"));
+				
+				$.ajax({
+					type: 'POST',
+					url: resData.value,
+					data: clData,
+					processData: false,
+					contentType: false,
+					/* success: location.reload(),	 */
+				});	
+			},
+			});	
+		};	
+			
 	});
 	
 	//open client menu
@@ -343,7 +389,7 @@
 		{
 			$('#client-new').css('display', 'none');
 			$('#client-menu-create').html("Добавить клиента");
-			$('#client-menu').css('height', '250px');
+			$('#client-menu').css('height', '322px');
 			
 			var clData = new FormData();    
 			clData.append('token', authSesToken);
@@ -352,14 +398,6 @@
 			clData.append('surname', $('#client-new-surname').val());
 			clData.append('phone', $('#client-new-phone').val());
 			clData.append('pass', '');
-
-			/* var clientData = {
-				token: authSesToken,
-				mail: $('#client-new-email').val(),
-				name: $('#client-new-name').val(),
-				surname: $('#client-new-surname').val(),
-				phone: $('#client-new-phone').val(),
-			}; */
 			
 			$.ajax({
 			type: 'POST',
@@ -367,15 +405,24 @@
 			data: clData,
 			processData: false,
 			contentType: false,
-			//success: location.reload(),	
+			success: location.reload(),	
 			});	
 		}
 		else 
 		{
 			$('#client-new').css('display', 'block');
-			$('#client-menu').css('height', '600px');
+			$('#client-menu').css('height', '637px');
+			$('#client-menu-dismiss').css('display', 'block');
 		}
 		
+	});
+	//cancel client creation
+	$('#client-menu-dismiss').on('click', function() {
+
+		$('#client-new').css('display', 'none');
+		$('#client-menu-create').html("Добавить клиента");
+		$('#client-menu').css('height', '322px');	
+		$('#client-menu-dismiss').css('display', 'none');		
 	});
 });
 
