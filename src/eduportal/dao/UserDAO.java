@@ -32,7 +32,7 @@ public class UserDAO {
 	}
 	
 	
-	public static List<Corporation> getCorpList (UserEntity user) {
+	public static List<Corporation> getCorpList (/*UserEntity user*/) {
 		return ofy().load().type(Corporation.class).list();
 	}
 

@@ -5,6 +5,8 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.google.appengine.api.blobstore.*;
+
+import eduportal.dao.OrderDAO;
 import eduportal.dao.entity.*;
 import eduportal.model.AuthContainer;
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -16,19 +18,19 @@ public class FileProcessorServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		System.out.println("POST");
-		System.out.println(req.getParameter("foo"));
 		UserEntity user = null;
 		String token = req.getParameter("token");
 		if (token == null) {
-		for (Cookie c : req.getCookies()) {
-			System.out.println(c.getName() + "   " + c.getValue());
-			if (c.getName().equals("sesToken")) {
-				user = AuthContainer.getUser(c.getValue());
+			for (Cookie c : req.getCookies()) {
+				System.out.println(c.getName() + "   " + c.getValue());
+				if (c.getName().equals("sesToken")) {
+					user = AuthContainer.getUser(c.getValue());
+					System.out.println("cookie!");
+				}
 			}
-		}
 		} else {
 			user = AuthContainer.getUser(token);
+			System.out.println(req.getParameter("else"));
 		}
 		if (user == null) {
 			res.sendRedirect("/auth.html");
@@ -36,16 +38,21 @@ public class FileProcessorServlet extends HttpServlet {
 		}
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
 		List<BlobKey> blobKeys = blobs.get("myFile");
+		System.out.println(blobKeys);
 		if (blobKeys == null || blobKeys.isEmpty()) {
-			res.sendRedirect("/");
+			res.sendRedirect("/auth");
 		} else {
 			UserSavedFile file = new UserSavedFile();
 			file.defineUser(user);
 			file.setId(blobKeys.get(0).getKeyString());
 			ofy().save().entity(file);
+			System.out.println(req.getParameter("orderid"));
+			Order order = OrderDAO.getOrder(req.getParameter("orderid"));
+			order.addFile(file);
+			OrderDAO.saveOrder(order);
 			res.sendRedirect("/FileProcessorServlet?blob-key=" + blobKeys.get(0).getKeyString());
 		}
-		
+
 	}
 
 	@Override

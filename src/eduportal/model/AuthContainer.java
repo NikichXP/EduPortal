@@ -68,7 +68,7 @@ public class AuthContainer {
 		synchronized (sessions) {
 			UserEntity user = UserDAO.get(login, pass);
 			if (user == null) {
-				return null;
+				return new AuthToken().setAccessLevel("FAIL");
 			}
 			String token = UUID.randomUUID().toString();
 			AuthSession session = new AuthSession(user);

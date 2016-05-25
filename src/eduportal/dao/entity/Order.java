@@ -21,12 +21,14 @@ public class Order extends AbstractEntity {
 	@Index
 	private Key<UserEntity> createdBy;
 	private String comment;
+	private ArrayList<UserSavedFile> files;
 	
 	protected final long maxIdValue = 0;
 	
 	public Order() {
 		super();
 		comment = "";
+		files.ensureCapacity(5);
 	}
 
 	public Order(Product p) {
@@ -35,6 +37,7 @@ public class Order extends AbstractEntity {
 		comment = new String();
 		this.price = p.getDefaultPrice();
 		this.productName = p.getTitle();
+		files.ensureCapacity(5);
 	}
 
 	public long getUser() {
@@ -134,6 +137,18 @@ public class Order extends AbstractEntity {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public void addFile (UserSavedFile file) {
+		this.files.add(file);
+	}
+
+	public ArrayList<UserSavedFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(ArrayList<UserSavedFile> files) {
+		this.files = files;
 	}
 
 	@Override

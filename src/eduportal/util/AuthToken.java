@@ -23,8 +23,9 @@ public class AuthToken {
 	public String getAccessLevel() {
 		return accessLevel;
 	}
-	public void setAccessLevel(String accessLevel) {
+	public AuthToken setAccessLevel(String accessLevel) {
 		this.accessLevel = accessLevel;
+		return this;
 	}
 	public void putAccessLevelInt(int al) {
 		this.accessLevel = ( (al == AccessSettings.MODERATOR_LEVEL) ? "MODERATOR" : (al == AccessSettings.ADMIN_LEVEL) ? "ADMIN" : "USER");

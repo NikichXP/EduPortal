@@ -124,4 +124,20 @@ public class AccessLogic {
 		return false;
 	}
 	
+	public static boolean isCompanyAdmin (UserEntity user) {
+		if (user.getPermission().corporationEntity().getOwner().getId() == user.getId()) {
+			return true;
+		}
+		if (AccessSettings.OWNERCORP().getOwner().getId() == user.getId()) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean canCreateOrder(UserEntity admin) {
+		if (admin.getAccessLevel() >= AccessSettings.CREATE_ORDER) {
+			return true;
+		}
+		return false;
+	}
 }

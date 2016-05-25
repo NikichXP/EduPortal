@@ -22,8 +22,8 @@ public class UserSavedFile {
 		this.id = name;
 	}
 
-	public Key<UserEntity> getUser() {
-		return user;
+	public long getUser() {
+		return user.getId();
 	}
 
 	public void setUser(Key<UserEntity> user) {

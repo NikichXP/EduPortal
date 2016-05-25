@@ -46,11 +46,14 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(path = "createorder", httpMethod = "GET")
-	public Text createOrder(@Named("productid") Long productid, @Named("clientid") Long clientid,
+	public Order createOrder(@Named("productid") Long productid, @Named("clientid") Long clientid,
 			@Named("token") String token, @Named("paid") @Nullable Double paid) { // Token to identify creator
 		UserEntity admin = AuthContainer.getUser(token);
 		if (admin == null) {
-			return new Text ("Wrong token");
+			return null;
+		}
+		if (AccessLogic.canCreateOrder(admin) == false) {
+			return null;
 		}
 		Order o = new Order(ProductDAO.get(productid));
 		if (paid != null) {
@@ -59,7 +62,7 @@ public class OrderAPI {
 		o.setCreatedBy(admin);
 		o.setUser(UserDAO.get(clientid));
 		OrderDAO.saveOrder(o);
-		return new Text("Done");
+		return o;
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")

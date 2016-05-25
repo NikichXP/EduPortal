@@ -15,6 +15,7 @@ public class Corporation extends AbstractEntity {
 	
 	public Corporation () {
 		super();
+		name = "";
 	}
 	
 	public Corporation (String s) {
