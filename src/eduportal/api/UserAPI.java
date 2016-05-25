@@ -2,6 +2,8 @@ package eduportal.api;
 
 import java.util.*;
 import com.google.api.server.spi.config.*;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -24,6 +26,13 @@ public class UserAPI {
 		for (Class<?> c : objectifiedClasses) {
 			ObjectifyService.register(c);
 		}
+	}
+	
+	@ApiMethod (path = "getBlobPath", httpMethod = "GET")
+	public Text getBlobFile () {
+		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		String URL = blobstoreService.createUploadUrl("/FileProcessorServlet");
+		return new Text(URL);
 	}
 
 	@ApiMethod(name = "auth", httpMethod = "GET", path = "auth")

@@ -439,6 +439,21 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "user.userAPI.getBlobFile" : {
+      "path" : "getBlobPath",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.getBlobFile",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -739,6 +754,11 @@
         }
       },
       "eduportal.api.UserAPI.checkToken" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.UserAPI.getBlobFile" : {
         "response" : {
           "$ref" : "Text"
         }

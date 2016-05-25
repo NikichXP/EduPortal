@@ -17,12 +17,18 @@ public class FileProcessorServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		System.out.println("POST");
+		System.out.println(req.getParameter("foo"));
 		UserEntity user = null;
+		String token = req.getParameter("token");
+		if (token == null) {
 		for (Cookie c : req.getCookies()) {
 			System.out.println(c.getName() + "   " + c.getValue());
 			if (c.getName().equals("sesToken")) {
 				user = AuthContainer.getUser(c.getValue());
 			}
+		}
+		} else {
+			user = AuthContainer.getUser(token);
 		}
 		if (user == null) {
 			res.sendRedirect("/auth.html");

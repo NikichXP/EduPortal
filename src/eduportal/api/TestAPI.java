@@ -57,7 +57,7 @@ public class TestAPI {
 
 	@ApiMethod(name = "Rebuild__DB", path = "rebuildDB", httpMethod = "GET")
 	public List<String> rebuildDB(@Named("size") String size, @Named("usersize") @Nullable Integer usersize,
-			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled) {
+			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled, @Named ("prior") @Nullable Integer prior) {
 		ofy().cache(true).flush();
 		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object u : ofy().load().kind(clazz.getSimpleName()).list()) {
@@ -126,6 +126,15 @@ public class TestAPI {
 					("user"+i + "@corp.com").toLowerCase())
 							.setCreator(admins[i % 5]);
 			clients[i].getPermission().setCorporation(corp);
+		}
+		if (prior != null) {
+			if (prior < admins.length) {
+				for (UserEntity u : clients) {
+					if (Math.random() > 0.33) {
+						u.setCreator(admins[prior]);
+					}
+				}
+			}
 		}
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);

@@ -8,7 +8,7 @@ public class UserSavedFile {
 	
 	@Id
 	private String id;
-	private Ref<UserEntity> user;
+	private Key<UserEntity> user;
 	
 	public UserSavedFile () {
 		super();
@@ -22,20 +22,20 @@ public class UserSavedFile {
 		this.id = name;
 	}
 
-	public Ref<UserEntity> getUser() {
+	public Key<UserEntity> getUser() {
 		return user;
 	}
 
-	public void setUser(Ref<UserEntity> user) {
+	public void setUser(Key<UserEntity> user) {
 		this.user = user;
 	}
 	
 	public UserEntity userEntity () {
-		return user.get();
+		return Ref.create(user).get();
 	}
 
 	public void defineUser(UserEntity user2) {
-		this.user = Ref.create(user2);
+		this.user = Ref.create(user2).getKey();
 	}
 	
 }

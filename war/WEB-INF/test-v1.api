@@ -95,6 +95,10 @@
           "shuffled" : {
             "type" : "boolean",
             "required" : false
+          },
+          "prior" : {
+            "type" : "int32",
+            "required" : false
           }
         },
         "body" : "empty"

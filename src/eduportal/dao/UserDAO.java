@@ -31,6 +31,10 @@ public class UserDAO {
 		return u;
 	}
 	
+	
+	public static List<Corporation> getCorpList (UserEntity user) {
+		return ofy().load().type(Corporation.class).list();
+	}
 
 	/**
 	 * Performs search through users DB
