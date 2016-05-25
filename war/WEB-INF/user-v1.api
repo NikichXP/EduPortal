@@ -42,7 +42,7 @@
           },
           "pass" : {
             "type" : "string",
-            "required" : true
+            "required" : false
           },
           "login" : {
             "type" : "string",
@@ -488,9 +488,6 @@
           "mail" : {
             "type" : "string"
           },
-          "login" : {
-            "type" : "string"
-          },
           "token" : {
             "type" : "string"
           }
@@ -512,9 +509,6 @@
           "id" : {
             "type" : "string",
             "format" : "int64"
-          },
-          "login" : {
-            "type" : "string"
           },
           "pass" : {
             "type" : "string"

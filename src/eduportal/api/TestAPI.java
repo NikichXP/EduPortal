@@ -5,6 +5,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Text;
 
 import eduportal.dao.*;
@@ -18,7 +19,19 @@ public class TestAPI {
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
 		UserEntity u = ofy().load().type(UserEntity.class).first().now();
-		ret.add(u);
+		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		String URL = blobstoreService.createUploadUrl("/FileProcessorServlet");
+		BlobInfoFactory blobInfoFactory = new BlobInfoFactory();
+		Iterator<BlobInfo> blobsIterator = blobInfoFactory.queryBlobInfos();
+	    while (blobsIterator.hasNext()) {
+	        BlobInfo blobInfo = blobsIterator.next();
+	        String[] adds = {"blob  " + blobInfo.getFilename(),
+	        		"content-type  " + blobInfo.getContentType(),
+	        		"key  " + blobInfo.getBlobKey().getKeyString()
+	        		};
+	        ret.add(adds);
+	    }
+		ret.add(URL);
 		ret.add("end");
 		return ret;
 	}
@@ -54,15 +67,15 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
-				new UserEntity("admin", "pass", "Admin", "Adminov", "+123456789012", "mail@me.now")
+				new UserEntity("pass", "Admin", "Adminov", "+123456789012", "admin@corp.com")
 						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("order", "order", "New", "Order", "+123456789015", "kelly@neworder.org")
+				new UserEntity("order", "New", "Order", "+123456789015", "order@corp.com")
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("adminus", "adminus", "Adminus", "Maximus", "+123456789016", "virto@asus.com")
+				new UserEntity("adminus", "Adminus", "Maximus", "+123456789016", "adminus@corp.com")
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("user", "user", "User", "User", "+123456789013", "mail@me2.now")
+				new UserEntity("user", "User", "User", "+123456789013", "user@corp.com")
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("johndoe", "johndoe", "John", "Doe", "+123456789014", "john@doe.bar")
+				new UserEntity("johndoe", "John", "Doe", "+123456789014", "john@doe.com")
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		ofy().save().entity(corp).now();
@@ -108,9 +121,9 @@ public class TestAPI {
 		}
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
-			clients[i] = new UserEntity("user" + i, "pass" + i, clientName[2 * i], clientName[2 * i + 1],
+			clients[i] = new UserEntity("pass" + i, clientName[2 * i], clientName[2 * i + 1],
 					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
-					(clientName[2 * i] + "@" + clientName[2 * i + 1] + ".nomm").toLowerCase())
+					("user"+i + "@corp.com").toLowerCase())
 							.setCreator(admins[i % 5]);
 			clients[i].getPermission().setCorporation(corp);
 		}

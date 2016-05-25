@@ -1,14 +1,16 @@
 package eduportal.dao.entity;
 
 import com.google.appengine.api.datastore.Blob;
+import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-public class UserSavedFile extends AbstractEntity {
+public class UserSavedFile {
 	
-	@Index
-	private String name;
+	@Id
+	private String id;
 	private Blob file;
+	private Ref<UserEntity> user;
 	
 	public UserSavedFile () {
 		super();
@@ -16,26 +18,36 @@ public class UserSavedFile extends AbstractEntity {
 
 	public UserSavedFile(String name2, Blob imageBlob) {
 		super();
-		this.name = name2;
+		this.id = name2;
 		this.file = imageBlob;
 	}
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
 	}
 
 	public Blob getFile() {
 		return file;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setId(String name) {
+		this.id = name;
 	}
 
 	public void setFile(Blob file) {
 		this.file = file;
 	}
+
+	public Ref<UserEntity> getUser() {
+		return user;
+	}
+
+	public void setUser(Ref<UserEntity> user) {
+		this.user = user;
+	}
 	
-	
+	public UserEntity userEntity () {
+		return user.get();
+	}
 	
 }

@@ -1,53 +1,49 @@
 package eduportal.servlet;
 
 import java.io.*;
-import java.util.LinkedList;
-
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.google.appengine.api.blobstore.*;
 
-import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.servlet.*;
-
-import com.google.appengine.api.datastore.Blob;
-
+import eduportal.dao.entity.UserEntity;
 import eduportal.dao.entity.UserSavedFile;
+import eduportal.model.AuthContainer;
 
 public class FileProcessorServlet extends HttpServlet {
 	private static final long serialVersionUID = 4212663183594760678L;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Set response content type
-		response.setContentType("text/html");
+	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-		// Actual logic goes here.
-		PrintWriter out = response.getWriter();
-		out.println("<h1>" + "LOL" + "</h1>");
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		System.out.println("POST");
+		UserEntity user = null;
+		for (Cookie c : req.getCookies()) {
+			System.out.println(c.getName() + "   " + c.getValue());
+			if (c.getName().equals("sesToken")) {
+				user = AuthContainer.getUser(c.getValue());
+			}
+		}
+		if (user == null) {
+			res.sendRedirect("/auth.html");
+			return;
+		}
+		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+		List<BlobKey> blobKeys = blobs.get("myFile");
+		if (blobKeys == null || blobKeys.isEmpty()) {
+			res.sendRedirect("/");
+		} else {
+			res.sendRedirect("/FileProcessorServlet?blob-key=" + blobKeys.get(0).getKeyString());
+		}
+		UserSavedFile file = new UserSavedFile();
+		
 	}
 
-	// Your upload handle would look like
-	public void doPost(HttpServletRequest req, HttpServletResponse res) {
-		
-		
-//		// Get the image representation
-//		ServletFileUpload upload = new ServletFileUpload();
-//		FileItemIterator iter = upload.getItemIterator(req);
-//		FileItemStream imageItem = iter.next();
-//		InputStream imgStream = imageItem.openStream();
-		
-		
-		// construct our entity objects
-//		Blob imageBlob = new Blob(IOUtils.toByteArray(imgStream));
-//		UserSavedFile myImage = new UserSavedFile(imageItem.getName(), imageBlob);
-//
-//		// persist image
-//		PersistenceManager pm = PMF.get().getPersistenceManager();
-//		pm.makePersistent(myImage);
-//		pm.close();
-
-		// respond to query
-//		res.setContentType("text/plain");
-//		res.getOutputStream().write("OK!".getBytes());
+	@Override
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		System.out.println("GET");
+		BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
+		blobstoreService.serve(blobKey, res);
 	}
-
 }

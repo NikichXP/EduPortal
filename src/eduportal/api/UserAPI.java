@@ -37,7 +37,7 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
-	public AuthToken register(@Named("name") String name, @Named("pass") String pass, @Named("login") String login,
+	public AuthToken register(@Named("name") String name, @Named("pass") @Nullable String pass, @Named("login") String login,
 			@Named("surname") String surname, @Named("phone") String phone, @Named("mail") String mail,
 			@Named("token") String token) {
 		UserEntity creator = AuthContainer.getUser(token);
@@ -50,7 +50,10 @@ public class UserAPI {
 		if (phone.matches("[+]{0,1}[0-9]{10,12}")) {
 			return null;
 		}
-		UserDAO.create(login, pass, name, surname, phone, mail, creator);
+		if (pass == null) {
+			pass = "TEST"; //TODO Gen pass here
+		}
+		UserDAO.create(pass, name, surname, phone, mail, creator);
 		return AuthContainer.authenticate(login, pass);
 	}
 	
@@ -72,17 +75,16 @@ public class UserAPI {
 		}
 		user.setName(deploy.name);
 		user.setSurname(deploy.surname);
-		user.setLogin(deploy.login);
 		user.setPass(deploy.pass);
 		user.setPhone(deploy.phone);
 		user.setPermission(new Permission());
-		user.setLogin(deploy.login);
 		user.setCreator(creator);
+		user.setMail(deploy.mail);
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
 			return new Text("User is probably registered");
 		}
-		return new Text("SID=" + AuthContainer.authenticate(user.getLogin(), user.getPass()).getSessionId());
+		return new Text("SID=" + AuthContainer.authenticate(user.getMail(), user.getPass()).getSessionId());
 
 	}
 	
@@ -109,7 +111,7 @@ public class UserAPI {
 			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
 			@Named("mail") @Nullable String mail, @Named ("token") String token) {
 		if (AccessLogic.canListAllUsers(token)) {
-			return UserDAO.searchUsers(phone, name, mail, login);
+			return UserDAO.searchUsers(phone, name, mail);
 		} else {
 			return null;
 		}
@@ -250,10 +252,9 @@ public class UserAPI {
 		private String pass;
 		private String phone;
 		private String mail;
-		private String login;
 		private String token;
 		public boolean hasNull() {
-			if (name == null || surname == null || pass == null || phone == null || mail == null || login == null) {
+			if (name == null || surname == null || pass == null || phone == null || mail == null) {
 				return true;
 			}
 			return false;
@@ -273,9 +274,6 @@ public class UserAPI {
 		public String getMail() {
 			return mail;
 		}
-		public String getLogin() {
-			return login;
-		}
 		public String getToken() {
 			return token;
 		}
@@ -293,9 +291,6 @@ public class UserAPI {
 		}
 		public void setMail(String mail) {
 			this.mail = mail;
-		}
-		public void setLogin(String login) {
-			this.login = login;
 		}
 		public void setToken(String token) {
 			this.token = token;

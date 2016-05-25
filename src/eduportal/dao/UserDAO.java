@@ -9,12 +9,9 @@ import eduportal.util.UserUtils;
 
 public class UserDAO {
 
-	private static String[] credentialVariables = { "mail", "login", "phone" };
+	private static String[] credentialVariables = { "mail", "phone" };
 	
-	public static UserEntity create(String login, String pass, String name, String surname, String mail, String phone, UserEntity creator) {
-		if (ofy().load().kind("UserEntity").filter("login == ", login).list().isEmpty() == false) {
-			return null;
-		}
+	public static UserEntity create(String pass, String name, String surname, String mail, String phone, UserEntity creator) {
 		if (ofy().load().kind("UserEntity").filter("mail == ", mail).list().isEmpty() == false) {
 			return null;
 		}
@@ -22,7 +19,6 @@ public class UserDAO {
 			return null;
 		}
 		UserEntity u = new UserEntity();
-		u.setLogin(login);
 		u.setPass(pass);
 		u.setName(name);
 		u.setMail(mail);
@@ -120,25 +116,22 @@ public class UserDAO {
 		return ofy().load().type(UserEntity.class).filter("creator", key).list();
 	}
 	
-	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login, Corporation corp) {
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, Corporation corp) {
 		System.out.println(corp.getId());
-		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail, login) ;
+		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail) ;
 	}
 	
-	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login, long corp) {
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, long corp) {
 		System.out.println(corp);
-		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail, login) ;
+		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail) ;
 	}
 
-	public static List<UserEntity> searchUsers(String phone, String name, String mail, String login) {
-		return userFilter (ofy().load().type(UserEntity.class), phone, name, mail, login) ;
+	public static List<UserEntity> searchUsers(String phone, String name, String mail) {
+		return userFilter (ofy().load().type(UserEntity.class), phone, name, mail) ;
 	}
 	
-	private static List<UserEntity> userFilter (Query<UserEntity> q, String phone, String name, String mail, String login) {
+	private static List<UserEntity> userFilter (Query<UserEntity> q, String phone, String name, String mail) {
 		List<UserEntity> ret = new ArrayList<>();
-		if (login != null) {
-			q = q.filter("login >=", login).filter("login <= ", login + "\uFFFD");
-		}
 		if (phone != null) {
 			q = q.filter("phone >=", phone).filter("phone <= ", phone + "\uFFFD");
 		}

@@ -9,10 +9,6 @@ import eduportal.util.UserUtils;
 @Entity
 public class UserEntity extends AbstractEntity {
 	private static final long serialVersionUID = 1441712953568281477L;
-	
-	@Index
-	private String login;
-	/** Pass is always encoded */
 	@Index
 	private String pass;
 	@Index
@@ -42,9 +38,7 @@ public class UserEntity extends AbstractEntity {
 	}
 
 	public boolean hasNull() {
-		if (login == null) {
-			return true;
-		} else if (pass == null) {
+		if (pass == null) {
 			return true;
 		} else if (phone == null) {
 			return true;
@@ -65,20 +59,15 @@ public class UserEntity extends AbstractEntity {
 		this.permission = new Permission();
 	}
 
-	public UserEntity(String login, String pass, String name, String surname, String phone, String mail) {
+	public UserEntity(String pass, String name, String surname, String phone, String mail) {
 		super();
 		this.name = name;
 		this.surname = surname;
-		this.login = login;
 		this.mail = mail;
 		this.phone = phone;
 		this.pass = UserUtils.encodePass(pass);
 		this.permission = new Permission();
 		this.ordersId = new ArrayList<>();
-	}
-
-	public String getLogin() {
-		return login;
 	}
 
 	public String getPass() {
@@ -91,10 +80,6 @@ public class UserEntity extends AbstractEntity {
 
 	public String getSurname() {
 		return surname;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	public void setPass(String pass) {
@@ -189,7 +174,6 @@ public class UserEntity extends AbstractEntity {
 		int result = 1;
 		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
-		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((ordersId == null) ? 0 : ordersId.hashCode());
@@ -223,13 +207,6 @@ public class UserEntity extends AbstractEntity {
 				return false;
 			}
 		} else if (!creator.equals(other.creator)) {
-			return false;
-		}
-		if (login == null) {
-			if (other.login != null) {
-				return false;
-			}
-		} else if (!login.equals(other.login)) {
 			return false;
 		}
 		if (mail == null) {
@@ -279,7 +256,7 @@ public class UserEntity extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [login=" + login + ", pass=" + ((pass.length() == 128) ? "..." : pass)
+		return "UserEntity [pass=" + ((pass.length() == 128) ? "..." : pass)
 				+ ", phone=" + phone + ", mail=" + mail + ", permission=" + permission + ", accessLevel=" + accessLevel
 				+ ", corpId=" + corpId + ", name=" + name + ", surname=" + surname + ", creator=" + creator
 				+ ", ordersId=" + ordersId + "]";
@@ -289,7 +266,6 @@ public class UserEntity extends AbstractEntity {
 		this.pass = null;
 		this.ordersId = null;
 		this.permission = null;
-		
 	}
 
 }

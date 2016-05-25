@@ -51,7 +51,7 @@ public class AccessLogic {
 		if (user.getAccessLevel() < AccessSettings.LIST_USERS) {
 			return null;
 		}
-		return UserDAO.searchUsers(phone, name, mail, login, user.getCorpId());
+		return UserDAO.searchUsers(phone, name, mail, user.getCorpId());
 	}
 
 	public static boolean canSeeAllProducts(String token) {
