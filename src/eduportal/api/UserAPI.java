@@ -17,7 +17,7 @@ public class UserAPI {
 	
 	// Init Objectify
 	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
-			Country.class, City.class, Order.class, Corporation.class, AuthSession.class};
+			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, UserSavedFile.class};
 
 	static {
 		ObjectifyService.begin();

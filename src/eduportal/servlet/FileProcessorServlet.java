@@ -5,10 +5,9 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.google.appengine.api.blobstore.*;
-
-import eduportal.dao.entity.UserEntity;
-import eduportal.dao.entity.UserSavedFile;
+import eduportal.dao.entity.*;
 import eduportal.model.AuthContainer;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class FileProcessorServlet extends HttpServlet {
 	private static final long serialVersionUID = 4212663183594760678L;
@@ -34,9 +33,12 @@ public class FileProcessorServlet extends HttpServlet {
 		if (blobKeys == null || blobKeys.isEmpty()) {
 			res.sendRedirect("/");
 		} else {
+			UserSavedFile file = new UserSavedFile();
+			file.defineUser(user);
+			file.setId(blobKeys.get(0).getKeyString());
+			ofy().save().entity(file);
 			res.sendRedirect("/FileProcessorServlet?blob-key=" + blobKeys.get(0).getKeyString());
 		}
-		UserSavedFile file = new UserSavedFile();
 		
 	}
 

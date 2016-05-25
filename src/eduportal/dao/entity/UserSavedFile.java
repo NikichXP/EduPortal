@@ -1,6 +1,5 @@
 package eduportal.dao.entity;
 
-import com.google.appengine.api.datastore.Blob;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
@@ -9,33 +8,18 @@ public class UserSavedFile {
 	
 	@Id
 	private String id;
-	private Blob file;
 	private Ref<UserEntity> user;
 	
 	public UserSavedFile () {
 		super();
 	}
 
-	public UserSavedFile(String name2, Blob imageBlob) {
-		super();
-		this.id = name2;
-		this.file = imageBlob;
-	}
-
 	public String getId() {
 		return id;
 	}
 
-	public Blob getFile() {
-		return file;
-	}
-
 	public void setId(String name) {
 		this.id = name;
-	}
-
-	public void setFile(Blob file) {
-		this.file = file;
 	}
 
 	public Ref<UserEntity> getUser() {
@@ -48,6 +32,10 @@ public class UserSavedFile {
 	
 	public UserEntity userEntity () {
 		return user.get();
+	}
+
+	public void defineUser(UserEntity user2) {
+		this.user = Ref.create(user2);
 	}
 	
 }
