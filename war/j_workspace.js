@@ -63,10 +63,10 @@
 				if (resData.items[i].donePaid == false) k++;
 			$('#li-done-orders').append(" " + k);
 		},
-	});	
+	});
 	//debug button to get token	
 	$('#menu-showses').on('click', function(){
-		$resDiv.append("TokenId = " + getCookie("sesToken") + "; tokenTO = " + getCookie("sesTO"));	
+		$resDiv.append("TokenId = " + getCookie("sesToken") + ";<br /> tokenTO = " + getCookie("sesTO") + ";<br /> AccessLevel = " + getCookie("accessLevel") + ";");	
 	});
 	//log out
 	$('#menu-logout').on('click', function(){
@@ -326,14 +326,21 @@
 			type: 'GET',
 			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getBlobPath',
 			success: function(resData) { 
-				var clData = new FormData();    
-				clData.append('myFile', $('#myFile-1').val());
+				var files;
+				$('input[type=file]#myFile-1').change(function(){
+					files = this.files;
+				});
+				var clData = new FormData();  
+				
+				clData.append('myFile', files);
 				clData.append('token', getCookie("sesToken"));
 				
 				$.ajax({
 					type: 'POST',
 					url: resData.value,
 					data: clData,
+					cache: false,
+					dataType: 'json'
 					processData: false,
 					contentType: false,
 					/* success: location.reload(),	 */
