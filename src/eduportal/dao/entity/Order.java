@@ -28,6 +28,7 @@ public class Order extends AbstractEntity {
 	public Order() {
 		super();
 		comment = "";
+		files = new ArrayList<>();
 		files.ensureCapacity(5);
 	}
 
@@ -37,6 +38,7 @@ public class Order extends AbstractEntity {
 		comment = new String();
 		this.price = p.getDefaultPrice();
 		this.productName = p.getTitle();
+		files = new ArrayList<>();
 		files.ensureCapacity(5);
 	}
 
