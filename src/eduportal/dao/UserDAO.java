@@ -11,6 +11,15 @@ public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "phone" };
 	
+	public static List<UserEntity> listAll () {
+		return ofy().load().type(UserEntity.class).list();
+	}
+	
+	public static List<UserEntity> getCorpEmployees (Corporation corp) {
+		Key<Corporation> key = Ref.create(corp).getKey();
+		return ofy().load().type(UserEntity.class).filter("corporation", key).list();
+	}
+	
 	public static UserEntity create(String pass, String name, String surname, String mail, String phone, UserEntity creator) {
 		if (ofy().load().kind("UserEntity").filter("mail == ", mail).list().isEmpty() == false) {
 			return null;
