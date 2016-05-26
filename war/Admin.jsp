@@ -43,7 +43,7 @@
 	<h1>Сотрудники Вашей фирмы</h1>
 	<table>
 		<%
-			for (UserEntity u : UserDAO.getCorpEmployees(user.getPermission().corporationEntity())) {
+			for (UserEntity u : UserDAO.getCorpEmployees(user.corporationEntity())) {
 				if (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
 		%>
 		<tr>

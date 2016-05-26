@@ -18,20 +18,6 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		UserEntity u = ofy().load().type(UserEntity.class).first().now();
-		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-		String URL = blobstoreService.createUploadUrl("/FileProcessorServlet");
-		BlobInfoFactory blobInfoFactory = new BlobInfoFactory();
-		Iterator<BlobInfo> blobsIterator = blobInfoFactory.queryBlobInfos();
-	    while (blobsIterator.hasNext()) {
-	        BlobInfo blobInfo = blobsIterator.next();
-	        String[] adds = {"blob  " + blobInfo.getFilename(),
-	        		"content-type  " + blobInfo.getContentType(),
-	        		"key  " + blobInfo.getBlobKey().getKeyString()
-	        		};
-	        ret.add(adds);
-	    }
-		ret.add(URL);
 		ret.add("end");
 		return ret;
 	}
@@ -57,7 +43,8 @@ public class TestAPI {
 
 	@ApiMethod(name = "Rebuild__DB", path = "rebuildDB", httpMethod = "GET")
 	public List<String> rebuildDB(@Named("size") String size, @Named("usersize") @Nullable Integer usersize,
-			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled, @Named ("prior") @Nullable Integer prior) {
+			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled,
+			@Named("prior") @Nullable Integer prior) {
 		ofy().cache(true).flush();
 		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object u : ofy().load().kind(clazz.getSimpleName()).list()) {
@@ -67,23 +54,23 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
-				new UserEntity("pass", "Admin", "Adminov", "+123456789012", "admin@corp.com")
-						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("order", "New", "Order", "+123456789015", "order@corp.com")
-						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("adminus", "Adminus", "Maximus", "+123456789016", "adminus@corp.com")
-						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("user", "User", "User", "+123456789013", "user@corp.com")
-						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("johndoe", "John", "Doe", "+123456789014", "john@doe.com")
-						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
+				new UserEntity("AA555555", "Admin", "Adminov", "Админ", "Админов", "admin@corp.com", "pass",
+						"+123456789012", new Date()).setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
+				new UserEntity("SQ512312", "New", "Order", "Новый", "Заказ", "order", "order@corp.com", "+123456789015",
+						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("RZ412231", "Adminus", "Maximus", "Админус", "Масимус", "adminus", "adminus@corp.com",
+						"+123456789016", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("VW155555", "User", "User", "Пользователь", "Пользователь", "user", "user@corp.com",
+						"+123456789013", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("JD151995", "John", "Doe", "Джон", "Доу", "johndoe", "john@doe.com", "+123456789014",
+						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
+		UserDAO.createCorp(corp);
+		admins[0].defineCorporation(corp);
 		ofy().save().entity(corp).now();
 		for (UserEntity user : admins) {
 			user.setPermission(new Permission());
-			user.getPermission().setCorporation(corp);
-		}
-		for (UserEntity user : admins) {
+			user.defineCorporation(corp);
 			user.setCreator(admins[0]);
 		}
 		UserEntity[] clients;
@@ -121,11 +108,15 @@ public class TestAPI {
 		}
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
-			clients[i] = new UserEntity("pass" + i, clientName[2 * i], clientName[2 * i + 1],
-					"+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345",
-					("user"+i + "@corp.com").toLowerCase())
-							.setCreator(admins[i % 5]);
-			clients[i].getPermission().setCorporation(corp);
+			clients[i] = new UserEntity();
+			clients[i].defineCorporation(corp);
+			clients[i].setName(clientName[2 * i]);
+			clients[i].setSurname(clientName[2 * i]);
+			clients[i].setPass("pass"+i);
+			clients[i].setMail("user" + i + "@corp.com");
+			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
+			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L*24*365*20)));
+			clients[i].setCreator(admins[i%admins.length]);
 		}
 		if (prior != null) {
 			if (prior < admins.length) {
@@ -160,7 +151,7 @@ public class TestAPI {
 		if (shuffled == null) {
 			shuffled = false;
 		}
-		
+
 		int i = 0;
 		for (Order ord : o) {
 			i++;

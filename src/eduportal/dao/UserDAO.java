@@ -10,39 +10,40 @@ import eduportal.util.UserUtils;
 public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "phone" };
-	
-	public static List<UserEntity> listAll () {
+		
+	private static List<Corporation> corpList = ofy().load().type(Corporation.class).list();
+
+	public static List<UserEntity> listAll() {
 		return ofy().load().type(UserEntity.class).list();
 	}
-	
-	public static List<UserEntity> getCorpEmployees (Corporation corp) {
+
+	public static List<UserEntity> getCorpEmployees(Corporation corp) {
 		Key<Corporation> key = Ref.create(corp).getKey();
 		return ofy().load().type(UserEntity.class).filter("permission.corporation", key).list();
 	}
-	
-	public static UserEntity create(String pass, String name, String surname, String mail, String phone, UserEntity creator) {
-		if (ofy().load().kind("UserEntity").filter("mail == ", mail).list().isEmpty() == false) {
+
+	public static UserEntity create(String passport, String pass, String name, String surname, String cyrillicName,
+			String cyrillicSurname, String mail, String phone, UserEntity creator, Date born) {
+		if (ofy().load().type(UserEntity.class).filter("mail == ", mail).list().isEmpty() == false) {
 			return null;
 		}
-		if (ofy().load().kind("UserEntity").filter("phone == ", phone).list().isEmpty() == false) {
+		if (ofy().load().type(UserEntity.class).filter("phone == ", phone).list().isEmpty() == false) {
 			return null;
 		}
-		UserEntity u = new UserEntity();
-		u.setPass(pass);
-		u.setName(name);
-		u.setMail(mail);
-		u.setPhone(phone);
-		u.setSurname(surname);
-		u.setPermission(new Permission());
-		u.getPermission().setCorporation(creator.getPermission().corporationEntity());
+		if (passport == null) {
+			Random r = new Random();
+			passport = ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A')) + "" + ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A'))
+					+ (r.nextInt(900_000) + 100_000);
+		}
+		UserEntity u = new UserEntity(passport, name, surname, cyrillicName, cyrillicSurname, mail, pass, phone, born);
 		u.setCreator(creator);
-		ofy().save().entity(u).now();
+
+		ofy().save().entity(u);
 		return u;
 	}
 	
-	
-	public static List<Corporation> getCorpList (/*UserEntity user*/) {
-		return ofy().load().type(Corporation.class).list();
+	public static List<Corporation> getCorpList() {
+		return corpList;
 	}
 
 	/**
@@ -51,8 +52,9 @@ public class UserDAO {
 	 * @param creds
 	 * @return
 	 */
+	@Deprecated
 	public static List<UserEntity> searchUsers(String creds) {
-		Query<UserEntity> q = ofy().load().kind("UserEntity");
+		Query<UserEntity> q = ofy().load().type(UserEntity.class);
 		ArrayList<Query<UserEntity>> qn = new ArrayList<>();
 		qn.ensureCapacity(credentialVariables.length);
 		if (creds == null) {
@@ -92,28 +94,25 @@ public class UserDAO {
 		}
 		UserEntity u = null;
 		for (String par : credentialVariables) {
-			u = (UserEntity) ofy().load().kind("UserEntity").filter(par, login).filter("pass == ", pass).first().now();
+			u = (UserEntity) ofy().load().type(UserEntity.class).filter(par, login).filter("pass == ", pass).first()
+					.now();
 			if (u != null) {
 				return u;
 			}
 		}
 		return null;
 	}
-	
+
 	public static void update(UserEntity u) {
 		ofy().save().entity(u).now();
 	}
 
-	public static UserEntity get(long parseLong) {
-		return (UserEntity) ofy().load().kind("UserEntity").id(parseLong).now();
-	}
-
-	public static UserEntity get(String parseLong) {
-		return (UserEntity) ofy().load().kind("UserEntity").id(parseLong).now();
+	public static UserEntity get(String id) {
+		return (UserEntity) ofy().load().type(UserEntity.class).id(id).now();
 	}
 
 	public static void delete(String target) {
-		UserEntity u = (UserEntity) ofy().load().kind("UserEntity").id(target).now();
+		UserEntity u = (UserEntity) ofy().load().type(UserEntity.class).id(target).now();
 		DeletedUser du = new DeletedUser(u);
 		ofy().delete().entity(u).now();
 		ofy().save().entity(du);
@@ -125,25 +124,23 @@ public class UserDAO {
 	}
 
 	public static List<UserEntity> getClients(UserEntity u) {
-		Key<UserEntity> key = Ref.create(u).getKey();
-		return ofy().load().type(UserEntity.class).filter("creator", key).list();
+		return ofy().load().type(UserEntity.class).filter("creator", Ref.create(u).getKey()).list();
 	}
-	
+
 	public static List<UserEntity> searchUsers(String phone, String name, String mail, Corporation corp) {
-		System.out.println(corp.getId());
-		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail) ;
+		return userFilter(ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail);
 	}
-	
+
 	public static List<UserEntity> searchUsers(String phone, String name, String mail, long corp) {
 		System.out.println(corp);
-		return userFilter (ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail) ;
+		return userFilter(ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail);
 	}
 
 	public static List<UserEntity> searchUsers(String phone, String name, String mail) {
-		return userFilter (ofy().load().type(UserEntity.class), phone, name, mail) ;
+		return userFilter(ofy().load().type(UserEntity.class), phone, name, mail);
 	}
-	
-	private static List<UserEntity> userFilter (Query<UserEntity> q, String phone, String name, String mail) {
+
+	private static List<UserEntity> userFilter(Query<UserEntity> q, String phone, String name, String mail) {
 		List<UserEntity> ret = new ArrayList<>();
 		if (phone != null) {
 			q = q.filter("phone >=", phone).filter("phone <= ", phone + "\uFFFD");
@@ -172,20 +169,38 @@ public class UserDAO {
 		}
 		return ret;
 	}
-	
-	public static void createCorp (Corporation... corp) {
+
+	public static void createCorp(Corporation... corp) {
 		ofy().save().entities(corp);
+		for (Corporation c : corp) {
+			corpList.add(c);
+		}
 	}
-	
-	public static Corporation getCorp (long id) {
-		return ofy().load().type(Corporation.class).id(id).now();
+
+	public static Corporation getCorp(long id) {
+		for (Corporation c : corpList) {
+			if (c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
 	}
-	
-	public static Corporation getCorp (String name) {
-		return ofy().load().type(Corporation.class).filter("name", name).first().now();
+
+	public static Corporation getCorp(String name) {
+		for (Corporation c : corpList) {
+			if (c.getName().equals(name)) {
+				return c;
+			}
+		}
+		return null;
 	}
-	
+
 	public static Corporation getOwnerCorp() {
-		return ofy().load().type(Corporation.class).filter("isOwnerCorp", true).first().now();
+		for (Corporation c : corpList) {
+			if (c.isOwnerCorp() == true) {
+				return c;
+			}
+		}
+		return null;
 	}
 }

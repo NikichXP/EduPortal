@@ -10,7 +10,6 @@
 	var tokenJson = {
 		token: authSesToken,
 	};
-		
 	
 	if (authSesToken != null)
 		if(authSesTO - dateObj < 0)

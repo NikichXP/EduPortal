@@ -2,12 +2,11 @@ package eduportal.dao.entity;
 
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
-
 import eduportal.model.AccessSettings;
 
 @Entity
 public class Corporation extends AbstractEntity {
-	
+	private static final long serialVersionUID = 1671381497531075311L;
 	private String name;
 	private Ref<UserEntity> owner;
 	@Index

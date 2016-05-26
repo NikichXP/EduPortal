@@ -24,7 +24,7 @@
 			value="<%=corp.getName()%>"> <br> Select new admin: <select
 			name="owner">
 			<%
-				long ownerid = corp.getOwner().getId();
+				String ownerid = corp.getOwner().getId();
 				List<UserEntity> users = ObjectifyService.ofy().load().type(UserEntity.class).list();
 				for (UserEntity user : UserDAO.getCorpEmployees(corp)) {
 					out.println("<option " + ((user.getId() == ownerid) ? " selected " : "") + " value=\"" + user.getId()

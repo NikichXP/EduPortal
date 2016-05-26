@@ -42,8 +42,7 @@ public class FileProcessorServlet extends HttpServlet {
 		if (blobKeys == null || blobKeys.isEmpty()) {
 			res.sendRedirect("/auth");
 		} else {
-			UserSavedFile file = new UserSavedFile();
-			file.defineUser(user);
+			SavedFile file = new SavedFile();
 			file.setId(blobKeys.get(0).getKeyString());
 			ofy().save().entity(file);
 			System.out.println(req.getParameter("orderid"));

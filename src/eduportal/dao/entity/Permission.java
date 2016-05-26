@@ -8,12 +8,11 @@ import eduportal.dao.GeoDAO;
 
 @Entity
 public class Permission extends AbstractEntity {
-	
+	private static final long serialVersionUID = 32648756287346L;
 	/** @see AccessSettings.class */
 	private HashSet<Long> country;
 	private HashSet<Long> city;
-	@Index
-	private Key<Corporation> corporation;
+	
 	
 	public Permission () {
 		super();
@@ -35,18 +34,6 @@ public class Permission extends AbstractEntity {
 
 	public HashSet<Long> getCity() {
 		return city;
-	}
-
-	public long getCorporation() {
-		return corporation.getId();
-	}
-
-	public void setCorporation(Corporation corporation) {
-		this.corporation = Ref.create(corporation).getKey();
-	}
-	
-	public Corporation corporationEntity () {
-		return Ref.create(corporation).get();
 	}
 
 	public void setCountry(HashSet<Long> country) {
@@ -89,8 +76,7 @@ public class Permission extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Permission [country=" + country + ", city=" + city + ", orgName=" + corporation
-				+ "]";
+		return "Permission [country=" + country + ", city=" + city + "]";
 	}
 
 	@Override
@@ -99,7 +85,6 @@ public class Permission extends AbstractEntity {
 		int result = 1;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((corporation == null) ? 0 : corporation.hashCode());
 		return result;
 	}
 
@@ -127,13 +112,6 @@ public class Permission extends AbstractEntity {
 				return false;
 			}
 		} else if (!country.equals(other.country)) {
-			return false;
-		}
-		if (corporation == null) {
-			if (other.corporation != null) {
-				return false;
-			}
-		} else if (!corporation.equals(other.corporation)) {
 			return false;
 		}
 		return true;

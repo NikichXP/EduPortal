@@ -1,14 +1,18 @@
 package eduportal.dao.entity;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.*;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
-import eduportal.util.UserUtils;
+import eduportal.dao.UserDAO;
+import eduportal.util.*;
 
 @Entity
-public class UserEntity extends AbstractEntity {
-	private static final long serialVersionUID = 1441712953568281477L;
+public class UserEntity implements Serializable {
+	private static final long serialVersionUID = 609051047144006260L;
+	@Id
+	private String id; // THIS IS PASSPORT ID
 	@Index
 	private String pass;
 	@Index
@@ -16,29 +20,25 @@ public class UserEntity extends AbstractEntity {
 	@Index
 	private String mail;
 	private Permission permission;
-	private int accessLevel;
 	@Index
-	private long corpId;
+	private long corporation;
+	private int accessLevel;
+	private String cyrillicName;
+	private String cyrillicSurname;
 	@Index
 	private String name;
 	@Index
 	private String surname;
 	@Index
 	private Key<UserEntity> creator;
-	private ArrayList<Long> ordersId;
-
-	public void addOrder(Order ord) {
-		long id = ord.getId();
-		for (long l : ordersId) {
-			if (l == id) {
-				return;
-			}
-		}
-		ordersId.add(ord.getId());
-	}
+	private Date born;
+	private long orderId;
+	private ArrayList<SavedFile> file;
 
 	public boolean hasNull() {
-		if (pass == null) {
+		if (id == null) {
+			return true;
+		} else if (pass == null) {
 			return true;
 		} else if (phone == null) {
 			return true;
@@ -55,19 +55,80 @@ public class UserEntity extends AbstractEntity {
 
 	public UserEntity() {
 		super();
-		this.ordersId = new ArrayList<>();
 		this.permission = new Permission();
+		this.name = "Noname";
+		this.surname = "Noname";
+		this.cyrillicName = "Неопознанный";
+		this.cyrillicSurname = ((Math.random() > 0.5) ? "абрикос" : "кекс");
+		this.file = new ArrayList<>();
+		this.id = "NU";
+		for (int i = 0; i < 6; i++) {
+			this.id += (int) (Math.random()*10);
+		}
 	}
 
-	public UserEntity(String pass, String name, String surname, String phone, String mail) {
+	public UserEntity(String id, String name, String surname, String cyrillicName, String cyrillicSurname, String mail,
+			String pass, String phone, Date date) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.mail = mail;
 		this.phone = phone;
 		this.pass = UserUtils.encodePass(pass);
 		this.permission = new Permission();
-		this.ordersId = new ArrayList<>();
+		this.cyrillicName = cyrillicName;
+		this.cyrillicSurname = cyrillicSurname;
+		this.born = date;
+		this.file = new ArrayList<>();
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCyrillicData() {
+		return cyrillicName + " " + cyrillicSurname;
+	}
+
+	public Date getBorn() {
+		return born;
+	}
+
+	public void setBorn(Date born) {
+		this.born = born;
+	}
+
+	public String getCyrillicName() {
+		return cyrillicName;
+	}
+
+	public String getCyrillicSurname() {
+		return cyrillicSurname;
+	}
+
+	public void setCyrillicName(String cyrillicName) {
+		this.cyrillicName = cyrillicName;
+	}
+
+	public void setCyrillicSurname(String cyrillicSurname) {
+		this.cyrillicSurname = cyrillicSurname;
+	}
+
+	public long getCorporation() {
+		return corporation;
+	}
+
+	public void setCorporation(long corporation) {
+		this.corporation = corporation;
+	}
+	
+	public void defineCorporation (Corporation corp) {
+		this.corporation = corp.getId();
 	}
 
 	public String getPass() {
@@ -118,15 +179,12 @@ public class UserEntity extends AbstractEntity {
 		this.mail = mail;
 	}
 
-	public ArrayList<Long> getOrdersId() {
-		return this.ordersId;
+	public long getOrderId() {
+		return orderId;
 	}
 
-	public void setOrders(Order[] orders) {
-		this.ordersId.ensureCapacity(orders.length);
-		for (Order ord : orders) {
-			this.ordersId.add(ord.getId());
-		}
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 
 	public long getCreator() {
@@ -139,9 +197,12 @@ public class UserEntity extends AbstractEntity {
 
 	public UserEntity setCreator(UserEntity creator) {
 		this.creator = Ref.create(creator).getKey();
-		this.permission.setCorporation(creator.getPermission().corporationEntity());
-		this.corpId = creator.getPermission().corporationEntity().getId();
+		this.corporation = creator.getCorporation();
 		return this;
+	}
+
+	public Corporation corporationEntity() {
+		return UserDAO.getCorp(corporation);
 	}
 
 	public Permission getPermission() {
@@ -152,20 +213,16 @@ public class UserEntity extends AbstractEntity {
 		this.permission = permission;
 	}
 
-	public void setOrdersId(ArrayList<Long> ordersId) {
-		this.ordersId = ordersId;
-	}
-
-	public long getCorpId() {
-		return this.permission.getCorporation();
-	}
-
-	public void setCorpId(long corpId) {
-		this.corpId = corpId;
-	}
-
 	public int getAccessLevel() {
 		return accessLevel;
+	}
+
+	public ArrayList<SavedFile> getFile() {
+		return file;
+	}
+
+	public void setFile(ArrayList<SavedFile> file) {
+		this.file = file;
 	}
 
 	@Override
@@ -176,7 +233,6 @@ public class UserEntity extends AbstractEntity {
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((ordersId == null) ? 0 : ordersId.hashCode());
 		result = prime * result + ((pass == null) ? 0 : pass.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
@@ -223,13 +279,6 @@ public class UserEntity extends AbstractEntity {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (ordersId == null) {
-			if (other.ordersId != null) {
-				return false;
-			}
-		} else if (!ordersId.equals(other.ordersId)) {
-			return false;
-		}
 		if (pass == null) {
 			if (other.pass != null) {
 				return false;
@@ -256,15 +305,13 @@ public class UserEntity extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [pass=" + ((pass.length() == 128) ? "..." : pass)
-				+ ", phone=" + phone + ", mail=" + mail + ", permission=" + permission + ", accessLevel=" + accessLevel
-				+ ", corpId=" + corpId + ", name=" + name + ", surname=" + surname + ", creator=" + creator
-				+ ", ordersId=" + ordersId + "]";
+		return "UserEntity [ id = " + id + "pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone
+				+ ", mail=" + mail + ", permission=" + permission + ", accessLevel=" + accessLevel + ", name=" + name
+				+ ", surname=" + surname + ", creator=" + creator + "]";
 	}
 
 	public void wipeSecData() {
 		this.pass = null;
-		this.ordersId = null;
 		this.permission = null;
 	}
 

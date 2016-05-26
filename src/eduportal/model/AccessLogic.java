@@ -12,11 +12,11 @@ public class AccessLogic {
 		if (admin.getAccessLevel() < AccessSettings.EDIT_ORDER) {
 			return false;
 		}
-		if (admin.getPermission().corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
+		if (admin.getPermission().getId() == AccessSettings.OWNERCORP().getId()) {
 			return true;
 		}
 		UserEntity creator = order.createdByEntity();
-		if (creator.getPermission().getCorporation() == admin.getPermission().getCorporation()) {
+		if (creator.corporationEntity() == admin.corporationEntity()) {
 			return true;
 		}
 		return false;
@@ -38,7 +38,7 @@ public class AccessLogic {
 
 	public static boolean canListAllUsers(String token) {
 		UserEntity user = AuthContainer.getUser(token);
-		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP().getId()) {
+		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.LIST_USERS) {
 				return true;
 			}
@@ -51,13 +51,13 @@ public class AccessLogic {
 		if (user.getAccessLevel() < AccessSettings.LIST_USERS) {
 			return null;
 		}
-		return UserDAO.searchUsers(phone, name, mail, user.getCorpId());
+		return UserDAO.searchUsers(phone, name, mail, user.corporationEntity());
 	}
 
 	public static boolean canSeeAllProducts(String token) {
 		UserEntity user = AuthContainer.getUser(token);
 		System.out.println(AccessSettings.OWNERCORP());
-		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP().getId()) {
+		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.LIST_OFFLINE_PRODUCTS) {
 				return true;
 			}
@@ -74,7 +74,7 @@ public class AccessLogic {
 
 	public static boolean canActivateProduct(String token) {
 		UserEntity user = AuthContainer.getUser(token);
-		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP().getId()) {
+		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.DEACTIVATE_PRODUCTS) {
 				return true;
 			}
@@ -91,7 +91,7 @@ public class AccessLogic {
 
 	public static boolean canAddProduct(String token) {
 		UserEntity user = AuthContainer.getUser(token);
-		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP().getId()) {
+		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.DEACTIVATE_PRODUCTS) {
 				return true;
 			}
@@ -101,7 +101,7 @@ public class AccessLogic {
 
 	public static boolean canSeeAllOrders(String token) {
 		UserEntity user = AuthContainer.getUser(token);
-		if (user.getPermission().getCorporation() == AccessSettings.OWNERCORP().getId()) {
+		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.LIST_ALL_ORDERS) {
 				return true;
 			}
@@ -114,18 +114,18 @@ public class AccessLogic {
 			return false;
 		}
 		UserEntity admin = AuthContainer.getUser(token);
-		if (admin.getPermission().corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
+		if (admin.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			return true;
 		}
 		UserEntity creator = order.createdByEntity();
-		if (creator.getPermission().getCorporation() == admin.getPermission().getCorporation()) {
+		if (creator.corporationEntity() == admin.corporationEntity()) {
 			return true;
 		}
 		return false;
 	}
 	
 	public static boolean isCompanyAdmin (UserEntity user) {
-		if (user.getPermission().corporationEntity().getOwner().getId() == user.getId()) {
+		if (user.corporationEntity().getOwner().getId() == user.getId()) {
 			return true;
 		}
 		if (AccessSettings.OWNERCORP().getOwner().getId() == user.getId()) {

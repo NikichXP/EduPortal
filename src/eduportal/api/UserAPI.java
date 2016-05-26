@@ -19,7 +19,7 @@ public class UserAPI {
 	
 	// Init Objectify
 	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
-			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, UserSavedFile.class};
+			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, SavedFile.class};
 
 	static {
 		ObjectifyService.begin();
@@ -46,9 +46,17 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
-	public AuthToken register(@Named("name") String name, @Named("pass") @Nullable String pass, @Named("login") String login,
-			@Named("surname") String surname, @Named("phone") String phone, @Named("mail") String mail,
-			@Named("token") String token) {
+	public AuthToken register(
+			@Named("name") String name, 
+			@Named("surname") String surname, 
+			@Named("cyrname") @Nullable String cyrname,
+			@Named("cyrsurname") @Nullable String cyrsurname,
+			@Named("password") @Nullable String pass, 
+			@Named("phone") String phone, 
+			@Named("mail") String mail,
+			@Named("passport") @Nullable String passport,
+			@Named("token") String token,
+			@Named("birthday") Long borned) {
 		UserEntity creator = AuthContainer.getUser(token);
 		if (creator == null || AccessLogic.canCreateUser(creator) == false) {
 			return null;
@@ -62,8 +70,14 @@ public class UserAPI {
 		if (pass == null) {
 			pass = "TEST"; //TODO Gen pass here
 		}
-		UserDAO.create(pass, name, surname, phone, mail, creator);
-		return AuthContainer.authenticate(login, pass);
+		Date born;
+		if (borned == null) {
+			born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
+		} else {
+			born = new Date (borned);
+		}
+		UserDAO.create(passport, pass, name, surname, cyrname, cyrsurname, mail, phone, creator, born);
+		return AuthContainer.authenticate(mail, pass);
 	}
 	
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
@@ -89,6 +103,9 @@ public class UserAPI {
 		user.setPermission(new Permission());
 		user.setCreator(creator);
 		user.setMail(deploy.mail);
+		user.setCyrillicName(deploy.cyrillicName);
+		user.setCyrillicSurname(deploy.cyrillicSurname);
+		user.setId(deploy.passport);
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
 			return new Text("User is probably registered");
@@ -223,7 +240,7 @@ public class UserAPI {
 	}
 	
 	@ApiMethod(name = "setModerator", httpMethod = "GET", path = "setModerator")
-	public UserEntity promoteUser(@Named("token") String token, @Named("target") Long target,
+	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") Integer access) {
 		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
@@ -239,7 +256,7 @@ public class UserAPI {
 	}
 	
 	@ApiMethod (name = "allowCountry", httpMethod = "GET", path = "allowCountry")
-	public UserEntity allowCountry (@Named("token") String token, @Named("countryid") Long countryid, @Named("userid") Long userid) {
+	public UserEntity allowCountry (@Named("token") String token, @Named("countryid") Long countryid, @Named("userid") String userid) {
 		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
 		}
@@ -262,6 +279,9 @@ public class UserAPI {
 		private String phone;
 		private String mail;
 		private String token;
+		private String cyrillicName;
+		private String cyrillicSurname;
+		private String passport;
 		public boolean hasNull() {
 			if (name == null || surname == null || pass == null || phone == null || mail == null) {
 				return true;
@@ -304,5 +324,24 @@ public class UserAPI {
 		public void setToken(String token) {
 			this.token = token;
 		}
+		public String getCyrillicName() {
+			return cyrillicName;
+		}
+		public String getCyrillicSurname() {
+			return cyrillicSurname;
+		}
+		public String getPassport() {
+			return passport;
+		}
+		public void setCyrillicName(String cyrillicName) {
+			this.cyrillicName = cyrillicName;
+		}
+		public void setCyrillicSurname(String cyrillicSurname) {
+			this.cyrillicSurname = cyrillicSurname;
+		}
+		public void setPassport(String passport) {
+			this.passport = passport;
+		}
+		
 	}
 }

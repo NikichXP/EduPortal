@@ -21,7 +21,7 @@ public class Order extends AbstractEntity {
 	@Index
 	private Key<UserEntity> createdBy;
 	private String comment;
-	private ArrayList<UserSavedFile> files;
+	private ArrayList<SavedFile> files;
 	
 	protected final long maxIdValue = 0;
 	
@@ -141,15 +141,15 @@ public class Order extends AbstractEntity {
 		this.comment = comment;
 	}
 	
-	public void addFile (UserSavedFile file) {
+	public void addFile (SavedFile file) {
 		this.files.add(file);
 	}
 
-	public ArrayList<UserSavedFile> getFiles() {
+	public ArrayList<SavedFile> getFiles() {
 		return files;
 	}
 
-	public void setFiles(ArrayList<UserSavedFile> files) {
+	public void setFiles(ArrayList<SavedFile> files) {
 		this.files = files;
 	}
 

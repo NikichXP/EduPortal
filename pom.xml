@@ -11,7 +11,7 @@
 	<artifactId>eduportal-1277</artifactId>
 	<version>beta</version>
 
-		<!-- <packaging>jar</packaging>   -->
+	<!-- <packaging>jar</packaging> -->
 
 	<!-- <profiles> <profile> <id>release-sign-artifacts</id> <activation> <property> 
 		<name>performRelease</name> <value>true</value> </property> </activation> 
@@ -113,7 +113,17 @@
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.2</version>
+		</dependency>
 
 	</dependencies>
 

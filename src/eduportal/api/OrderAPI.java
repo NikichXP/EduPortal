@@ -46,7 +46,7 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(path = "createorder", httpMethod = "GET")
-	public Order createOrder(@Named("productid") Long productid, @Named("clientid") Long clientid,
+	public Order createOrder(@Named("productid") Long productid, @Named("clientid") String clientid,
 			@Named("token") String token, @Named("paid") @Nullable Double paid) { // Token to identify creator
 		UserEntity admin = AuthContainer.getUser(token);
 		if (admin == null) {
