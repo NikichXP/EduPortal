@@ -56,13 +56,13 @@ public class TestAPI {
 		UserEntity[] admins = {
 				new UserEntity("AA555555", "Admin", "Adminov", "Админ", "Админов", "admin@corp.com", "pass",
 						"+123456789012", new Date()).setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("SQ512312", "New", "Order", "Новый", "Заказ", "order", "order@corp.com", "+123456789015",
+				new UserEntity("SQ512312", "New", "Order", "Новый", "Заказ", "order@corp.com", "order", "+123456789015",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("RZ412231", "Adminus", "Maximus", "Админус", "Масимус", "adminus", "adminus@corp.com",
+				new UserEntity("RZ412231", "Adminus", "Maximus", "Админус", "Масимус", "adminus@corp.com", "adminus",
 						"+123456789016", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("VW155555", "User", "User", "Пользователь", "Пользователь", "user", "user@corp.com",
+				new UserEntity("VW155555", "User", "User", "Пользователь", "Пользователь", "user@corp.com", "user",
 						"+123456789013", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("JD151995", "John", "Doe", "Джон", "Доу", "johndoe", "john@doe.com", "+123456789014",
+				new UserEntity("JD151995", "John", "Doe", "Джон", "Доу", "john@doe.com", "johndoe", "+123456789014",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		UserDAO.createCorp(corp);
@@ -112,11 +112,11 @@ public class TestAPI {
 			clients[i].defineCorporation(corp);
 			clients[i].setName(clientName[2 * i]);
 			clients[i].setSurname(clientName[2 * i]);
-			clients[i].setPass("pass"+i);
+			clients[i].setPass("pass" + i);
 			clients[i].setMail("user" + i + "@corp.com");
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
-			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L*24*365*20)));
-			clients[i].setCreator(admins[i%admins.length]);
+			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20)));
+			clients[i].setCreator(admins[i % admins.length]);
 		}
 		if (prior != null) {
 			if (prior < admins.length) {
