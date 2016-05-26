@@ -2,23 +2,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 		
-		<link rel='stylesheet' type='text/css' href='styles/s_workspace.css' />
+		<link rel='stylesheet' type='text/css' href='s_client-create-table.css' />
 		
-		<script type="text/javascript" src="js/cookie_func.js"></script>
-		<script>
-			var authSesToken = getCookie("sesToken");
-			var authSesTO = getCookie("sesTO");
-			var dateObj = new Date();
-			
-			if (authSesToken != null)
-				if(authSesTO - dateObj < 0)
-					window.location = "auth.html";
-		</script>
-		
-		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
-		<script type="text/javascript" src="js/j_workspace.js"></script>	
+		<script type="text/javascript" src="cookie_func.js"></script>
+
+		<script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="j_client-create-table.js"></script>	
 		
 		<title>EduPortal</title>
 	</head>
@@ -101,7 +91,7 @@
 		</div>
 		
 		<div id="client-menu">
-			<!-- <div id="client-menu-text-block"></div>
+			<div id="client-menu-text-block"></div>
 			<div id="client-menu-main">
 				<table id="table-client-menu">
 					<tbody>
@@ -119,7 +109,7 @@
 					<input type='text' id='client-new-phone' value='+380507295746'>
 			</div>
 			<div class="div-form-button" id="client-menu-create">Добавить клиента</div>	
-			<div class="div-form-button" id="client-menu-dismiss">Отмена</div>	 -->
+			<div class="div-form-button" id="client-menu-dismiss">Отмена</div>	
 		</div>
 		
 		<div id="header">
