@@ -1,334 +1,5 @@
 ﻿$(function(){
-	var count;	
-	var $resDiv = $('#div-right');
-	var dateObj = new Date();
-	
-	var authSesToken = getCookie("sesToken");
-	var authSesTO = getCookie("sesTO");
-
-	var ordersList = {};
-	var tokenJson = {
-		token: authSesToken,
-	};
-	
-	if (authSesToken != null)
-		if(authSesTO - dateObj < 0)
-			window.location = "auth.html";
-
-	//check if session ok every 60 secs
-	setInterval(function() 
-	{ 
-		if (getCookie("sesToken") == null) window.location = "auth.html";
-		else 
-			$.ajax({
-				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/checkToken',
-				data: { token: getCookie("sesToken")},
-				success: function(resData) { 
-					if (resData.value == false) window.location = "auth.html";
-				},
-			});		
-	}, 60000);
-	
-	//get user name	
-	$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
-		data: tokenJson,
-		success: function(resData) {
-			$('#p-greeting').append("<h3>Добро пожаловать, " + resData.name + "!</h3>");
-		},	
-	});	
-	//dynamic table of orders
-	$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
-		data: tokenJson,
-		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++)
-			{
-				$('#table-orders').append("<tr class='tr-order'>" +
-						"<td>" + (i + 1) + "</td>" +
-						"<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].clientName + "</td>" +
-						"<td>" + resData.items[i].productName + "</td>" +
-						"<td>" + resData.items[i].creatorName + "</td>" +
-						"<td>" + resData.items[i].paid + "</td>" +
-						"<td>" + checkFiles(resData.items[i]) + "</td>" +
-					"</tr>");	
-			};
-			$('#li-open-orders').append(" " + i);
-			var k = 0;
-			for (var i = 0; i < resData.items.length; i++)
-				if (resData.items[i].donePaid == false) k++;
-			$('#li-done-orders').append(" " + k);
-		},
-	});	
-	//debug button to get token	
-	$('#menu-showses').on('click', function(){
-		$resDiv.append("TokenId = " + getCookie("sesToken") + "; tokenTO = " + getCookie("sesTO") + "; accessLevel = " + getCookie("accessLevel") + ";");	
-	});
-	//log out
-	$('#menu-logout').on('click', function(){
-		deleteCookie("sesToken");	
-		deleteCookie("sesTO");	
-		window.location = "auth.html";
-	});
-	//hide order edit block
-	$('#opacity').on('click', function(){
-		$(this).css('display', 'none');	
-		
-		$('#order-edit-form').css('display', 'none');
-		
-		$('#order-edit-payment').css('display', 'none');
-		
-		$('#client-list').css('display', 'none');
-		
-		$('#product-list').css('display', 'none');
-		
-		$('#lists-container').css('display', 'none');
-		
-		$('#order-create').css('display', 'none');
-		
-		$('#client-menu').css('display', 'none');
-		$('#client-menu').css('height', '322px');
-		$('#client-menu-create').html("Добавить клиента");
-		
-		$('#order-create-file-upload').css('display', 'none');
-		$('#order-create-file-upload').html("");
-	});
-	//hide lists block
-	$('#lists-container').on('click', function(){
-		$(this).css('display', 'none');	
-		$('#client-list').css('display', 'none');
-		$('#product-list').css('display', 'none');
-		$('#lists-container').css('display', 'none');
-	});
-	//get client name from table
-	$('#table-client-list').on("click", "td.td-client-list", function() {
-		var chosenClientId = $(this).children('input.inner-client-input-1').val();
-		$('#order-client-name').html($(this).html())
-		$('#client-list').css('display', 'none');
-		$('#lists-container').css('display', 'none');
-		
-		$('#input-order-client-id').val(chosenClientId);
-	});
-	//get product name from table
-	$('#table-product-list').on("click", "td.td-product-list", function() {
-		var chosenProduct = $(this).html();
-		var chosenProductId = $(this).children('input.inner-product-input-1').val();
-		var chosenProductPrice = $(this).children('input.inner-product-input-2').val();
-		
-		$('#order-product-name').html(chosenProduct);
-		$('#order-product-price').html(chosenProductPrice);
-		$('#input-order-product-id').val(chosenProductId);
-		$('#product-list').css('display', 'none');
-		$('#lists-container').css('display', 'none');
-	});
-	//show client names table		
-	$('#order-client-name').on('click', function(){
-		$('#table-client-list').html("<tbody></tbody>");
-		
-		$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
-		data: tokenJson,
-		success: function(resData) {
-			var imax = resData.items.length;
-			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
-			{
-				if (count == imax) break;
-				$('#table-client-list tbody').append("<tr id='tr-client-list-" + (i + 1) + "'>");
-				for (var j = 0; j < 5; j++)
-				{
-					$('#tr-client-list-' + (i + 1)).append(
-					"<td class='td-client-list'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-client-input-1' value=" + resData.items[count].id + ">" +
-					"</td>"
-					);
-					count++;
-					if (count == imax) break;
-				}
-				$('#table-client-list').append("</tr>");				
-			}
-			$('#client-list').css('display', 'block');
-			$('#lists-container').css('display', 'block');
-		},
-		});	
-	});
-	
-	//show products table
-	$('#order-product-name').on('click', function(){
-		$('#table-product-list').html("<tbody></tbody>");
-		
-		$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
-		data: tokenJson,
-		success: function(resData) {
-			var imax = resData.items.length;
-			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
-			{
-				if (count == imax) break;
-				$('#table-product-list tbody').append("<tr id='tr-product-list-" + (i + 1) + "'>");
-				for (var j = 0; j < 5; j++)
-				{
-					$('#tr-product-list-' + (i + 1)).append(
-					"<td class='td-product-list'>" + 
-					resData.items[count].title + 
-					"<input type='hidden' class='inner-product-input-1' value=" + resData.items[count].id + ">" +
-					"<input type='hidden' class='inner-product-input-2' value=" + resData.items[count].defaultPrice + ">" 
-					+ "</td>"
-					);
-					count++;
-					if (count == imax) break;
-				}
-				$('#table-product-list tbody').append("</tr>");				
-			}
-			$('#product-list').css('display', 'block');
-			$('#lists-container').css('display', 'block');
-		},
-		});	
-	});
-	
-	//open payment edit menu
-	$('#table-orders').on("click", "tr.tr-order", function() {
-		
-		var rowIndex = $(this).index() - 1;
-		
-		$('#table-order-payment').html("<tbody>" + 
-			"<tr id='table-order-payment-header'>" + 
-			"<td>Клиент</td>" + 
-			"<td>Продукт</td>" +
-			"<td>Стоимость</td>" +
-			"<td>Внесенная оплата</td>" +
-			"<td>Осталось</td>" +
-			"<td>Файлы</td>" +
-		"</tbody>");
-		
-		$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
-		data: tokenJson,
-		success: function(resData) { 
-			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
 			
-			$('#table-order-payment tbody').append("<tr>" + 
-				"<td>" + resData.items[rowIndex].clientName + "</td>" + 
-				"<td>" + resData.items[rowIndex].productName + "</td>" +
-				"<td>" + resData.items[rowIndex].price + "</td>" + 
-				"<td>" + resData.items[rowIndex].paid + "</td>" + 
-				"<td>" + (resData.items[rowIndex].price - resData.items[rowIndex].paid) + "</td>" + 
-				"<td>" + checkFiles(resData.items[rowIndex]) + "</td>" + 
-			+ "</tr>");
-			
-			$('#input-order-Id').val(resData.items[rowIndex].id);
-			$('#opacity').css('display', 'block');
-			$('#order-edit-payment').css('display', 'block');
-		},
-		});	
-	});
-	//Send order payment
-	$('#order-edit-send').on('click', function(){
-
-		if ($('#input-paid').val() != "")	
-			var payment = Math.round($('#input-paid').val() * 100) / 100;
-		else var payment = 0;
-		
-		var paymentData = {
-			token: authSesToken,
-			orderid: $('#input-order-Id').val(),
-			paid: payment,
-		};
-		
-		$.ajax({
-			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/editorder',
-			data: paymentData,
-			success: location.reload(),	
-		});		
-
-	});
-	
-	//Add order files 
-	$('#order-edit-file').on('click', function(){
-	
-		var url = "File.jsp?order=" + $('#input-order-Id').val();
-		var windowName = "File Upload";
-		var windowSize = ["width=500, height=500"];
-		window.open(url, windowName, windowSize);
-		event.preventDefault();
-
-	});
-	
-	//Delete order
-	$('#order-edit-del').on('click', function(){
-
-		var delData = {
-			token: authSesToken,
-			orderid: $('#input-order-Id').val(),
-		};
-		
-		$.ajax({
-			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/cancelOrder',
-			data: delData,
-			success: location.reload(),	
-		});		
-
-	});
-	
-	//open order creation menu
-	$('#menu-create-order').on('click', function() {
-		
-		$('#order-create-text-block').html("<H2>Создание заказа</H2>");
-		
-		$('#opacity').css('display', 'block');
-		$('#order-create').css('display', 'block');
-		$('#order-create-file-form').html("Приложить файлы");
-	});
-		
-	//send new order
-	$('#order-create-send').on('click', function() {
-		
-		var pID = $('#input-order-product-id').val();
-		var cID = $('#input-order-client-id').val();
-		var paidSum = $('#create-input-paid').val();
-		
-		if (!$.isNumeric(paidSum)) paidSum = 0;
-		if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
-		else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
-		else
-		{
-			var orderData = {
-				token: authSesToken,
-				productid: pID,
-				clientid: cID,
-				paid: paidSum,
-			};
-
-			$.ajax({
-				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
-				data: orderData,
-				success: function(resData) { 
-					if ($('#file-upload-chb').is(':checked'))
-					{
-						var url = "File.jsp?order=" + resData.id;
-						var windowName = "File Upload";
-						var windowSize = ["width=500, height=500"];
-						window.open(url, windowName, windowSize);
-						event.preventDefault();
-					}
-				},
-			});	
-			
-		};	
-			
-	});
-	
 	//open client menu
 	$('#menu-client-open').on("click", function() {
 				
@@ -407,20 +78,39 @@
 		$('#client-new').css('display', 'none');
 		$('#client-menu-create').html("Добавить клиента");
 		$('#client-menu').css('height', '322px');	
-		$('#client-menu-dismiss').css('display', 'none');		
+		$('#client-menu-dismiss').css('display', 'none');	
+
+		window.close();
 	});
+
+	$('#select-day').html(" ");
+	for (var i = 1; i < 32; i++)
+	{
+		$('#select-day').append("<option id='day-" + i + "'>" + i + "</option>");
+	}
+	$('#select-month').html(" ");
+	for (var i = 1; i < 13; i++)
+	{
+		$('#select-month').append("<option id='month-" + i + "'>" + i + "</option>");
+	}
+	$('#select-year').html(" ");
+	for (var i = 1; i < 21; i++)
+	{
+		$('#select-year').append("<option id='year-" + (i + 1980) + "'>" + (i + 1980) + "</option>");
+	}
+
+	$('#select-month').on('change', function() {
+  		if ($('#select-month').find(":selected").text() == '2')
+  		{
+  			$('#select-day').html(" ");
+
+			for (var i = 1; i < 30; i++)
+			{
+				$('#select-day').append("<option id='day-" + i + "'>" + i + "</option>");
+			}
+		}
+	});
+
 });
 
-function checkBool(data)
-{
-	if (data == true)
-		return "Да";
-	else return "Нет";
-};
-
-function checkFiles(data)
-{
-	if (data.files == null) return 0;
-	else return data.files.length;
-};
 

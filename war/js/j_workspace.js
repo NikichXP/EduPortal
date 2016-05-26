@@ -98,6 +98,7 @@
 		$('#order-create-file-upload').css('display', 'none');
 		$('#order-create-file-upload').html("");
 	});
+
 	//hide lists block
 	$('#lists-container').on('click', function(){
 		$(this).css('display', 'none');	
@@ -105,6 +106,7 @@
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
 	});
+
 	//get client name from table
 	$('#table-client-list').on("click", "td.td-client-list", function() {
 		var chosenClientId = $(this).children('input.inner-client-input-1').val();
@@ -114,6 +116,7 @@
 		
 		$('#input-order-client-id').val(chosenClientId);
 	});
+
 	//get product name from table
 	$('#table-product-list').on("click", "td.td-product-list", function() {
 		var chosenProduct = $(this).html();
@@ -126,6 +129,7 @@
 		$('#product-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
 	});
+
 	//show client names table		
 	$('#order-client-name').on('click', function(){
 		$('#table-client-list').html("<tbody></tbody>");
@@ -332,10 +336,10 @@
 	
 	//open client menu
 	$('#menu-client-open').on("click", function() {
-				
+		//$("#client-menu").load("client-create-table.html");
 		$('#table-client-menu').html("<tbody></tbody>");
-		$('#client-menu-text-block').html("<H2>Мои клиенты</H2>");
-		$('#client-new').css('display', 'none');
+		$('#client-menu-text-block').html("<H2>Мои клиенты</H2>"); 
+		//$('#client-new').css('display', 'none');
 		
 		$.ajax({
 		type: 'GET',
@@ -364,52 +368,25 @@
 			$('#opacity').css('display', 'block');
 		},
 		});	
-	});
+	}); 
 	
 	//client creation menu
 	$('#client-menu-create').on('click', function() {
-		
-		$('#client-menu-create').html("Принять");
-		
-		if ($('#client-new').css('display') == 'block')
-		{
-			$('#client-new').css('display', 'none');
-			$('#client-menu-create').html("Добавить клиента");
-			$('#client-menu').css('height', '322px');
-			
-			var clData = new FormData();    
-			clData.append('token', authSesToken);
-			clData.append('mail', $('#client-new-email').val());
-			clData.append('name', $('#client-new-name').val());
-			clData.append('surname', $('#client-new-surname').val());
-			clData.append('phone', $('#client-new-phone').val());
-			clData.append('pass', '');
-			
-			$.ajax({
-			type: 'POST',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/createuser',
-			data: clData,
-			processData: false,
-			contentType: false,
-			success: location.reload(),	
-			});	
-		}
-		else 
-		{
-			$('#client-new').css('display', 'block');
-			$('#client-menu').css('height', '637px');
-			$('#client-menu-dismiss').css('display', 'block');
-		}
-		
+
+		var url = "client-create-table.html?token=" + getCookie("sesToken");
+		var windowName = "User creation";
+		var windowSize = ["width=500, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
 	});
 	//cancel client creation
-	$('#client-menu-dismiss').on('click', function() {
+	/* $('#client-menu-dismiss').on('click', function() {
 
 		$('#client-new').css('display', 'none');
 		$('#client-menu-create').html("Добавить клиента");
 		$('#client-menu').css('height', '322px');	
 		$('#client-menu-dismiss').css('display', 'none');		
-	});
+	}); */
 });
 
 function checkBool(data)
