@@ -4,6 +4,8 @@ import java.util.*;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
+import eduportal.dao.GeoDAO;
+
 @Entity
 public class Permission extends AbstractEntity {
 	
@@ -65,6 +67,24 @@ public class Permission extends AbstractEntity {
 		for (City c : set) {
 			city.add(c.getId());
 		}
+	}
+	
+	public City[] cityList () {
+		City[] ret = new City[city.size()];
+		int i = 0;
+		for (long l : city) {
+			ret[i] = GeoDAO.getCityById(l);
+		}
+		return ret;
+	}
+	
+	public Country[] countryList () {
+		Country[] ret = new Country[country.size()];
+		int i = 0;
+		for (long l : city) {
+			ret[i] = GeoDAO.getCountryById(l);
+		}
+		return ret;
 	}
 
 	@Override

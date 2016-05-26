@@ -21,20 +21,20 @@
 
 	<form action="edit.jsp">
 		Corporation name <input type="text" name="Name"
-			value="<%=corp.getName()%>"> <br> Select new admin: <select name = "owner">
+			value="<%=corp.getName()%>"> <br> Select new admin: <select
+			name="owner">
 			<%
 				long ownerid = corp.getOwner().getId();
 				List<UserEntity> users = ObjectifyService.ofy().load().type(UserEntity.class).list();
-				for (UserEntity user : users) {
-					if (user.getPermission().getCorporation() == corp.getId()) {
-						out.println("<option " + ((user.getId() == ownerid) ? " selected " : "") + " value=\""
-								+ user.getId() + "\">" + user.getName() + " " + user.getSurname() + "</option>");
-					}
+				for (UserEntity user : UserDAO.getCorpEmployees(corp)) {
+					out.println("<option " + ((user.getId() == ownerid) ? " selected " : "") + " value=\"" + user.getId()
+							+ "\">" + user.getName() + " " + user.getSurname() + "</option>");
+
 				}
 			%>
-		</select> <br>
-		<input type="hidden" name="corp" value="<%= request.getParameter("corp") %>">
-		<input type="submit"> GO </input>
+		</select> <br> <input type="hidden" name="corp"
+			value="<%=request.getParameter("corp")%>"> <input
+			type="submit" value = "GO">
 	</form>
 </body>
 </html>

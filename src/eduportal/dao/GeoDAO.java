@@ -43,6 +43,14 @@ public class GeoDAO {
 		}
 	}
 	
+	public static City getCityById(long id) {
+		try {
+			return ofy().load().type(City.class).id(id).now();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public static List<Country> getCountryList (String filterExp) {
 		return ofy().load().type(Country.class).filter("name >= ", filterExp).filter("name <=", filterExp+"\uFFFD").list();
 	}

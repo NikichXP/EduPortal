@@ -1,8 +1,7 @@
-<%@page import="eduportal.model.AccessLogic"%>
-<%@page import="eduportal.dao.entity.Corporation"%>
-<%@page import="eduportal.dao.UserDAO"%>
+<%@page import="eduportal.model.*"%>
+<%@page import="eduportal.dao.entity.*"%>
+<%@page import="eduportal.dao.*"%>
 <%@page import="eduportal.api.UserAPI"%>
-<%@page import="eduportal.model.AuthContainer"%>
 <%@page import="eduportal.dao.entity.UserEntity"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -13,6 +12,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<%
+		UserEntity user = null;
+		for (Cookie c : request.getCookies()) {
+			if (c.getName().equals("sesToken")) {
+				user = AuthContainer.getUser(c.getValue());
+			}
+		}
+	%>
 	<h1>Company:</h1>
 	<br>
 	<table>
@@ -29,12 +36,42 @@
 			}
 		%>
 	</table>
-	<h1></h1>
+	<%
+		StringBuilder sb;
+	%>
 	<br>
-	<h1></h1>
-	<br>
-	<h1></h1>
-	<br>
-
+	<h1>Сотрудники Вашей фирмы</h1>
+	<table>
+		<%
+			for (UserEntity u : UserDAO.getCorpEmployees(user.getPermission().corporationEntity())) {
+				if (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
+		%>
+		<tr>
+			<td><%=u.getName() + " " + u.getSurname()%></td>
+			<td>
+				<%
+					sb = new StringBuilder();
+							for (City c : u.getPermission().cityList()) {
+								sb.append(c.getName() + ", ");
+							}
+							out.println(sb.toString());
+				%>
+			</td>
+			<td>
+				<%
+					sb = new StringBuilder();
+							for (Country c : u.getPermission().countryList()) {
+								sb.append(c.getName() + ", ");
+							}
+							out.println(sb.toString());
+				%>
+			</td>
+			<td><a href="edituser.jsp?corp=<%=u.getId()%>">Edit</a></td>
+		</tr>
+		<%
+			}
+			}
+		%>
+	</table>
 </body>
 </html>

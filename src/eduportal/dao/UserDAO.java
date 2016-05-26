@@ -17,7 +17,7 @@ public class UserDAO {
 	
 	public static List<UserEntity> getCorpEmployees (Corporation corp) {
 		Key<Corporation> key = Ref.create(corp).getKey();
-		return ofy().load().type(UserEntity.class).filter("corporation", key).list();
+		return ofy().load().type(UserEntity.class).filter("permission.corporation", key).list();
 	}
 	
 	public static UserEntity create(String pass, String name, String surname, String mail, String phone, UserEntity creator) {
