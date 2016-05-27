@@ -594,6 +594,9 @@
               "$ref" : "SavedFile"
             }
           },
+          "active" : {
+            "type" : "boolean"
+          },
           "cyrillicData" : {
             "type" : "string"
           }

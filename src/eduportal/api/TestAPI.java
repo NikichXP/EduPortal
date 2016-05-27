@@ -98,14 +98,12 @@ public class TestAPI {
 			dbsize = 20;
 			break;
 		}
-		clients = new UserEntity[100];
-		Order o[] = new Order[dbsize];
 		if (usersize != null) {
 			clients = new UserEntity[usersize];
+		} else {
+			clients = new UserEntity[100];
 		}
-		if (ordersize != null) {
-			o = new Order[ordersize];
-		}
+		Order o[] = new Order[clients.length];
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new UserEntity();
@@ -117,6 +115,7 @@ public class TestAPI {
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
 			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20)));
 			clients[i].setCreator(admins[i % admins.length]);
+			clients[i].setActive(Math.random() > 0.5);
 		}
 		if (prior != null) {
 			if (prior < admins.length) {
@@ -140,7 +139,7 @@ public class TestAPI {
 				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
 		for (Product prod : p) {
-			prod.setActual(Math.random() > 0.5);
+			prod.setActual(Math.random() < 0.75); //chance vary!
 			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);
 		}
 		ProductDAO.save(p);
@@ -151,24 +150,19 @@ public class TestAPI {
 		if (shuffled == null) {
 			shuffled = false;
 		}
-
 		int i = 0;
-		for (Order ord : o) {
-			i++;
-			if (shuffled) {
-				ord.setUser(clients[r.nextInt(clients.length)]);
-				ord.setCreatedBy(admins[i % admins.length]);
-			} else {
-				ord.setUser(clients[i % clients.length]);
-				ord.setCreatedBy(admins[i % admins.length]);
-				ord.setProduct(p[i % p.length]);
+		for (UserEntity u : clients) {
+			if (u.isActive()) {
+				o[i].setUser(u);
+				o[i].setCreatedBy(admins[i % admins.length]);
+				if (Math.random() > 0.5) {
+					o[i].setPaid(o[i].getPrice());
+				} else {
+					o[i].setPaid((double) Math.round(Math.random() * 10 * o[i].getPrice()) / 100);
+				}
+				OrderDAO.saveOrder(o[i]);
+				i++;
 			}
-			if (Math.random() > 0.5) {
-				ord.setPaid(ord.getPrice());
-			} else {
-				ord.setPaid((double) Math.round(Math.random() * 10 * ord.getPrice()) / 100);
-			}
-			OrderDAO.saveOrder(ord);
 		}
 		return getAll();
 	}

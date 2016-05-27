@@ -6,6 +6,7 @@ import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
 import eduportal.dao.UserDAO;
+import eduportal.model.AccessSettings;
 import eduportal.util.*;
 
 @Entity
@@ -34,6 +35,8 @@ public class UserEntity implements Serializable {
 	private Date born;
 	private long orderId;
 	private ArrayList<SavedFile> files;
+	@Index
+	private boolean isActive;
 
 	public boolean hasNull() {
 		if (id == null) {
@@ -66,6 +69,7 @@ public class UserEntity implements Serializable {
 		for (int i = 0; i < 6; i++) {
 			this.id += (int) (Math.random()*10);
 		}
+		this.isActive = false;
 	}
 
 	public UserEntity(String id, String name, String surname, String cyrillicName, String cyrillicSurname, String mail,
@@ -83,6 +87,7 @@ public class UserEntity implements Serializable {
 		this.accessLevel = 0;
 		this.born = date;
 		this.files = new ArrayList<>();
+		this.isActive = false;
 	}
 
 	public String getId() {
@@ -154,6 +159,9 @@ public class UserEntity implements Serializable {
 
 	public UserEntity setAccessLevel(int accessGroup) {
 		this.accessLevel = accessGroup;
+		if (accessGroup >= AccessSettings.MODERATOR_LEVEL) {
+			this.isActive = true;
+		}
 		return this;
 	}
 
@@ -229,6 +237,14 @@ public class UserEntity implements Serializable {
 
 	public void setFiles(ArrayList<SavedFile> files) {
 		this.files = files;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override
@@ -311,10 +327,10 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail + ", permission="
+		return "UserEntity [id=" + id + ", pass=" + ( (pass.length() == 128) ? "..." : pass ) + ", phone=" + phone + ", mail=" + mail + ", permission="
 				+ permission + ", corporation=" + corporation + ", accessLevel=" + accessLevel + ", cyrillicName="
 				+ cyrillicName + ", cyrillicSurname=" + cyrillicSurname + ", name=" + name + ", surname=" + surname
-				+ ", creator=" + creator + ", born=" + born + ", orderId=" + orderId + ", files=" + files + "]";
+				+ ", creator=" + creator + ", born=" + born + ", orderId=" + orderId + ", files=" + files + ", active=" + isActive + "]";
 	}
 
 	public void wipeSecData() {

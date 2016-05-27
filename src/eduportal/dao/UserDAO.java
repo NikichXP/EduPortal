@@ -44,6 +44,10 @@ public class UserDAO {
 	public static List<Corporation> getCorpList() {
 		return corpList;
 	}
+	
+	public static List<UserEntity> getUnactiveClientsByCorp (UserEntity user, boolean active) {
+		return ofy().load().type(UserEntity.class).filter("corporation", user.getCorporation()).filter("isActive", active).list();
+	}
 
 	/**
 	 * Performs search through users DB

@@ -20,7 +20,7 @@ public class AccessSettings {
 	public static final boolean ALLOW_USER_MULTISESSIONS = false;
 	public static final boolean ALLOW_WORKER_MULTISESSIONS = false;
 	public static final long USER_SESSION_TIMEOUT = 60 * 60 * 1000;
-	public static final long WORKER_SESSION_TIMEOUT = 60 * 60 * 1000;
+	public static final long WORKER_SESSION_TIMEOUT = 12 * 60 * 60 * 1000;
 	
 	public static final int CREATE_USER = MODERATOR_LEVEL;
 	public static final int EDIT_ORDER = MODERATOR_LEVEL;
