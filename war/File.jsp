@@ -1,20 +1,40 @@
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
+<%@ page
+	import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService"%>
 
 <%
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
 
 <html>
-    <head>
-        <title>Upload Test</title>
-    </head>
-    <body>
-        <form action="<%= blobstoreService.createUploadUrl("/FileProcessorServlet") %>" method="post" enctype="multipart/form-data">
-            <input type="file" name="myFile">
-            <input type="hidden" name="orderid" value="<%= request.getParameter("order") %>">
-            <input type="submit" value="Submit">
-        </form>
-    </body>
+<head>
+<title>Upload Test</title>
+</head>
+<body>
+	<%
+		String order = request.getParameter("order");
+		String token = request.getParameter("token");
+		String user = request.getParameter("user");
+		String product = request.getParameter("product");
+	%>
+	<form
+		action="<%=blobstoreService.createUploadUrl("/FileProcessorServlet")%>"
+		method="post" enctype="multipart/form-data">
+		<input type="file" name="myFile">
+		<input type="hidden" name="token" value="<%=token%>">
+		<%
+			if (order != null) {
+				out.println("	<input type=\"hidden\" name=\"orderid\" value=\"" + order + "\">");
+			}
+			if (user != null) {
+				out.println("	<input type=\"hidden\" name=\"userid\" value=\"" + user + "\">");
+			}
+			if (product != null) {
+				out.println("	<input type=\"hidden\" name=\"productid\" value=\"" + product + "\">");
+			}
+		%>
+		<input type="submit" value="Submit">
+	</form>
+</body>
 </html>

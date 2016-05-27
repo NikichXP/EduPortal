@@ -64,6 +64,10 @@ public class OrderDAO {
 	public static Product getProduct(long product) {
 		return ofy().load().type(Product.class).id(product).now();
 	}
+	
+	public static Product getProduct(String product) {
+		return ofy().load().type(Product.class).id(Long.parseLong(product)).now();
+	}
 
 	public static Order getOrder(Long id) {
 		return ofy().load().type(Order.class).id(id).now();

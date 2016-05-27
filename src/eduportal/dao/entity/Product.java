@@ -1,5 +1,7 @@
 package eduportal.dao.entity;
 
+import java.util.ArrayList;
+
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
@@ -15,9 +17,10 @@ public class Product extends AbstractEntity {
 	private boolean actual;
 	@Index
 	private double defaultPrice;
+	private ArrayList<SavedFile> files;
 	
 	public Product () {
-		
+		files = new ArrayList<>();
 	}
 	
 	public Product (String name, String descr, City c) {
@@ -25,6 +28,7 @@ public class Product extends AbstractEntity {
 		this.title = name;
 		this.description = descr;
 		this.city = Ref.create(c).getKey();
+		files = new ArrayList<>();
 	}
 	
 	public String getTitle() {
@@ -59,6 +63,18 @@ public class Product extends AbstractEntity {
 	public Product setDefaultPrice(double defaultPrice) {
 		this.defaultPrice = defaultPrice;
 		return this;
+	}
+	
+	public void addFile (SavedFile file) {
+		this.files.add(file);
+	}
+
+	public ArrayList<SavedFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(ArrayList<SavedFile> files) {
+		this.files = files;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class UserEntity implements Serializable {
 	private Key<UserEntity> creator;
 	private Date born;
 	private long orderId;
-	private ArrayList<SavedFile> file;
+	private ArrayList<SavedFile> files;
 
 	public boolean hasNull() {
 		if (id == null) {
@@ -58,10 +58,11 @@ public class UserEntity implements Serializable {
 		this.permission = new Permission();
 		this.name = "Noname";
 		this.surname = "Noname";
-		this.cyrillicName = "Неопознанный";
-		this.cyrillicSurname = ((Math.random() > 0.5) ? "абрикос" : "кекс");
-		this.file = new ArrayList<>();
+		this.cyrillicName = "РќРµРѕРїРѕР·РЅР°РЅРЅС‹Р№";
+		this.cyrillicSurname = ((Math.random() > 0.5) ? "Р‘Р°РєР»Р°Р¶Р°РЅ" : "РљРµРєСЃ");
+		this.files = new ArrayList<>();
 		this.id = "NU";
+		this.accessLevel = 0;
 		for (int i = 0; i < 6; i++) {
 			this.id += (int) (Math.random()*10);
 		}
@@ -79,8 +80,9 @@ public class UserEntity implements Serializable {
 		this.permission = new Permission();
 		this.cyrillicName = cyrillicName;
 		this.cyrillicSurname = cyrillicSurname;
+		this.accessLevel = 0;
 		this.born = date;
-		this.file = new ArrayList<>();
+		this.files = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -217,12 +219,16 @@ public class UserEntity implements Serializable {
 		return accessLevel;
 	}
 
-	public ArrayList<SavedFile> getFile() {
-		return file;
+	public void addFile (SavedFile file) {
+		this.files.add(file);
 	}
 
-	public void setFile(ArrayList<SavedFile> file) {
-		this.file = file;
+	public ArrayList<SavedFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(ArrayList<SavedFile> files) {
+		this.files = files;
 	}
 
 	@Override
@@ -305,14 +311,15 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [ id = " + id + "pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone
-				+ ", mail=" + mail + ", permission=" + permission + ", accessLevel=" + accessLevel + ", name=" + name
-				+ ", surname=" + surname + ", creator=" + creator + "]";
+		return "UserEntity [id=" + id + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail + ", permission="
+				+ permission + ", corporation=" + corporation + ", accessLevel=" + accessLevel + ", cyrillicName="
+				+ cyrillicName + ", cyrillicSurname=" + cyrillicSurname + ", name=" + name + ", surname=" + surname
+				+ ", creator=" + creator + ", born=" + born + ", orderId=" + orderId + ", files=" + files + "]";
 	}
 
 	public void wipeSecData() {
 		this.pass = null;
 		this.permission = null;
 	}
-
+	
 }

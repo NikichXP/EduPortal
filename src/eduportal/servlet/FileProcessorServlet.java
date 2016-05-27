@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 import com.google.appengine.api.blobstore.*;
 
 import eduportal.dao.OrderDAO;
+import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.model.AuthContainer;
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -20,20 +21,37 @@ public class FileProcessorServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		UserEntity user = null;
 		String token = req.getParameter("token");
+		String userid = req.getParameter("userid");
+		String productid = req.getParameter("productid");
+		String orderid = req.getParameter("orderid");
 		if (token == null) {
 			for (Cookie c : req.getCookies()) {
 				System.out.println(c.getName() + "   " + c.getValue());
 				if (c.getName().equals("sesToken")) {
 					user = AuthContainer.getUser(c.getValue());
-					System.out.println("cookie!");
 				}
 			}
 		} else {
 			user = AuthContainer.getUser(token);
-			System.out.println(req.getParameter("else"));
 		}
 		if (user == null) {
 			res.sendRedirect("/auth.html");
+			return;
+		}
+		Order order = null;
+		Product product = null;
+		UserEntity targetUser = null;
+		if (orderid != null) {
+			order = OrderDAO.getOrder(orderid);
+		}
+		if (productid != null) {
+			product = OrderDAO.getProduct(productid);
+		}
+		if (userid != null) {
+			targetUser = UserDAO.get(userid);
+		}
+		if (order == null && product == null && targetUser == null) {
+			res.sendRedirect("/workspace.jsp");
 			return;
 		}
 		Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
@@ -45,10 +63,18 @@ public class FileProcessorServlet extends HttpServlet {
 			SavedFile file = new SavedFile();
 			file.setId(blobKeys.get(0).getKeyString());
 			ofy().save().entity(file);
-			System.out.println(req.getParameter("orderid"));
-			Order order = OrderDAO.getOrder(req.getParameter("orderid"));
-			order.addFile(file);
-			OrderDAO.saveOrder(order);
+			if (order != null) {
+				order.addFile(file);
+				OrderDAO.saveOrder(order);
+			}
+			if (product != null) {
+				product.addFile(file);
+				OrderDAO.saveProduct(product);
+			}
+			if (targetUser != null) {
+				targetUser.addFile(file);
+				UserDAO.update(targetUser);
+			}
 			res.sendRedirect("/FileProcessorServlet?blob-key=" + blobKeys.get(0).getKeyString());
 		}
 

@@ -54,15 +54,15 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
-				new UserEntity("AA555555", "Admin", "Adminov", "Админ", "Админов", "admin@corp.com", "pass",
+				new UserEntity("AA555555", "Admin", "Adminov", "РђРґРјРёРЅ", "РђРґРјРёРЅРѕРІ", "admin@corp.com", "pass",
 						"+123456789012", new Date()).setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("SQ512312", "New", "Order", "Новый", "Заказ", "order@corp.com", "order", "+123456789015",
+				new UserEntity("SQ512312", "New", "Order", "РќРѕРІРѕСЃ", "РћСЂРґРµСЂСѓСЃ", "order@corp.com", "order", "+123456789015",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("RZ412231", "Adminus", "Maximus", "Админус", "Масимус", "adminus@corp.com", "adminus",
+				new UserEntity("RZ412231", "Adminus", "Maximus", "РђРґРјРёРЅСѓСЃ", "РњР°РєСЃРёРјСѓСЃ", "adminus@corp.com", "adminus",
 						"+123456789016", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("VW155555", "User", "User", "Пользователь", "Пользователь", "user@corp.com", "user",
+				new UserEntity("VW155555", "User", "User", "Р’РµР»РёРєРёР№", "Р®Р·РІРµСЂСЊ", "user@corp.com", "user",
 						"+123456789013", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("JD151995", "John", "Doe", "Джон", "Доу", "john@doe.com", "johndoe", "+123456789014",
+				new UserEntity("JD151995", "John", "Doe", "Р”Р¶РѕРЅ", "Р”РѕСѓ", "john@doe.com", "johndoe", "+123456789014",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		UserDAO.createCorp(corp);
@@ -111,7 +111,7 @@ public class TestAPI {
 			clients[i] = new UserEntity();
 			clients[i].defineCorporation(corp);
 			clients[i].setName(clientName[2 * i]);
-			clients[i].setSurname(clientName[2 * i]);
+			clients[i].setSurname(clientName[2 * i+1]);
 			clients[i].setPass("pass" + i);
 			clients[i].setMail("user" + i + "@corp.com");
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
@@ -135,10 +135,10 @@ public class TestAPI {
 		Product p[] = { new Product("Test product", "Some product to test", c[0]),
 				new Product("NewOrderTest", "Some product to test new order", c[1]),
 				new Product("Prague Study School", "Nice Prague school of english, .......", c[2]),
-				new Product("Высшая школа Будапешта", "Описание программы", c[3]),
-				new Product("Высшая школа Лондона", "Описание программы", c[4]),
-				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
-				new Product("КПИ", "Как же без него?", c[0]), };
+				new Product("Р’С‹СЃС€Р°СЏ С€РєРѕР»Р° Р‘СѓРґР°РїРµС€С‚Р°", "РћРїРёСЃР°РЅРёРµ РїСЂРѕРіСЂР°РјРјС‹", c[3]),
+				new Product("Р’С‹СЃС€Р°СЏ С€РєРѕР»Р° Р›РѕРЅРґРѕРЅР°", "РћРїРёСЃР°РЅРёРµ РїСЂРѕРіСЂР°РјРјС‹", c[4]),
+				new Product("LSE", "РћРїРёСЃР°РЅРёРµ РїСЂРѕРіСЂР°РјРјС‹", c[4]), new Product("Р•С‰С‘ РѕРґРёРЅ Р’РЈР—", "РћРїРёСЃР°РЅРёРµ РїСЂРѕРіСЂР°РјРјС‹", c[2]),
+				new Product("РљРџР", "РљР°Рє Р¶Рµ Р±РµР· РЅРµРіРѕ?", c[0]), };
 		for (Product prod : p) {
 			prod.setActual(Math.random() > 0.5);
 			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);

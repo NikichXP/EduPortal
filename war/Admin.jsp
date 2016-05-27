@@ -14,15 +14,27 @@
 <body>
 	<%
 		UserEntity user = null;
+		String token = "";
 		for (Cookie c : request.getCookies()) {
 			if (c.getName().equals("sesToken")) {
-				user = AuthContainer.getUser(c.getValue());
+				token = c.getValue();
 			}
 		}
+		if (request.getParameter("token") != null) {
+			token = request.getParameter("token");
+		}
+		user = AuthContainer.getUser(token);
 	%>
-	<h1>Company:</h1>
+	<h1>Companies:</h1>
 	<br>
 	<table>
+	<tr>
+	<td>Name</td>
+	<td>ID</td>
+	<td>Owner</td>
+	<td>Mail</td>
+	<td>Editor</td>
+	</tr>
 		<%
 			for (Corporation comp : UserDAO.getCorpList()) {
 		%>
@@ -30,48 +42,66 @@
 			<td><%=comp.getName()%></td>
 			<td><%=comp.getId()%></td>
 			<td><%=comp.getOwner().getName() + " " + comp.getOwner().getSurname()%></td>
-			<td><a href="edit.jsp?corp=<%=comp.getId()%>">Edit</a></td>
+			<td><%=comp.getOwner().getMail() %></td>
+			<td><a href="edit.jsp?corp=<%=comp.getId()%>&token=<%=token%>">Edit</a></td>
 		</tr>
 		<%
 			}
 		%>
 	</table>
+	<a href = "createagent.jsp">Create new agent company</a>
 	<%
 		StringBuilder sb;
 	%>
 	<br>
 	<h1>Сотрудники Вашей фирмы</h1>
+	<br>
+	<a
+		href="/Admin.jsp?token=<%=request.getParameter("token")%><%out.println((request.getParameter("all") == null) ? "&all=true" : "");%>">See
+		all on/off</a>
+	<br>
+	<br>
+	<br>
+
 	<table>
 		<%
 			for (UserEntity u : UserDAO.getCorpEmployees(user.corporationEntity())) {
-				if (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
+				if (request.getParameter("all") == null) {
+					if (u.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+						continue;
+					}
+				}
 		%>
 		<tr>
 			<td><%=u.getName() + " " + u.getSurname()%></td>
+			<td><%=u.getMail() %></td>
 			<td>
 				<%
 					sb = new StringBuilder();
-							for (City c : u.getPermission().cityList()) {
-								sb.append(c.getName() + ", ");
-							}
-							out.println(sb.toString());
+						for (City c : u.getPermission().cityList()) {
+							sb.append(c.getName() + ", ");
+						}
+						out.println(sb.toString());
 				%>
 			</td>
 			<td>
 				<%
 					sb = new StringBuilder();
-							for (Country c : u.getPermission().countryList()) {
-								sb.append(c.getName() + ", ");
-							}
-							out.println(sb.toString());
+						for (Country c : u.getPermission().countryList()) {
+							sb.append(c.getName() + ", ");
+						}
+						out.println(sb.toString());
 				%>
+			</td>
+			<td>
+				<% out.print((u.getAccessLevel() > 1000) ? "BOSS" : u.getAccessLevel()+""); %>
 			</td>
 			<td><a href="edituser.jsp?corp=<%=u.getId()%>">Edit</a></td>
 		</tr>
 		<%
 			}
-			}
 		%>
 	</table>
+
 </body>
 </html>

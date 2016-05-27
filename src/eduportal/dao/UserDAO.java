@@ -18,8 +18,7 @@ public class UserDAO {
 	}
 
 	public static List<UserEntity> getCorpEmployees(Corporation corp) {
-		Key<Corporation> key = Ref.create(corp).getKey();
-		return ofy().load().type(UserEntity.class).filter("permission.corporation", key).list();
+		return ofy().load().type(UserEntity.class).filter("corporation", corp.getId()).list();
 	}
 
 	public static UserEntity create(String passport, String pass, String name, String surname, String cyrillicName,
@@ -108,11 +107,11 @@ public class UserDAO {
 	}
 
 	public static UserEntity get(String id) {
-		return (UserEntity) ofy().load().type(UserEntity.class).id(id).now();
+		return ofy().load().type(UserEntity.class).id(id).now();
 	}
 
 	public static void delete(String target) {
-		UserEntity u = (UserEntity) ofy().load().type(UserEntity.class).id(target).now();
+		UserEntity u = ofy().load().type(UserEntity.class).id(target).now();
 		DeletedUser du = new DeletedUser(u);
 		ofy().delete().entity(u).now();
 		ofy().save().entity(du);
@@ -168,6 +167,10 @@ public class UserDAO {
 			ret = q.list();
 		}
 		return ret;
+	}
+	
+	public static UserEntity getUserByMail (String mail) {
+		return ofy().load().type(UserEntity.class).filter("mail", mail).first().now();
 	}
 
 	public static void createCorp(Corporation... corp) {
