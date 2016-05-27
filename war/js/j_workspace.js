@@ -97,6 +97,8 @@
 		
 		$('#order-create-file-upload').css('display', 'none');
 		$('#order-create-file-upload').html("");
+
+		$('#product-menu').css('display', 'none');
 	});
 
 	//hide lists block
@@ -379,6 +381,16 @@
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
+
+	//open profile
+	$('#table-client-menu').on("click", "td.td-client-menu", function() {
+
+		var url = "user-profile.html?token=" + getCookie("sesToken") + "&clientid=" + $(this).children('input.inner-client-input-1').val();
+		var windowName = "User profile";
+		var windowSize = ["width=450, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+	});
 	//cancel client creation
 	/* $('#client-menu-dismiss').on('click', function() {
 
@@ -387,6 +399,52 @@
 		$('#client-menu').css('height', '322px');	
 		$('#client-menu-dismiss').css('display', 'none');		
 	}); */
+
+	//open product menu
+	$('#menu-product-page').on("click", function() {
+		//$("#client-menu").load("client-create-table.html");
+		$('#table-product-menu').html("<tbody></tbody>");
+		$('#product-menu-text-block').html("<H2>Продукты</H2>"); 
+		//$('#client-new').css('display', 'none');
+		
+		$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/products',
+		data: tokenJson,
+		success: function(resData) {
+			var imax = resData.items.length;
+			var count = 0;
+			for (var i = 0; i < resData.items.length; i++)
+			{
+				if (count == imax) break;
+				$('#table-product-menu tbody').append("<tr id='tr-product-menu-" + (i + 1) + "'>");
+				for (var j = 0; j < 5; j++)
+				{
+					$('#tr-product-menu-' + (i + 1)).append(
+					"<td class='td-product-menu'>" + resData.items[count].title +  
+					"<input type='hidden' class='inner-product-menu-input-1' value=" + resData.items[count].id + ">" +
+					"</td>"
+					);
+					count++;
+					if (count == imax) break;
+				}
+				$('#table-product-menu').append("</tr>");				
+			}
+			$('#product-menu').css('display', 'block');
+			$('#opacity').css('display', 'block');
+		},
+		});	
+	}); 
+	//product creation menu
+	$('#product-menu-create').on('click', function() {
+
+		var url = "product-create-table.html?token=" + getCookie("sesToken");
+		var windowName = "Product creation";
+		var windowSize = ["width=450, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+	});
+	
 });
 
 function checkBool(data)

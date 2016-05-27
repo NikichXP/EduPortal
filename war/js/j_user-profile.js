@@ -74,6 +74,12 @@
 	});
 	//cancel client creation
 	$('#client-menu-dismiss').on('click', function() {
+
+		$('#client-new').css('display', 'none');
+		$('#client-menu-create').html("Добавить клиента");
+		$('#client-menu').css('height', '322px');	
+		$('#client-menu-dismiss').css('display', 'none');	
+
 		window.close();
 	});
 
@@ -156,7 +162,22 @@
 				);
 			}
 		},
-	});		
+	});	
+	//get user's files
+	// $.ajax({
+	// 	type: 'GET',
+	// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
+	// 	data: {'token' : getCookie("sesToken")},
+	// 	success: function(resData) { 
+	// 		for (var i = 0; i < resData.items.length; i++)
+	// 			checkFiles(resData.items[i]) 
+	// 	},
+	// });		
 });
 
+function checkFiles(data)
+{
+	if (data.files == null) return 0;
+	else return data.files.length;
+};
 

@@ -1,0 +1,66 @@
+html {
+  overflow: hidden;
+}
+
+body {
+	margin: 0px;
+	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+	font-size: 11px; 
+	/*background-color: #f1f1f1;*/
+	background-color: #fff;
+	overflow: hidden;
+}
+
+
+#product-new {
+	/*margin: auto;*/
+	width: 500px;
+	text-align: center;
+	margin: auto;
+}
+
+.product-data-block {
+	font-size: 11px;
+	border: 2px solid #5269b1; 
+	background-color: #fff;
+	width: 90%;
+}
+.product-data-block td {
+	background-color: #fff;
+	text-align: left;
+}
+
+.product-data-block td.field-td {
+	text-align: right;
+}
+
+.div-form-button {
+	height: 40px;
+	width: 135px;
+	margin: auto;
+	margin-top: 10px;
+	background-color: #5269b1;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+.product-new-fields-header {
+	font-size: 12px;
+	height: 20px;
+	width: 450px;
+	background-color: #435ea4;
+	text-align: center;
+	line-height: 20px;
+	color: #fff;
+	margin: 0px;
+}
+
+#product-comment {
+	resize: none;
+	overflow: hidden;
+}
+
+
+
