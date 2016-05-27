@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Управление: администратор</title>
 </head>
 <body>
 	<%
@@ -25,7 +25,8 @@
 		}
 		user = AuthContainer.getUser(token);
 	%>
-	<h1>Companies:</h1>
+	<a href=moderator.jsp?token=<%=token %>>Управление: модератор</a>
+	<h1>Компании-агенты:</h1>
 	<br>
 	<table>
 	<tr>
@@ -56,9 +57,8 @@
 	<br>
 	<h1>Сотрудники Вашей фирмы</h1>
 	<br>
-	<a
-		href="/Admin.jsp?token=<%=request.getParameter("token")%><%out.println((request.getParameter("all") == null) ? "&all=true" : "");%>">See
-		all on/off</a>
+	<a href="/Admin.jsp?token=<%=request.getParameter("token")%><%out.println((request.getParameter("all") == null) ? "&all=true" : "");%>">
+	See	all on/off</a>
 	<br>
 	<br>
 	<br>

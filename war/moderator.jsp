@@ -30,7 +30,7 @@
 	<tr>
 	<td><%= client.getName() + " " + client.getSurname() %></td>
 	<td>Файлов:<%= client.getFiles().size() %></td>
-	<td><a href="activation.jsp?user=<%=client.getId()%>">Обзор</a></td>
+	<td><a href="activation.jsp?user=<%=client.getId()%>&token=<%=token%>">Обзор</a></td>
 	</tr>
 	<% } %>
 	</table>
