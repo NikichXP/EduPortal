@@ -4,35 +4,37 @@
 		<link rel='stylesheet' type='text/css' href='styles/s_client-create-table.css' />
 		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
 		<script type="text/javascript" src="js/j_client-create-table.js"></script>
+		<script type="text/javascript" src="js/cookie_func.js"></script>
 		<title>Добавить клиента</title>
 	</head>
 	<body>
 		
 		<div id="client-new">
-			<table id="client-new-fields-personal">
+			<div class="client-new-fields-header">Личная информация</div>
+			<table class='client-data-block' id="client-new-fields-personal">
 				<tr>
-					<td class='field-req'>Имя:</td>
-					<td><input type='text' id='client-new-name' value='sas'></td>
+					<td>Имя:</td>
+					<td class='field-td'><input type='text' id='client-new-name' value='sas'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Фамилия:</td>
-					<td><input type='text' id='client-new-surname' value='ssasa'></td>
+					<td>Фамилия:</td>
+					<td class='field-td'><input type='text' id='client-new-surname' value='ssasa'></td>
 				</tr>
 				<tr>
 					<td>Отчество:</td>
-					<td><input type='text' id='client-new-surname' value='ssasaвич'></td>
+					<td class='field-td'><input type='text' id='client-new-surname' value='ssasaвич'></td>
 				</tr>
 				<tr>
 					<td>Пол:</td>
-					<td><input type="radio" name="client-new-sex" id="client-new-sex-M">Муж. <input type="radio" name="client-new-sex" id="client-new-sex-F">Жен. </td>
+					<td class='field-td'><input type="radio" name="client-new-sex" id="client-new-sex-M">Муж. <input type="radio" name="client-new-sex" id="client-new-sex-F">Жен. </td>
 				</tr>
 				<tr>
 					<td>Дата рождения:</td>
-					<td><select id='select-day'></select><select id='select-month'></select><select id='select-year'></select></td>
+					<td class='field-td'><select id='select-client-day'></select><select id='select-client-month'></select><select id='select-client-year'></select></td>
 				</tr>
 				<tr>
 					<td>Гражданство:</td>
-					<td>
+					<td class='field-td'>
 						<select id='select-nat'>
 							<option id='nat-ua'>Украина</option>
 							<option id='nat-ru'>Россия</option>
@@ -41,40 +43,174 @@
 					</td>
 				</tr>
 			</table>
-			<table id="client-new-fields-passport">
+			<div class="client-new-fields-header">Данные заграничного паспорта (при наличии)</div>
+			<table class='client-data-block' id="client-new-fields-passport">
 				<tr>
-					<td class='field-req'>Имя латиницей:</td>
-					<td><input type='text' id='client-new-pas=name' value='sas'></td>
+					<td>Имя латиницей:</td>
+					<td class='field-td'><input type='text' id='client-new-pas=name' value='sas'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Фамилия латиницей:</td>
-					<td><input type='text' id='client-new-pas-surname' value='sasssss'></td>
+					<td>Фамилия латиницей:</td>
+					<td class='field-td'><input type='text' id='client-new-pas-surname' value='sasssss'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Серия и номер паспорта:</td>
-					<td><input type='text' id='client-new-pas-id' value='SS1213231'></td>
+					<td>Серия и номер паспорта:</td>
+					<td class='field-td'><input type='text' id='client-new-pas-id' value='SS1213231'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Срок действия паспорта:</td>
-					<td><input type='text' id='client-new-pas-to' value='111'></td>
+					<td>Срок действия паспорта:</td>
+					<td class='field-td'><select id='select-pas-day'></select><select id='select-pas-month'></select><select id='select-pas-year'></select></td>
 				</tr>
 			</table>
-			<table id="client-new-fields-contact">
+			<div class="client-new-fields-header">Контактная информация</div>
+			<table class='client-data-block' id="client-new-fields-contact">
 				<tr>
-					<td class='field-req'>Email:</td>
-					<td><input type='text' id='client-new-email' value='sas@sas.com'></td>
+					<td>Email:</td>
+					<td class='field-td'><input type='text' id='client-new-email' value='sas@sas.com'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Номер телефона:</td>
-					<td><input type='text' id='client-new-phone' value='+380507295746'></td>
+					<td>Номер телефона:</td>
+					<td class='field-td'><input type='text' id='client-new-phone' value='+380507295746'></td>
 				</tr>
 				<tr>
-					<td class='field-req'>Нас.пункт:</td>
-					<td><input type='text' id='client-new-city' value='Киев'></td>
+					<td>Страна:</td>
+					<td class='field-td'>
+						<select id='select-country'>						
+				           <option value="1">Украина</option>
+				           <option value="2">Россия</option>
+				           <option value="3">Беларусь</option>
+				           <option value="4">Казахстан</option>
+				           <option value="5">Австрия</option>
+				           <option value="6">Азербайджан</option>
+				           <option value="56">Албания</option>
+				           <option value="7">Англия</option>
+				           <option value="8">Андорра</option>
+				           <option value="9">Армения</option>
+				           <option value="10">Бельгия</option>
+				           <option value="11">Болгария</option>
+				           <option value="12">Босния</option>
+				           <option value="13">Венгрия</option>
+				           <option value="14">Германия</option>
+				           <option value="15">Греция</option>
+				           <option value="16">Грузия</option>
+				           <option value="17">Дания</option>
+				           <option value="18">Израиль</option>
+				           <option value="19">Ирландия</option>
+				           <option value="20">Исландия</option>
+				           <option value="21">Испания</option>
+				           <option value="22">Италия</option>
+				           <option value="23">Кипр</option>
+				           <option value="24">Киргизия</option>
+				           <option value="25">Косово</option>
+				           <option value="27">Латвия</option>
+				           <option value="28">Литва</option>
+				           <option value="29">Лихтенштейн</option>
+				           <option value="30">Люксембург</option>
+				           <option value="31">Македония</option>
+				           <option value="32">Мальта</option>
+				           <option value="33">Молдова</option>
+				           <option value="34">Монако</option>
+				           <option value="57">Монголия</option>
+				           <option value="35">Нидерланды</option>
+				           <option value="36">Норвегия</option>
+				           <option value="37">Польша</option>
+				           <option value="38">Португалия</option>
+				           <option value="39">Румыния</option>
+				           <option value="40">Сан Марино</option>
+				           <option value="41">Сербия</option>
+				           <option value="42">Словакия</option>
+				           <option value="43">Словения</option>
+				           <option value="44">Таджикистан</option>
+				           <option value="45">Туркменистан</option>
+				           <option value="46">Турция</option>
+				           <option value="47">Узбекистан</option>
+				           <option value="48">Финляндия</option>
+				           <option value="49">Франция</option>
+				           <option value="50">Хорватия</option>
+				           <option value="51">Черногория</option>
+				           <option value="52">Чехия</option>
+				           <option value="53">Швейцария</option>
+				           <option value="54">Швеция</option>
+				           <option value="55">Эстония</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Нас.пункт:</td>
+					<td class='field-td'><input type='text' id='client-new-city' value=''></td>
+				</tr>
+				<tr>
+					<td>Почтовый индекс:</td>
+					<td class='field-td'><input type='text' id='client-new-ind' value=''></td>
+				</tr>
+				<tr>
+					<td>Улица, номер дома, квартира:</td>
+					<td class='field-td'><input type='text' id='client-new-adress' value=''></td>
+				</tr>
+				<tr>
+					<td>Школа:</td>
+					<td class='field-td'><input type='text' id='client-new-school' value=''></td>
+				</tr>
+			</table>
+			<div class="client-new-fields-header">Оплата залога (если вы приняли залог за обучение от абитуриента)</div>
+			<table class='client-data-block' id="client-new-fields-zalog">
+				<tr>
+					<td>Представитель:</td>
+					<td class='field-td'><input type='text' id='client-new-emp' readonly></td>
+				</tr>
+				<tr>
+					<td>Сумма залога в евро:</td>
+					<td class='field-td'><input type='text' id='client-new-sum-e' value='0' disabled></td>
+				</tr>
+				<tr>
+					<td>Сумма залога в кронах:</td>
+					<td class='field-td'><input type='text' id='client-new-sum-k' value='0' disabled></td>
+				</tr>
+				<tr>
+					<td>Номер договора(необязательно):</td>
+					<td class='field-td'><input type='text' id='client-new-order-id' value=''></td>
+				</tr>
+			</table>
+			<div class="client-new-fields-header">Запись на курсы</div>
+			<table class='client-data-block' id="client-new-fields-product">
+				<tr>
+					<td>Курсы:</td>
+					<td class='field-td'><select id='select-product'></select></td>
+				</tr>
+			</table>
+			<div class="client-new-fields-header">Учебный год</div>
+			<table class='client-data-block' id="client-new-fields-year">
+				<tr>
+					<td>Учебный год:</td>
+					<td class='field-td'>
+						<select id='select-year'>
+							<option id='year-1'>2016-2017</option>
+							<option id='year-2'>2017-2018</option>
+							<option id='year-3'>2018-2019</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<table class='client-data-block' id="client-new-comment">
+				<tr>
+					<td>Комментарий:</td>
+					<td class='field-td' rowspan='2'>
+						<div class="div-form-button" id="client-menu-send">Отправить</div>	
+						<div class="div-form-button" id="client-menu-dismiss">Отмена</div>		
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<textarea rows="7" cols="40" name="comment" id='client-comment'></textarea>
+					</td>
 				</tr>
 			</table>
 		</div>
 		
-		<div class="div-form-button" id="client-menu-dismiss">Отмена</div>	
+		
 	</body>
 </html>
+
+
+<!-- <option value="0" selected="">--</option>
+            -->

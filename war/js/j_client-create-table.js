@@ -83,34 +83,86 @@
 		window.close();
 	});
 
-	$('#select-day').html(" ");
+	$('#select-client-day').html(" ");
 	for (var i = 1; i < 32; i++)
 	{
-		$('#select-day').append("<option id='day-" + i + "'>" + i + "</option>");
+		$('#select-client-day').append("<option id='day-" + i + "'>" + i + "</option>");
 	}
-	$('#select-month').html(" ");
+	$('#select-client-month').html(" ");
 	for (var i = 1; i < 13; i++)
 	{
-		$('#select-month').append("<option id='month-" + i + "'>" + i + "</option>");
+		$('#select-client-month').append("<option id='month-" + i + "'>" + i + "</option>");
 	}
-	$('#select-year').html(" ");
+	$('#select-client-year').html(" ");
 	for (var i = 1; i < 21; i++)
 	{
-		$('#select-year').append("<option id='year-" + (i + 1980) + "'>" + (i + 1980) + "</option>");
+		$('#select-client-year').append("<option id='year-" + (i + 1980) + "'>" + (i + 1980) + "</option>");
 	}
 
-	$('#select-month').on('change', function() {
-  		if ($('#select-month').find(":selected").text() == '2')
+	$('#select-client-month').on('change', function() {
+  		if ($('#select-client-month').find(":selected").text() == '2')
   		{
-  			$('#select-day').html(" ");
+  			$('#select-client-day').html(" ");
 
 			for (var i = 1; i < 30; i++)
 			{
-				$('#select-day').append("<option id='day-" + i + "'>" + i + "</option>");
+				$('#select-client-day').append("<option id='day-" + i + "'>" + i + "</option>");
 			}
 		}
 	});
 
+	$('#select-pas-day').html(" ");
+	for (var i = 1; i < 32; i++)
+	{
+		$('#select-pas-day').append("<option id='day-" + i + "'>" + i + "</option>");
+	}
+	$('#select-pas-month').html(" ");
+	for (var i = 1; i < 13; i++)
+	{
+		$('#select-pas-month').append("<option id='month-" + i + "'>" + i + "</option>");
+	}
+	$('#select-pas-year').html(" ");
+	for (var i = 1; i < 21; i++)
+	{
+		$('#select-pas-year').append("<option id='year-" + (i + 2015) + "'>" + (i + 2015) + "</option>");
+	}
+
+	$('#select-pas-month').on('change', function() {
+  		if ($('#select-pas-month').find(":selected").text() == '2')
+  		{
+  			$('#select-pas-day').html(" ");
+
+			for (var i = 1; i < 30; i++)
+			{
+				$('#select-pas-day').append("<option id='day-" + i + "'>" + i + "</option>");
+			}
+		}
+	});
+
+	
+	$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
+		data: {'token' : getCookie("sesToken")},
+		success: function(resData) {
+			$('#client-new-emp').val(resData.name + " " + resData.surname);
+		},	
+	});
+
+	$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
+		data: {'token' : getCookie("sesToken")},
+		success: function(resData) {
+			for (var i = 0; i < resData.items.length; i++)
+			{
+				$('#select-product').append("<option id='product-" + i + "' value='" + resData.items[i].id + "'>" 
+					+ resData.items[i].title 
+					+ "</option>" 
+				);
+			}
+		},
+	});		
 });
 
 
