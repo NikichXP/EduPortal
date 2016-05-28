@@ -152,52 +152,11 @@
 					<td class='field-td'><input type='text' id='client-new-school' value=''></td>
 				</tr>
 			</table>
-			<div class="client-new-fields-header">Оплата залога (если вы приняли залог за обучение от абитуриента)</div>
-			<table class='client-data-block' id="client-new-fields-zalog">
-				<tr>
-					<td>Представитель:</td>
-					<td class='field-td'><input type='text' id='client-new-emp' readonly></td>
-				</tr>
-				<tr>
-					<td>Сумма залога:</td>
-					<td class='field-td'><input type='text' id='client-new-sum-e' value='0' disabled></td>
-				</tr>
-				<tr>
-					<td>Валюта:</td>
-					<td class='field-td'>
-						<select id='select-year'>
-							<option id='cur-1'>UAH</option>
-							<option id='cur-2'>USD</option>
-							<option id='cur-3'>EUR</option>
-							<option id='cur-4'>CZK</option>
-						</select>
-					</td>
-				</tr>
-			</table>
-			<div class="client-new-fields-header">Запись на курсы</div>
-			<table class='client-data-block' id="client-new-fields-product">
-				<tr>
-					<td>Курсы:</td>
-					<td class='field-td'><select id='select-product'></select></td>
-				</tr>
-			</table>
-			<div class="client-new-fields-header">Учебный год</div>
-			<table class='client-data-block' id="client-new-fields-year">
-				<tr>
-					<td>Учебный год:</td>
-					<td class='field-td'>
-						<select id='select-year'>
-							<option id='year-1'>2016-2017</option>
-							<option id='year-2'>2017-2018</option>
-							<option id='year-3'>2018-2019</option>
-						</select>
-					</td>
-				</tr>
-			</table>
 			<table class='client-data-block' id="client-new-comment">
 				<tr>
 					<td>Комментарий:</td>
 					<td class='field-td' rowspan='2'>
+						Оформить заказ <input type='checkbox' id='if-order'> 
 						<div class="div-form-button" id="client-menu-send">Отправить</div>	
 						<div class="div-form-button" id="client-menu-dismiss">Отмена</div>		
 					</td>
@@ -213,7 +172,3 @@
 		
 	</body>
 </html>
-
-
-<!-- <option value="0" selected="">--</option>
-            -->
