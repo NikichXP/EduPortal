@@ -289,51 +289,12 @@
 	
 	//open order creation menu
 	$('#menu-create-order').on('click', function() {
-		
-		$('#order-create-text-block').html("<H2>Создание заказа</H2>");
-		
-		$('#opacity').css('display', 'block');
-		$('#order-create').css('display', 'block');
-		$('#order-create-file-form').html("Приложить файлы");
-	});
-		
-	//send new order
-	$('#order-create-send').on('click', function() {
-		
-		var pID = $('#input-order-product-id').val();
-		var cID = $('#input-order-client-id').val();
-		var paidSum = $('#create-input-paid').val();
-		
-		if (!$.isNumeric(paidSum)) paidSum = 0;
-		if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
-		else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
-		else
-		{
-			var orderData = {
-				token: authSesToken,
-				productid: pID,
-				clientid: cID,
-				paid: paidSum,
-			};
 
-			$.ajax({
-				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
-				data: orderData,
-				success: function(resData) { 
-					if ($('#file-upload-chb').is(':checked'))
-					{
-						var url = "File.jsp?order=" + resData.id + "&token=" + getCookie("sesToken");
-						var windowName = "File Upload";
-						var windowSize = ["width=500, height=500"];
-						window.open(url, windowName, windowSize);
-						event.preventDefault();
-					}
-				},
-			});	
-			
-		};	
-			
+		var url = "order-create-table.html?token=" + getCookie("sesToken");
+		var windowName = "Order creation";
+		var windowSize = ["width=450, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
 	});
 	
 	//open client menu
