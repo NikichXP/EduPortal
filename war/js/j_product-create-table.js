@@ -76,7 +76,7 @@
 			type: 'GET',
 			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/product/add',
 			data: prData,
-			// success: window.close(),
+			success: window.close(),
 		});	
 	});	
 
