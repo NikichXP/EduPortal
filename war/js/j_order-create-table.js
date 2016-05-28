@@ -161,39 +161,39 @@
 	//send new order
 	$('#order-menu-send').on('click', function() {
 		
-		var pID = $('#input-order-product-id').val();
-		var cID = $('#input-order-client-id').val();
-		var paidSum = $('#create-input-paid').val();
+		// var pID = $('#input-order-product-id').val();
+		// var cID = $('#input-order-client-id').val();
+		// var paidSum = $('#create-input-paid').val();
 		
-		if (!$.isNumeric(paidSum)) paidSum = 0;
-		if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
-		else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
-		else
-		{
-			var orderData = {
-				token: authSesToken,
-				productid: pID,
-				clientid: cID,
-				paid: paidSum,
-			};
+		// if (!$.isNumeric(paidSum)) paidSum = 0;
+		// if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
+		// else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
+		// else
+		// {
+		// 	var orderData = {
+		// 		token: authSesToken,
+		// 		productid: pID,
+		// 		clientid: cID,
+		// 		paid: paidSum,
+		// 	};
 
-			$.ajax({
-				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
-				data: orderData,
-				success: function(resData) { 
-					if ($('#file-upload-chb').is(':checked'))
-					{
-						var url = "File.jsp?order=" + resData.id + "&token=" + getCookie("sesToken");
-						var windowName = "File Upload";
-						var windowSize = ["width=500, height=500"];
-						window.open(url, windowName, windowSize);
-						event.preventDefault();
-						window.close();
-					}
-					else window.close();
-				},
-			});	
+			// $.ajax({
+			// 	type: 'GET',
+			// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
+			// 	data: orderData,
+			// 	success: function(resData) { 
+			// 		if ($('#file-upload-chb').is(':checked'))
+			// 		{
+			// 			var url = "File.jsp?order=" + resData.id + "&token=" + getCookie("sesToken");
+			// 			var windowName = "File Upload";
+			// 			var windowSize = ["width=500, height=500"];
+			// 			window.open(url, windowName, windowSize);
+			// 			event.preventDefault();
+			// 			window.close();
+			// 		}
+			// 		else window.close();
+			// 	},
+			// });	
 			
 		};	
 			
