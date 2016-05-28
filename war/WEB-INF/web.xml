@@ -7,7 +7,7 @@
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 		<init-param>
 			<param-name>services</param-name>
-			<param-value>eduportal.api.OrderAPI,eduportal.api.TestAPI,eduportal.api.UserAPI</param-value>
+			<param-value>eduportal.api.OrderAPI,eduportal.api.TestAPI,eduportal.api.UserAPI,eduportal.api.UtilAPI</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

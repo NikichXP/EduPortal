@@ -23,8 +23,8 @@ public class ProductDAO {
 		return ofy().load().type(Product.class).list();
 	}
 	
-	public static List<Product> getActual() {
-		return ofy().load().type(Product.class).filter("actual == ", true).list();
+	public static List<Product> getActual(boolean actuality) {
+		return ofy().load().type(Product.class).filter("actual == ", actuality).list();
 	}
 	
 	public static List<Product> getAllByCounry(String countryid) {

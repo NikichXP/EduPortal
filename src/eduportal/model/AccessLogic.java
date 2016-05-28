@@ -89,14 +89,15 @@ public class AccessLogic {
 		return false;
 	}
 
-	public static boolean canAddProduct(String token) {
+	public static String canAddProduct(String token) {
 		UserEntity user = AuthContainer.getUser(token);
 		if (user.corporationEntity().getId() == AccessSettings.OWNERCORP().getId()) {
 			if (user.getAccessLevel() >= AccessSettings.DEACTIVATE_PRODUCTS) {
-				return true;
+				return "GOOD";
 			}
+			return "Access";
 		}
-		return false;
+		return "Corp";
 	}
 
 	public static boolean canSeeAllOrders(String token) {
@@ -140,4 +141,14 @@ public class AccessLogic {
 		}
 		return false;
 	}
+	
+	public static boolean canAccessAdminPanel (UserEntity user) {
+		if (user == null) {
+			return false;
+		}
+		if (user.getAccessLevel() >= AccessSettings.ADMIN_LEVEL) {
+			return true;
+		}
+		return false;
+	} 
 }

@@ -15,7 +15,7 @@ public class OrderAPI {
 	@ApiMethod(name = "getProducts", path = "products", httpMethod = "GET")
 	public List<Product> getActualProducts(@Named("token") String token) {
 		if (AccessLogic.canSeeProducts(token)) {
-			return ProductDAO.getActual();
+			return ProductDAO.getActual(true);
 		}
 		return null;
 	}
@@ -166,11 +166,11 @@ public class OrderAPI {
 
 	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "product/add")
 	public Text addProduct(@Named("title") String title, @Named("description") String descr,
-			@Named("cityid") String cityname, @Named ("token") String token) {
-		if (!AccessLogic.canAddProduct(token)) {
-			return new Text("403 Forbidden");
+			@Named("cityid") String cityname, @Named ("token") String token, @Named("price") Double price) {
+		if (!AccessLogic.canAddProduct(token).equals("GOOD")) {
+			return new Text("403 Forbidden " + AccessLogic.canAddProduct(token));
 		}
-		City city = GeoDAO.getCityById(cityname);
+		City city = GeoDAO.getCityById(Long.parseLong(cityname));
 		if (city == null) {
 			city = GeoDAO.getCity(cityname);
 			if (city == null) {
@@ -178,6 +178,7 @@ public class OrderAPI {
 			}
 		}
 		Product p = new Product(title, descr, city);
+		p.setDefaultPrice(price);
 		ProductDAO.save(p);
 		return new Text(p.toString());
 	}

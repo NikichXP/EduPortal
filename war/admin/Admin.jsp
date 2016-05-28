@@ -2,6 +2,7 @@
 <%@page import="eduportal.dao.entity.*"%>
 <%@page import="eduportal.dao.*"%>
 <%@page import="eduportal.api.UserAPI"%>
+<%@page import="java.util.*"%>
 <%@page import="eduportal.dao.entity.UserEntity"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -15,7 +16,7 @@
 <body>
 	<div id="header">
 		<div id="header-main">
-			<H1>Администрирование</H1>
+			<H1>Администрирование: панель администратора</H1>
 		</div>
 	</div>
 	<%
@@ -26,10 +27,10 @@
 				token = c.getValue();
 			}
 		}
-		if (request.getParameter("token") != null) {
-			token = request.getParameter("token");
-		}
 		user = AuthContainer.getUser(token);
+		if (AccessLogic.canAccessAdminPanel(user) == false) {
+			return;
+		}
 	%>
 	<div id='main-div'>
 		<div class="div-form-button">
@@ -72,41 +73,49 @@
 		<br>
 		<div class="div-form-button">
 			<a
-				href="/Admin.jsp?token=<%=request.getParameter("token")%><%out.println((request.getParameter("all") == null) ? "&all=true" : "");%>">
+				href="/admin/admin.jsp?<%out.println((request.getParameter("all") == null) ? "&all=true" : "");%>">
 				Показать/скрыть всех</a>
 		</div>
 		<br>
-
 		<div class='table-div'>
 			<table class='table-list'>
 				<tr class='table-list-header'>
-					<td>HEADER</td>
-					<td>HEADER</td>
-					<td>HEADER</td>
-					<td>HEADER</td>
-					<td>HEADER</td>
-					<td>HEADER</td>
+					<td>Имя</td>
+					<td>e-mail</td>
+					<td>Доступные страны</td>
+					<td>Доступ</td>
+					<td>Редактирование</td>
 				</tr>
 				<%
-					for (UserEntity u : UserDAO.getCorpEmployees(user.corporationEntity())) {
+					List<UserEntity> users = UserDAO.getCorpEmployees(user.corporationEntity());
+					UserEntity tmp;
+					int minIndex;
+					for (int i = 0; i < users.size(); i++) {
+						for (int j = i; j < users.size(); j++) {
+							minIndex = i;
+							if (users.get(i).compareTo(users.get(j))>0) {
+								minIndex = j;
+							}
+							if (minIndex != i) {
+								tmp = users.get(minIndex);
+								users.set(minIndex, users.get(i));
+								users.set(i, tmp);
+							}
+						}
+					}
+					for (UserEntity u : users) {
 						if (request.getParameter("all") == null) {
 							if (u.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 								continue;
 							}
 						}
+						if (u.getId() == user.getId()) {
+							continue;
+						}
 				%>
 				<tr>
 					<td><%=u.getName() + " " + u.getSurname()%></td>
 					<td><%=u.getMail()%></td>
-					<td>
-						<%
-							sb = new StringBuilder();
-								for (City c : u.getPermission().cityList()) {
-									sb.append(c.getName() + ", ");
-								}
-								out.println(sb.toString());
-						%>
-					</td>
 					<td>
 						<%
 							sb = new StringBuilder();
@@ -118,10 +127,11 @@
 					</td>
 					<td>
 						<%
-							out.print((u.getAccessLevel() > 1000) ? "BOSS" : u.getAccessLevel() + "");
+							out.print((u.getAccessLevel() > 1000) ? "Администратор"
+										: (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? "Модератор" : "Клиент");
 						%>
 					</td>
-					<td><a href="edituser.jsp?corp=<%=u.getId()%>">Edit</a></td>
+					<td><a href="edituser.jsp?emp=<%=u.getId()%>">Edit</a></td>
 				</tr>
 				<%
 					}

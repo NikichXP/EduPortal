@@ -10,7 +10,7 @@ import eduportal.model.AccessSettings;
 import eduportal.util.*;
 
 @Entity
-public class UserEntity implements Serializable {
+public class UserEntity implements Serializable, Comparable<UserEntity> {
 	private static final long serialVersionUID = 609051047144006260L;
 	@Id
 	private String id;
@@ -66,6 +66,7 @@ public class UserEntity implements Serializable {
 			return false;
 		}
 	}
+
 	private void genId() {
 		this.id = UUID.randomUUID().toString().substring(0, 8);
 	}
@@ -91,8 +92,8 @@ public class UserEntity implements Serializable {
 		this.citizen = Ref.create(AccessSettings.DEFAULT_COUNTRY).getKey();
 	}
 
-	public UserEntity(String passport, String name, String surname, String cyrillicName, String cyrillicSurname, String mail,
-			String pass, String phone, Date date) {
+	public UserEntity(String passport, String name, String surname, String cyrillicName, String cyrillicSurname,
+			String mail, String pass, String phone, Date date) {
 		super();
 		genId();
 		this.passport = passport;
@@ -139,7 +140,7 @@ public class UserEntity implements Serializable {
 	public Corporation corporationEntity() {
 		return UserDAO.getCorp(corporation);
 	}
-	
+
 	public void addFile(SavedFile file) {
 		this.files.add(file);
 	}
@@ -350,16 +351,35 @@ public class UserEntity implements Serializable {
 	public int getAccessLevel() {
 		return accessLevel;
 	}
+
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone + ", mail=" + mail + ", passport="
-				+ passport + ", permission=" + permission + ", corporation=" + corporation + ", accessLevel="
-				+ accessLevel + ", cyrillicName=" + cyrillicName + ", cyrillicSurname=" + cyrillicSurname
-				+ ", cyrillicFathername=" + cyrillicFathername + ", name=" + name + ", surname=" + surname
-				+ ", creator=" + creator + ", born=" + born + ", passportActive=" + passportActive + ", files=" + files
-				+ ", isActive=" + isActive + ", postindex=" + postindex + ", citizen=" + citizen + ", school=" + school
-				+ ", homeAddr=" + homeAddr + ", comment=" + comment + ", orderdata=" + orderdata + ", year=" + year
-				+ ", orderId=" + orderId + "]";
+		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone
+				+ ", mail=" + mail + ", passport=" + passport + ", permission=" + permission + ", corporation="
+				+ corporation + ", accessLevel=" + accessLevel + ", cyrillicName=" + cyrillicName + ", cyrillicSurname="
+				+ cyrillicSurname + ", cyrillicFathername=" + cyrillicFathername + ", name=" + name + ", surname="
+				+ surname + ", creator=" + creator + ", born=" + born + ", passportActive=" + passportActive
+				+ ", files=" + files + ", isActive=" + isActive + ", postindex=" + postindex + ", citizen=" + citizen
+				+ ", school=" + school + ", homeAddr=" + homeAddr + ", comment=" + comment + ", orderdata=" + orderdata
+				+ ", year=" + year + ", orderId=" + orderId + "]";
 	}
-	
+
+	public static boolean compareMail = true;
+
+	@Override
+	public int compareTo(UserEntity o) {
+		if (this.getAccessLevel() != o.getAccessLevel()) {
+			return this.getAccessLevel() - o.getAccessLevel();
+		}
+		if (compareMail) {
+			return this.getMail().compareToIgnoreCase(o.getMail());
+		} else {
+			int ret = this.getName().compareToIgnoreCase(o.getName());
+			if (ret == 0) {
+				ret = this.getSurname().compareToIgnoreCase(o.getName());
+			}
+			return ret;
+		}
+	}
+
 }

@@ -5,10 +5,11 @@ import com.googlecode.objectify.annotation.*;
 
 @Entity
 public class City extends AbstractEntity {
-	
+	private static final long serialVersionUID = -2792000127515334576L;
 	private Key<Country> country;
 	@Index
 	private String name;
+	private String cyrname;
 	protected final int maxIdValue = 999_999;
 
 	public Country getCountry() {
@@ -25,6 +26,14 @@ public class City extends AbstractEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCyrname() {
+		return ((cyrname != null) ? cyrname : name);
+	}
+
+	public void setCyrname(String cyrname) {
+		this.cyrname = cyrname;
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public class AuthContainer {
 	}
 
 	private static void put(String key, AuthSession value) {
+		value.setToken(key);
 		sessions.put(key, value);
 		cache.put(key, value, Expiration.byDeltaSeconds(3600*24)); //1 day
 		ofy().save().entity(value.setToken(key));

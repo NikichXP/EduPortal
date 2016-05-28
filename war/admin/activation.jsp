@@ -30,7 +30,7 @@
 		if (request.getParameter("act") != null) {
 			client.setActive(true);
 			UserDAO.update(client);
-			response.sendRedirect("/moderator.jsp?token="+ token);
+			response.sendRedirect("/admin/moderator.jsp");
 			return;
 		}
 	%><h1>Прикрепленные файлы:</h1>
@@ -45,7 +45,7 @@
 			}
 		%>
 	</table>
-	<a href="moderator.jsp?token=<%=token%>">Вернуться в прежнее меню</a>
-	<a href="activation.jsp?token=<%=token + "&user=" + client.getId() + "&act=true"%>">Активировать</a>
+	<a href="moderator.jsp">Вернуться в прежнее меню</a>
+	<a href="activation.jsp?user=<%=client.getId()%>&act=true">Активировать</a>
 </body>
 </html>

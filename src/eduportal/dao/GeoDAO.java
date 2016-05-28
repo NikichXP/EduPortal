@@ -35,7 +35,7 @@ public class GeoDAO {
 		}
 	}
 	
-	public static City getCityById(String id) {
+	public static City getCityById(Long id) {
 		try {
 			return ofy().load().type(City.class).id(id).now();
 		} catch (Exception e) {
@@ -67,6 +67,10 @@ public class GeoDAO {
 
 	public static Country getCountryById(Long countryid) {
 		return ofy().load().type(Country.class).id(countryid).now();
+	}
+
+	public static List<City> getCityList() {
+		return ofy().load().type(City.class).list();
 	}
 
 }

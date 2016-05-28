@@ -1,0 +1,115 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://eduportal-1277.appspot.com/_ah/api",
+  "name" : "util",
+  "version" : "v1",
+  "title" : "Misc features",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://eduportal-1277.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "util.utilAPI.getCityList" : {
+      "path" : "cityList",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UtilAPI.getCityList",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "City" : {
+        "id" : "City",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "country" : {
+            "$ref" : "Country"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "cyrname" : {
+            "type" : "string"
+          },
+          "idString" : {
+            "type" : "string"
+          },
+          "idHexString" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Country" : {
+        "id" : "Country",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "cyrname" : {
+            "type" : "string"
+          },
+          "idString" : {
+            "type" : "string"
+          },
+          "idHexString" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CityCollection" : {
+        "id" : "CityCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "City"
+            }
+          }
+        }
+      }
+    },
+    "methods" : {
+      "eduportal.api.UtilAPI.getCityList" : {
+        "response" : {
+          "$ref" : "CityCollection"
+        }
+      }
+    }
+  }
+}
