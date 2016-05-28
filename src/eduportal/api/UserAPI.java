@@ -28,6 +28,17 @@ public class UserAPI {
 		}
 	}
 	
+	@ApiMethod (path = "getUserFiles", httpMethod = "GET")
+	public List<SavedFile> getFiles (@Named("token") String token, @Named("user") @Nullable String user) {
+		UserEntity admin = AuthContainer.getUser(token);
+		//TODO AccessCheck
+		if (user != null) {
+			return UserDAO.get(user).getFiles();
+		} else {
+			return admin.getFiles();
+		}
+	}
+	
 	@ApiMethod (path = "getBlobPath", httpMethod = "GET")
 	public Text getBlobFile () {
 		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -98,14 +109,15 @@ public class UserAPI {
 		}
 		user.setName(deploy.name);
 		user.setSurname(deploy.surname);
-		user.setPass(deploy.pass);
+		user.setPass(deploy.password);
 		user.setPhone(deploy.phone);
 		user.setPermission(new Permission());
 		user.setCreator(creator);
 		user.setMail(deploy.mail);
 		user.setCyrillicName(deploy.cyrillicName);
 		user.setCyrillicSurname(deploy.cyrillicSurname);
-		user.setId(deploy.passport);
+		user.setPassport(deploy.passport);
+		user.setBorn(new Date(deploy.born));
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
 			return new Text("User is probably registered");
@@ -275,15 +287,28 @@ public class UserAPI {
 		public UserDeploy() {}
 		private String name;
 		private String surname;
-		private String pass;
+		private String password;
 		private String phone;
 		private String mail;
 		private String token;
 		private String cyrillicName;
 		private String cyrillicSurname;
+		private String cyrillicFathername;
 		private String passport;
+		private long born;
+		private long passportActive;
+		private String citizen;
+		private String city;
+		private String address;
+		private String school;
+		private String comment;
+		private String orderdata;
+		private long courseid;
+		private int year;
+		private int postindex;
+		
 		public boolean hasNull() {
-			if (name == null || surname == null || pass == null || phone == null || mail == null) {
+			if (name == null || surname == null || password == null || phone == null || mail == null) {
 				return true;
 			}
 			return false;
@@ -294,8 +319,8 @@ public class UserAPI {
 		public String getSurname() {
 			return surname;
 		}
-		public String getPass() {
-			return pass;
+		public String getPassword() {
+			return password;
 		}
 		public String getPhone() {
 			return phone;
@@ -312,8 +337,8 @@ public class UserAPI {
 		public void setSurname(String surname) {
 			this.surname = surname;
 		}
-		public void setPass(String pass) {
-			this.pass = pass;
+		public void setPassword(String pass) {
+			this.password = pass;
 		}
 		public void setPhone(String phone) {
 			this.phone = phone;
@@ -342,6 +367,77 @@ public class UserAPI {
 		public void setPassport(String passport) {
 			this.passport = passport;
 		}
-		
+		public String getCyrillicFathername() {
+			return cyrillicFathername;
+		}
+		public long getBorn() {
+			return born;
+		}
+		public String getCitizen() {
+			return citizen;
+		}
+		public String getCity() {
+			return city;
+		}
+		public String getAddress() {
+			return address;
+		}
+		public String getSchool() {
+			return school;
+		}
+		public String getComment() {
+			return comment;
+		}
+		public String getOrderdata() {
+			return orderdata;
+		}
+		public long getCourseid() {
+			return courseid;
+		}
+		public int getYear() {
+			return year;
+		}
+		public void setCyrillicFathername(String cyrillicFathername) {
+			this.cyrillicFathername = cyrillicFathername;
+		}
+		public void setBorn(long born) {
+			this.born = born;
+		}
+		public void setCitizen(String citizen) {
+			this.citizen = citizen;
+		}
+		public void setCity(String city) {
+			this.city = city;
+		}
+		public void setAddress(String address) {
+			this.address = address;
+		}
+		public void setSchool(String school) {
+			this.school = school;
+		}
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+		public void setOrderdata(String orderdata) {
+			this.orderdata = orderdata;
+		}
+		public void setCourseid(long courseid) {
+			this.courseid = courseid;
+		}
+		public void setYear(int year) {
+			this.year = year;
+		}
+		public long getPassportActive() {
+			return passportActive;
+		}
+		public void setPassportActive(long passportActive) {
+			this.passportActive = passportActive;
+		}
+		public int getPostindex() {
+			return postindex;
+		}
+		public void setPostindex(int postindex) {
+			this.postindex = postindex;
+		}
 	}
 }

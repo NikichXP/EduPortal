@@ -7,6 +7,8 @@ public class Country extends AbstractEntity {
 	
 	@Index
 	private String name;
+	@Index
+	private String cyrname;
 	protected final int maxIdValue = 99_999;
 	
 	public Country () {
@@ -15,13 +17,24 @@ public class Country extends AbstractEntity {
 	public Country (String title) {
 		super();
 		this.name = title;
-	}	
+	}
+	public Country (String title, String cyrname) {
+		super();
+		this.name = title;
+		this.cyrname = cyrname;
+	}
 	
 	public String getName() {
 		return name;
 	}
 	public void setName(String title) {
 		this.name = title;
+	}	
+	public String getCyrname() {
+		return ((cyrname != null) ? cyrname : name);
+	}
+	public void setCyrname(String cyrname) {
+		this.cyrname = cyrname;
 	}
 	@Override
 	public int hashCode() {

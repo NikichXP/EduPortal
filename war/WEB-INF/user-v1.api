@@ -166,6 +166,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "user.userAPI.getFiles" : {
+      "path" : "getUserFiles",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.getFiles",
+      "request" : {
+        "parameters" : {
+          "token" : {
+            "type" : "string",
+            "required" : true
+          },
+          "user" : {
+            "type" : "string",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "user.user.filter.anyData" : {
       "path" : "user/search",
       "httpMethod" : "GET",
@@ -506,7 +531,7 @@
           "surname" : {
             "type" : "string"
           },
-          "pass" : {
+          "password" : {
             "type" : "string"
           },
           "phone" : {
@@ -524,8 +549,47 @@
           "cyrillicSurname" : {
             "type" : "string"
           },
+          "cyrillicFathername" : {
+            "type" : "string"
+          },
           "passport" : {
             "type" : "string"
+          },
+          "born" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "passportActive" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "citizen" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "school" : {
+            "type" : "string"
+          },
+          "comment" : {
+            "type" : "string"
+          },
+          "orderdata" : {
+            "type" : "string"
+          },
+          "courseid" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "year" : {
+            "type" : "integer"
+          },
+          "postindex" : {
+            "type" : "integer"
           }
         }
       },
@@ -554,6 +618,9 @@
           "mail" : {
             "type" : "string"
           },
+          "passport" : {
+            "type" : "string"
+          },
           "permission" : {
             "$ref" : "Permission"
           },
@@ -570,6 +637,9 @@
           "cyrillicSurname" : {
             "type" : "string"
           },
+          "cyrillicFathername" : {
+            "type" : "string"
+          },
           "name" : {
             "type" : "string"
           },
@@ -584,15 +654,41 @@
             "type" : "string",
             "format" : "date-time"
           },
-          "orderId" : {
+          "passportActive" : {
             "type" : "string",
-            "format" : "int64"
+            "format" : "date-time"
           },
           "files" : {
             "type" : "array",
             "items" : {
               "$ref" : "SavedFile"
             }
+          },
+          "postindex" : {
+            "type" : "integer"
+          },
+          "citizen" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "school" : {
+            "type" : "string"
+          },
+          "homeAddr" : {
+            "type" : "string"
+          },
+          "comment" : {
+            "type" : "string"
+          },
+          "orderdata" : {
+            "type" : "string"
+          },
+          "year" : {
+            "type" : "integer"
+          },
+          "orderId" : {
+            "type" : "string",
+            "format" : "int64"
           },
           "active" : {
             "type" : "boolean"
@@ -641,6 +737,18 @@
           }
         }
       },
+      "SavedFileCollection" : {
+        "id" : "SavedFileCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "SavedFile"
+            }
+          }
+        }
+      },
       "UserEntityCollection" : {
         "id" : "UserEntityCollection",
         "type" : "object",
@@ -681,6 +789,11 @@
       "eduportal.api.UserAPI.auth" : {
         "response" : {
           "$ref" : "AuthToken"
+        }
+      },
+      "eduportal.api.UserAPI.getFiles" : {
+        "response" : {
+          "$ref" : "SavedFileCollection"
         }
       },
       "eduportal.api.UserAPI.listAnotherUserFilter" : {

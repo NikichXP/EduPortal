@@ -13,19 +13,22 @@ import eduportal.util.*;
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 609051047144006260L;
 	@Id
-	private String id; // THIS IS PASSPORT ID
+	private String id;
 	@Index
 	private String pass;
 	@Index
 	private String phone;
 	@Index
 	private String mail;
+	@Index
+	private String passport;
 	private Permission permission;
 	@Index
 	private long corporation;
 	private int accessLevel;
 	private String cyrillicName;
 	private String cyrillicSurname;
+	private String cyrillicFathername;
 	@Index
 	private String name;
 	@Index
@@ -33,13 +36,21 @@ public class UserEntity implements Serializable {
 	@Index
 	private Key<UserEntity> creator;
 	private Date born;
-	private long orderId;
+	private Date passportActive;
 	private ArrayList<SavedFile> files;
 	@Index
 	private boolean isActive;
+	private int postindex;
+	private Key<Country> citizen;
+	private String school;
+	private String homeAddr;
+	private String comment; // Комментарий на момент создания пользователя
+	private String orderdata;
+	private int year;
+	private long orderId;
 
 	public boolean hasNull() {
-		if (id == null) {
+		if (passport == null) {
 			return true;
 		} else if (pass == null) {
 			return true;
@@ -55,27 +66,36 @@ public class UserEntity implements Serializable {
 			return false;
 		}
 	}
+	private void genId() {
+		this.id = UUID.randomUUID().toString().substring(0, 8);
+	}
 
 	public UserEntity() {
 		super();
+		genId();
 		this.permission = new Permission();
 		this.name = "Noname";
 		this.surname = "Noname";
 		this.cyrillicName = "Неопознанный";
 		this.cyrillicSurname = ((Math.random() > 0.5) ? "Баклажан" : "Кекс");
+		this.cyrillicFathername = "Войдович";
 		this.files = new ArrayList<>();
-		this.id = "NU";
-		this.accessLevel = 0;
+		this.passport = "NU";
 		for (int i = 0; i < 6; i++) {
-			this.id += (int) (Math.random()*10);
+			this.passport += (int) (Math.random() * 10);
 		}
+		this.accessLevel = 0;
 		this.isActive = false;
+		this.born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
+		this.passportActive = new Date(System.currentTimeMillis() + (3600L * 24 * 365 * 10));
+		this.citizen = Ref.create(AccessSettings.DEFAULT_COUNTRY).getKey();
 	}
 
-	public UserEntity(String id, String name, String surname, String cyrillicName, String cyrillicSurname, String mail,
+	public UserEntity(String passport, String name, String surname, String cyrillicName, String cyrillicSurname, String mail,
 			String pass, String phone, Date date) {
 		super();
-		this.id = id;
+		genId();
+		this.passport = passport;
 		this.name = name;
 		this.surname = surname;
 		this.mail = mail;
@@ -88,73 +108,18 @@ public class UserEntity implements Serializable {
 		this.born = date;
 		this.files = new ArrayList<>();
 		this.isActive = false;
+		this.born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
+		this.passportActive = new Date(System.currentTimeMillis() + (3600L * 24 * 365 * 10));
+		this.citizen = Ref.create(AccessSettings.DEFAULT_COUNTRY).getKey();
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public void wipeSecData() {
+		this.pass = null;
+		this.permission = null;
 	}
 
 	public String getCyrillicData() {
-		return cyrillicName + " " + cyrillicSurname;
-	}
-
-	public Date getBorn() {
-		return born;
-	}
-
-	public void setBorn(Date born) {
-		this.born = born;
-	}
-
-	public String getCyrillicName() {
-		return cyrillicName;
-	}
-
-	public String getCyrillicSurname() {
-		return cyrillicSurname;
-	}
-
-	public void setCyrillicName(String cyrillicName) {
-		this.cyrillicName = cyrillicName;
-	}
-
-	public void setCyrillicSurname(String cyrillicSurname) {
-		this.cyrillicSurname = cyrillicSurname;
-	}
-
-	public long getCorporation() {
-		return corporation;
-	}
-
-	public void setCorporation(long corporation) {
-		this.corporation = corporation;
-	}
-	
-	public void defineCorporation (Corporation corp) {
-		this.corporation = corp.getId();
-	}
-
-	public String getPass() {
-		return pass;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setPass(String pass) {
-		if (pass == null) {
-			return;
-		}
-		this.pass = UserUtils.encodePass(pass);
+		return cyrillicName + " " + cyrillicSurname + " " + cyrillicFathername;
 	}
 
 	public UserEntity setAccessLevel(int accessGroup) {
@@ -163,46 +128,6 @@ public class UserEntity implements Serializable {
 			this.isActive = true;
 		}
 		return this;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
-	public long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
-	}
-
-	public long getCreator() {
-		return creator.getId();
-	}
-
-	public UserEntity creatorEntity() {
-		return Ref.create(creator).get();
 	}
 
 	public UserEntity setCreator(UserEntity creator) {
@@ -214,6 +139,53 @@ public class UserEntity implements Serializable {
 	public Corporation corporationEntity() {
 		return UserDAO.getCorp(corporation);
 	}
+	
+	public void addFile(SavedFile file) {
+		this.files.add(file);
+	}
+
+	public void defineCorporation(Corporation corp) {
+		this.corporation = corp.getId();
+	}
+
+	public void setPass(String pass) {
+		if (pass == null) {
+			return;
+		}
+		this.pass = UserUtils.encodePass(pass);
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getPassport() {
+		return passport;
+	}
+
+	public void setPassport(String passport) {
+		this.passport = passport;
+	}
 
 	public Permission getPermission() {
 		return permission;
@@ -223,12 +195,72 @@ public class UserEntity implements Serializable {
 		this.permission = permission;
 	}
 
-	public int getAccessLevel() {
-		return accessLevel;
+	public long getCorporation() {
+		return corporation;
 	}
 
-	public void addFile (SavedFile file) {
-		this.files.add(file);
+	public void setCorporation(long corporation) {
+		this.corporation = corporation;
+	}
+
+	public String getCyrillicName() {
+		return cyrillicName;
+	}
+
+	public void setCyrillicName(String cyrillicName) {
+		this.cyrillicName = cyrillicName;
+	}
+
+	public String getCyrillicSurname() {
+		return cyrillicSurname;
+	}
+
+	public void setCyrillicSurname(String cyrillicSurname) {
+		this.cyrillicSurname = cyrillicSurname;
+	}
+
+	public String getCyrillicFathername() {
+		return cyrillicFathername;
+	}
+
+	public void setCyrillicFathername(String cyrillicFathername) {
+		this.cyrillicFathername = cyrillicFathername;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public long getCreator() {
+		return creator.getId();
+	}
+
+	public Date getBorn() {
+		return born;
+	}
+
+	public void setBorn(Date born) {
+		this.born = born;
+	}
+
+	public Date getPassportActive() {
+		return passportActive;
+	}
+
+	public void setPassportActive(Date passportActive) {
+		this.passportActive = passportActive;
 	}
 
 	public ArrayList<SavedFile> getFiles() {
@@ -247,95 +279,87 @@ public class UserEntity implements Serializable {
 		this.isActive = isActive;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
-		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
-		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((pass == null) ? 0 : pass.hashCode());
-		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
-		return result;
+	public int getPostindex() {
+		return postindex;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof UserEntity)) {
-			return false;
-		}
-		UserEntity other = (UserEntity) obj;
-		if (permission == null) {
-			if (other.permission != null) {
-				return false;
-			}
-		} else if (!permission.equals(other.permission)) {
-			return false;
-		}
-		if (creator == null) {
-			if (other.creator != null) {
-				return false;
-			}
-		} else if (!creator.equals(other.creator)) {
-			return false;
-		}
-		if (mail == null) {
-			if (other.mail != null) {
-				return false;
-			}
-		} else if (!mail.equals(other.mail)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (pass == null) {
-			if (other.pass != null) {
-				return false;
-			}
-		} else if (!pass.equals(other.pass)) {
-			return false;
-		}
-		if (phone == null) {
-			if (other.phone != null) {
-				return false;
-			}
-		} else if (!phone.equals(other.phone)) {
-			return false;
-		}
-		if (surname == null) {
-			if (other.surname != null) {
-				return false;
-			}
-		} else if (!surname.equals(other.surname)) {
-			return false;
-		}
-		return true;
+	public void setPostindex(int postindex) {
+		this.postindex = postindex;
 	}
 
+	public long getCitizen() {
+		return citizen.getId();
+	}
+
+	public void setCitizen(Country citizen) {
+		this.citizen = Ref.create(citizen).getKey();
+	}
+
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public String getHomeAddr() {
+		return homeAddr;
+	}
+
+	public void setHomeAddr(String homeAddr) {
+		this.homeAddr = homeAddr;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getOrderdata() {
+		return orderdata;
+	}
+
+	public void setOrderdata(String orderdata) {
+		this.orderdata = orderdata;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public int getAccessLevel() {
+		return accessLevel;
+	}
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + ( (pass.length() == 128) ? "..." : pass ) + ", phone=" + phone + ", mail=" + mail + ", permission="
-				+ permission + ", corporation=" + corporation + ", accessLevel=" + accessLevel + ", cyrillicName="
-				+ cyrillicName + ", cyrillicSurname=" + cyrillicSurname + ", name=" + name + ", surname=" + surname
-				+ ", creator=" + creator + ", born=" + born + ", orderId=" + orderId + ", files=" + files + ", active=" + isActive + "]";
-	}
-
-	public void wipeSecData() {
-		this.pass = null;
-		this.permission = null;
+		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone + ", mail=" + mail + ", passport="
+				+ passport + ", permission=" + permission + ", corporation=" + corporation + ", accessLevel="
+				+ accessLevel + ", cyrillicName=" + cyrillicName + ", cyrillicSurname=" + cyrillicSurname
+				+ ", cyrillicFathername=" + cyrillicFathername + ", name=" + name + ", surname=" + surname
+				+ ", creator=" + creator + ", born=" + born + ", passportActive=" + passportActive + ", files=" + files
+				+ ", isActive=" + isActive + ", postindex=" + postindex + ", citizen=" + citizen + ", school=" + school
+				+ ", homeAddr=" + homeAddr + ", comment=" + comment + ", orderdata=" + orderdata + ", year=" + year
+				+ ", orderId=" + orderId + "]";
 	}
 	
 }
