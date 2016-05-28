@@ -1,40 +1,26 @@
 ﻿$(function(){
 			
-	//open client menu
-	$('#menu-client-open').on("click", function() {
-				
-		$('#table-client-menu').html("<tbody></tbody>");
-		$('#client-menu-text-block').html("<H2>Мои клиенты</H2>");
-		$('#client-new').css('display', 'none');
-		
-		$.ajax({
+	//fields
+	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
-		data: tokenJson,
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/fields',
 		success: function(resData) {
-			var imax = resData.items.length;
-			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			$('#client-new-fields').html(' ');
+			for (var i = 0; i < resData.items.length; i++) 
 			{
-				if (count == imax) break;
-				$('#table-client-menu tbody').append("<tr id='tr-client-menu-" + (i + 1) + "'>");
-				for (var j = 0; j < 5; j++)
-				{
-					$('#tr-client-menu-' + (i + 1)).append(
-					"<td class='td-client-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-client-menu-input-1' value=" + resData.items[count].id + ">" +
-					"</td>"
-					);
-					count++;
-					if (count == imax) break;
-				}
-				$('#table-client-menu').append("</tr>");				
+				$('#client-new-fields').append("<tr id='field-" + i + "'>");
+					$('#field-' + i).append("<td class='col-left'>");
+						$('#field-' + i + ' .col-left').append(resData.items[i]);
+					$('#field-' + i).append('</td>');
+
+					$('#field-' + i).append("<td class='col-right'>");
+						$('#field-' + i + ' .col-right').append("<textarea rows='2' cols='40' id='field-" + i + "'></textarea>");
+					$('#field-' + i).append('</td>');
+				$('#client-new-fields').append('</tr>');
 			}
-			$('#client-menu').css('display', 'block');
-			$('#opacity').css('display', 'block');
-		},
-		});	
+		},	
 	});
+
 	
 	//client creation menu
 	$('#client-menu-create').on('click', function() {
