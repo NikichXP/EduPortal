@@ -47,7 +47,7 @@
 				<tr>
 					<td><%=prod.getTitle()%></td>
 					<td>Файлов:<%=prod.getFiles().size()%></td>
-					<td><a href="activation.jsp?user=<%=prod.getId()%>">Активация</a></td>
+					<td><a href="prodactiv.jsp?user=<%=prod.getId()%>">Активация</a></td>
 				</tr>
 				<%
 					}

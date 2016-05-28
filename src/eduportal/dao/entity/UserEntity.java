@@ -369,7 +369,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	@Override
 	public int compareTo(UserEntity o) {
 		if (this.getAccessLevel() != o.getAccessLevel()) {
-			return this.getAccessLevel() - o.getAccessLevel();
+			return o.getAccessLevel() - this.getAccessLevel();
 		}
 		if (compareMail) {
 			return this.getMail().compareToIgnoreCase(o.getMail());

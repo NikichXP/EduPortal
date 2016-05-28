@@ -19,23 +19,24 @@
 			<H1>Администрирование: панель администратора</H1>
 		</div>
 	</div>
-	<%
-		UserEntity user = null;
-		String token = "";
-		for (Cookie c : request.getCookies()) {
-			if (c.getName().equals("sesToken")) {
-				token = c.getValue();
-			}
-		}
-		user = AuthContainer.getUser(token);
-		if (AccessLogic.canAccessAdminPanel(user) == false) {
-			return;
-		}
-	%>
 	<div id='main-div'>
 		<div class="div-form-button">
 			<a href=moderator.jsp?token=e24379d8-9874-4a52-8b85-242a565d6b9f>Управление</a>
 		</div>
+		<%
+			UserEntity user = null;
+			String token = "";
+			for (Cookie c : request.getCookies()) {
+				if (c.getName().equals("sesToken")) {
+					token = c.getValue();
+				}
+			}
+			user = AuthContainer.getUser(token);
+			if (AccessLogic.canAccessAdminPanel(user) == false) {
+				return;
+			}
+		%>
+
 		<h1>Компании</h1>
 		<div class='table-div'>
 			<br>
@@ -93,7 +94,7 @@
 					for (int i = 0; i < users.size(); i++) {
 						for (int j = i; j < users.size(); j++) {
 							minIndex = i;
-							if (users.get(i).compareTo(users.get(j))>0) {
+							if (users.get(i).compareTo(users.get(j)) > 0) {
 								minIndex = j;
 							}
 							if (minIndex != i) {
