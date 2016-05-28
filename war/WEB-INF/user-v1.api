@@ -44,14 +44,6 @@
             "type" : "string",
             "required" : true
           },
-          "cyrname" : {
-            "type" : "string",
-            "required" : false
-          },
-          "cyrsurname" : {
-            "type" : "string",
-            "required" : false
-          },
           "password" : {
             "type" : "string",
             "required" : false
@@ -98,6 +90,21 @@
             "required" : true
           }
         },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "user.available_fields" : {
+      "path" : "fields",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UserAPI.getFields",
+      "request" : {
         "body" : "empty"
       },
       "response" : {
@@ -521,6 +528,18 @@
         "properties" : {
         }
       },
+      "StringCollection" : {
+        "id" : "StringCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
       "UserDeploy" : {
         "id" : "UserDeploy",
         "type" : "object",
@@ -529,9 +548,6 @@
             "type" : "string"
           },
           "surname" : {
-            "type" : "string"
-          },
-          "password" : {
             "type" : "string"
           },
           "phone" : {
@@ -543,18 +559,6 @@
           "token" : {
             "type" : "string"
           },
-          "cyrillicName" : {
-            "type" : "string"
-          },
-          "cyrillicSurname" : {
-            "type" : "string"
-          },
-          "cyrillicFathername" : {
-            "type" : "string"
-          },
-          "passport" : {
-            "type" : "string"
-          },
           "born" : {
             "type" : "string",
             "format" : "int64"
@@ -563,33 +567,17 @@
             "type" : "string",
             "format" : "int64"
           },
-          "citizen" : {
-            "type" : "string"
+          "keys" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           },
-          "city" : {
-            "type" : "string"
-          },
-          "address" : {
-            "type" : "string"
-          },
-          "school" : {
-            "type" : "string"
-          },
-          "comment" : {
-            "type" : "string"
-          },
-          "orderdata" : {
-            "type" : "string"
-          },
-          "courseid" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "year" : {
-            "type" : "integer"
-          },
-          "postindex" : {
-            "type" : "integer"
+          "values" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -628,18 +616,6 @@
             "type" : "string",
             "format" : "int64"
           },
-          "accessLevel" : {
-            "type" : "integer"
-          },
-          "cyrillicName" : {
-            "type" : "string"
-          },
-          "cyrillicSurname" : {
-            "type" : "string"
-          },
-          "cyrillicFathername" : {
-            "type" : "string"
-          },
           "name" : {
             "type" : "string"
           },
@@ -649,6 +625,9 @@
           "creator" : {
             "type" : "string",
             "format" : "int64"
+          },
+          "accessLevel" : {
+            "type" : "integer"
           },
           "born" : {
             "type" : "string",
@@ -664,37 +643,11 @@
               "$ref" : "SavedFile"
             }
           },
-          "postindex" : {
-            "type" : "integer"
-          },
-          "citizen" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "school" : {
-            "type" : "string"
-          },
-          "homeAddr" : {
-            "type" : "string"
-          },
-          "comment" : {
-            "type" : "string"
-          },
-          "orderdata" : {
-            "type" : "string"
-          },
-          "year" : {
-            "type" : "integer"
-          },
-          "orderId" : {
-            "type" : "string",
-            "format" : "int64"
+          "userData" : {
+            "$ref" : "JsonMap"
           },
           "active" : {
             "type" : "boolean"
-          },
-          "cyrillicData" : {
-            "type" : "string"
           }
         }
       },
@@ -737,6 +690,10 @@
           }
         }
       },
+      "JsonMap" : {
+        "id" : "JsonMap",
+        "type" : "object"
+      },
       "SavedFileCollection" : {
         "id" : "SavedFileCollection",
         "type" : "object",
@@ -771,6 +728,11 @@
       "eduportal.api.UserAPI.getName" : {
         "response" : {
           "$ref" : "Dummy"
+        }
+      },
+      "eduportal.api.UserAPI.getFields" : {
+        "response" : {
+          "$ref" : "StringCollection"
         }
       },
       "eduportal.api.UserAPI.create" : {

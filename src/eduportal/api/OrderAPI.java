@@ -166,7 +166,7 @@ public class OrderAPI {
 
 	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "product/add")
 	public Text addProduct(@Named("title") String title, @Named("description") String descr,
-			@Named("cityid") String cityname, @Named ("token") String token, @Named("price") Double price) {
+			@Named("cityid") String cityname, @Named ("token") String token, @Named("price") Double price, @Named ("begin") String begin) {
 		if (!AccessLogic.canAddProduct(token).equals("GOOD")) {
 			return new Text("403 Forbidden " + AccessLogic.canAddProduct(token));
 		}

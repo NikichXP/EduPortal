@@ -25,29 +25,35 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	private Permission permission;
 	@Index
 	private long corporation;
-	private int accessLevel;
-	private String cyrillicName;
-	private String cyrillicSurname;
-	private String cyrillicFathername;
 	@Index
 	private String name;
 	@Index
 	private String surname;
 	@Index
 	private Key<UserEntity> creator;
+	private int accessLevel;
+	@Index
+	private boolean isActive;
 	private Date born;
 	private Date passportActive;
 	private ArrayList<SavedFile> files;
-	@Index
-	private boolean isActive;
-	private int postindex;
-	private Key<Country> citizen;
-	private String school;
-	private String homeAddr;
-	private String comment; // Комментарий на момент создания пользователя
-	private String orderdata;
-	private int year;
-	private long orderId;
+
+	private HashMap<String, String> userData;
+	public final static String[] userParams = { "Имя кириллицей", "Фамилия кириллицей", "Отчество",
+			"Имя латиницей (как в загран.паспорте)", "Фамилия латиницей", "Серия и номер заграничного паспорта",
+			"Почтовый индекс", "Гражданство", "Номер школы", "Адрес школы", "Статус обучения (абитуриент, бакалавр...)",
+			"Год окончания обучения", "Место работы", "Оконченный ВУЗ (если имеется)", "Адрес ВУЗа (если имеется)",
+			"ФИО отца", "ФИО матери", "Фамилия при рождении", "Ранее используемые фамилии", "Гражданство отца",
+			"Гражданство матери", "Адрес прописки", "Адрес Skype", "Братья и сестры",
+			"Предпологаемые университеты (минимум 2)",
+			"Были ли ранее проблемы, связанные с пребыванием за границей ( "
+					+ "нарушения визового режима или закона, депортации, задержания полицией, "
+					+ "незаконный перевоз чего — либо и т.п.) (указать какие, если были",
+			"Медицинские проблемы (болезни, которые требуют регулярный контроль врача, "
+					+ "постоянное употребление каких-либо медикаментов) – для оптимального подбора страховой компании",
+			"Противопоказания, аллергии, ограничение по спорту или активному образу жизни",
+			"Спорт. Секции, клубы, увлечения, что хотели бы продолжить в стране обучения",
+			"Откуда узнали о нашей программе. Кто нас порекомендовал", "Комментарий сотруднику Vedi Tour Group" };
 
 	public boolean hasNull() {
 		if (passport == null) {
@@ -77,9 +83,6 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.permission = new Permission();
 		this.name = "Noname";
 		this.surname = "Noname";
-		this.cyrillicName = "Неопознанный";
-		this.cyrillicSurname = ((Math.random() > 0.5) ? "Баклажан" : "Кекс");
-		this.cyrillicFathername = "Войдович";
 		this.files = new ArrayList<>();
 		this.passport = "NU";
 		for (int i = 0; i < 6; i++) {
@@ -89,11 +92,10 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.isActive = false;
 		this.born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
 		this.passportActive = new Date(System.currentTimeMillis() + (3600L * 24 * 365 * 10));
-		this.citizen = Ref.create(AccessSettings.DEFAULT_COUNTRY).getKey();
+		this.userData = new HashMap<>();
 	}
 
-	public UserEntity(String passport, String name, String surname, String cyrillicName, String cyrillicSurname,
-			String mail, String pass, String phone, Date date) {
+	public UserEntity(String passport, String name, String surname, String mail, String pass, String phone, Date date) {
 		super();
 		genId();
 		this.passport = passport;
@@ -103,24 +105,26 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.phone = phone;
 		this.pass = UserUtils.encodePass(pass);
 		this.permission = new Permission();
-		this.cyrillicName = cyrillicName;
-		this.cyrillicSurname = cyrillicSurname;
 		this.accessLevel = 0;
 		this.born = date;
 		this.files = new ArrayList<>();
 		this.isActive = false;
 		this.born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
 		this.passportActive = new Date(System.currentTimeMillis() + (3600L * 24 * 365 * 10));
-		this.citizen = Ref.create(AccessSettings.DEFAULT_COUNTRY).getKey();
+		this.userData = new HashMap<>();
+	}
+	
+	public void addData (String key, String value) {
+		this.userData.put(key, value);
+	}
+	
+	public String getData (String key) {
+		return this.userData.get(key);
 	}
 
 	public void wipeSecData() {
 		this.pass = null;
 		this.permission = null;
-	}
-
-	public String getCyrillicData() {
-		return cyrillicName + " " + cyrillicSurname + " " + cyrillicFathername;
 	}
 
 	public UserEntity setAccessLevel(int accessGroup) {
@@ -204,30 +208,6 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.corporation = corporation;
 	}
 
-	public String getCyrillicName() {
-		return cyrillicName;
-	}
-
-	public void setCyrillicName(String cyrillicName) {
-		this.cyrillicName = cyrillicName;
-	}
-
-	public String getCyrillicSurname() {
-		return cyrillicSurname;
-	}
-
-	public void setCyrillicSurname(String cyrillicSurname) {
-		this.cyrillicSurname = cyrillicSurname;
-	}
-
-	public String getCyrillicFathername() {
-		return cyrillicFathername;
-	}
-
-	public void setCyrillicFathername(String cyrillicFathername) {
-		this.cyrillicFathername = cyrillicFathername;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -280,70 +260,6 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.isActive = isActive;
 	}
 
-	public int getPostindex() {
-		return postindex;
-	}
-
-	public void setPostindex(int postindex) {
-		this.postindex = postindex;
-	}
-
-	public long getCitizen() {
-		return citizen.getId();
-	}
-
-	public void setCitizen(Country citizen) {
-		this.citizen = Ref.create(citizen).getKey();
-	}
-
-	public String getSchool() {
-		return school;
-	}
-
-	public void setSchool(String school) {
-		this.school = school;
-	}
-
-	public String getHomeAddr() {
-		return homeAddr;
-	}
-
-	public void setHomeAddr(String homeAddr) {
-		this.homeAddr = homeAddr;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getOrderdata() {
-		return orderdata;
-	}
-
-	public void setOrderdata(String orderdata) {
-		this.orderdata = orderdata;
-	}
-
-	public int getYear() {
-		return year;
-	}
-
-	public void setYear(int year) {
-		this.year = year;
-	}
-
-	public long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
-	}
-
 	public String getPass() {
 		return pass;
 	}
@@ -352,34 +268,24 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		return accessLevel;
 	}
 
-	@Override
-	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone
-				+ ", mail=" + mail + ", passport=" + passport + ", permission=" + permission + ", corporation="
-				+ corporation + ", accessLevel=" + accessLevel + ", cyrillicName=" + cyrillicName + ", cyrillicSurname="
-				+ cyrillicSurname + ", cyrillicFathername=" + cyrillicFathername + ", name=" + name + ", surname="
-				+ surname + ", creator=" + creator + ", born=" + born + ", passportActive=" + passportActive
-				+ ", files=" + files + ", isActive=" + isActive + ", postindex=" + postindex + ", citizen=" + citizen
-				+ ", school=" + school + ", homeAddr=" + homeAddr + ", comment=" + comment + ", orderdata=" + orderdata
-				+ ", year=" + year + ", orderId=" + orderId + "]";
+	public HashMap<String, String> getUserData() {
+		return userData;
 	}
 
-	public static boolean compareMail = true;
+	public void setUserData(HashMap<String, String> userData) {
+		this.userData = userData;
+	}
 
 	@Override
 	public int compareTo(UserEntity o) {
 		if (this.getAccessLevel() != o.getAccessLevel()) {
 			return o.getAccessLevel() - this.getAccessLevel();
 		}
-		if (compareMail) {
-			return this.getMail().compareToIgnoreCase(o.getMail());
-		} else {
-			int ret = this.getName().compareToIgnoreCase(o.getName());
-			if (ret == 0) {
-				ret = this.getSurname().compareToIgnoreCase(o.getName());
-			}
-			return ret;
+		int ret = this.getName().compareToIgnoreCase(o.getName());
+		if (ret == 0) {
+			ret = this.getSurname().compareToIgnoreCase(o.getName());
 		}
+		return ret;
 	}
 
 }

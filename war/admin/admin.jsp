@@ -16,27 +16,29 @@
 <body>
 	<div id="header">
 		<div id="header-main">
-			<H1>Администрирование: панель администратора</H1>
+			<H1>Администрирование</H1>
 		</div>
 	</div>
 	<div id='main-div'>
 		<div class="div-form-button">
-			<a href=moderator.jsp?token=e24379d8-9874-4a52-8b85-242a565d6b9f>Управление</a>
+			<a href=workspace.html>Назад на панель управления</a>
 		</div>
 		<%
 			UserEntity user = null;
-			String token = "";
+			String token = null;
 			for (Cookie c : request.getCookies()) {
 				if (c.getName().equals("sesToken")) {
 					token = c.getValue();
 				}
 			}
 			user = AuthContainer.getUser(token);
-			if (AccessLogic.canAccessAdminPanel(user) == false) {
+			if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+				out.print("</div></body></html>");
 				return;
 			}
+			StringBuilder sb;
+			if (AccessLogic.canAccessAdminPanel(user)) {
 		%>
-
 		<h1>Компании</h1>
 		<div class='table-div'>
 			<br>
@@ -67,8 +69,9 @@
 			<a href="createagent.jsp">Добавить новую компанию</a>
 		</div>
 		<%
-			StringBuilder sb;
+			}
 		%>
+		
 		<br>
 		<h1>Сотрудники Вашей фирмы</h1>
 		<br>

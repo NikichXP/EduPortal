@@ -166,6 +166,21 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "test.listParams" : {
+      "path" : "listParams",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.listParams",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -247,6 +262,11 @@
       "eduportal.api.TestAPI.ping" : {
         "response" : {
           "$ref" : "Text"
+        }
+      },
+      "eduportal.api.TestAPI.listParams" : {
+        "response" : {
+          "$ref" : "StringCollection"
         }
       }
     }

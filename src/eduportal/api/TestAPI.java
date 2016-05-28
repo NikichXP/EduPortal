@@ -36,6 +36,16 @@ public class TestAPI {
 		return AuthContainer.testMethod();
 	}
 
+	@ApiMethod(name = "listParams", path = "listParams", httpMethod = "GET")
+	public List<String> listParams() {
+		List<String> ret = new ArrayList<>();
+		ret.add("ФИО отца");
+		ret.add("ФИО матери");
+		ret.add("Город-адрес школы");
+		ret.add("Наличие работы");
+		return ret;
+	}
+
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")
 	public Text ping() {
 		return new Text("ping");
@@ -54,15 +64,15 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
-				new UserEntity("AA555555", "Admin", "Adminov", "Админ", "Админов", "admin@corp.com", "pass",
+				new UserEntity("AA555555", "Admin", "Adminov", "admin@corp.com", "pass",
 						"+123456789012", new Date()).setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("SQ512312", "New", "Order", "Новос", "Ордерус", "order@corp.com", "order", "+123456789015",
-						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("RZ412231", "Adminus", "Maximus", "Админус", "Максимус", "adminus@corp.com", "adminus",
+				new UserEntity("SQ512312", "New", "Order", "order@corp.com", "order",
+						"+123456789015", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus",
 						"+123456789016", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("VW155555", "User", "User", "Великий", "Юзверь", "user@corp.com", "user",
+				new UserEntity("VW155555", "User", "User", "user@corp.com", "user",
 						"+123456789013", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("JD151995", "John", "Doe", "Джон", "Доу", "john@doe.com", "johndoe", "+123456789014",
+				new UserEntity("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		UserDAO.createCorp(corp);
@@ -109,7 +119,7 @@ public class TestAPI {
 			clients[i] = new UserEntity();
 			clients[i].defineCorporation(corp);
 			clients[i].setName(clientName[2 * i]);
-			clients[i].setSurname(clientName[2 * i+1]);
+			clients[i].setSurname(clientName[2 * i + 1]);
 			clients[i].setPass("pass" + i);
 			clients[i].setMail("user" + i + "@corp.com");
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
@@ -139,7 +149,7 @@ public class TestAPI {
 				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
 		for (Product prod : p) {
-			prod.setActual(Math.random() < 0.75); //chance vary!
+			prod.setActual(Math.random() < 0.75); // chance vary!
 			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);
 		}
 		ProductDAO.save(p);

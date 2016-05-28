@@ -10,7 +10,7 @@ import eduportal.util.UserUtils;
 public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "phone" };
-		
+
 	private static List<Corporation> corpList = ofy().load().type(Corporation.class).list();
 
 	public static List<UserEntity> listAll() {
@@ -21,8 +21,8 @@ public class UserDAO {
 		return ofy().load().type(UserEntity.class).filter("corporation", corp.getId()).list();
 	}
 
-	public static UserEntity create(String passport, String pass, String name, String surname, String cyrillicName,
-			String cyrillicSurname, String mail, String phone, UserEntity creator, Date born) {
+	public static UserEntity create(String passport, String pass, String name, String surname, String mail,
+			String phone, UserEntity creator, Date born) {
 		if (ofy().load().type(UserEntity.class).filter("mail == ", mail).list().isEmpty() == false) {
 			return null;
 		}
@@ -34,19 +34,20 @@ public class UserDAO {
 			passport = ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A')) + "" + ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A'))
 					+ (r.nextInt(900_000) + 100_000);
 		}
-		UserEntity u = new UserEntity(passport, name, surname, cyrillicName, cyrillicSurname, mail, pass, phone, born);
+		UserEntity u = new UserEntity(passport, name, surname, mail, pass, phone, born);
 		u.setCreator(creator);
 
 		ofy().save().entity(u);
 		return u;
 	}
-	
+
 	public static List<Corporation> getCorpList() {
 		return corpList;
 	}
-	
-	public static List<UserEntity> getUnactiveClientsByCorp (UserEntity user, boolean active) {
-		return ofy().load().type(UserEntity.class).filter("corporation", user.getCorporation()).filter("isActive", active).list();
+
+	public static List<UserEntity> getUnactiveClientsByCorp(UserEntity user, boolean active) {
+		return ofy().load().type(UserEntity.class).filter("corporation", user.getCorporation())
+				.filter("isActive", active).list();
 	}
 
 	/**
@@ -172,8 +173,8 @@ public class UserDAO {
 		}
 		return ret;
 	}
-	
-	public static UserEntity getUserByMail (String mail) {
+
+	public static UserEntity getUserByMail(String mail) {
 		return ofy().load().type(UserEntity.class).filter("mail", mail).first().now();
 	}
 

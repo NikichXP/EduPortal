@@ -317,6 +317,10 @@
           "price" : {
             "type" : "double",
             "required" : true
+          },
+          "begin" : {
+            "type" : "string",
+            "required" : true
           }
         },
         "body" : "empty"
@@ -493,6 +497,12 @@
           },
           "defaultPrice" : {
             "type" : "number"
+          },
+          "start" : {
+            "type" : "string"
+          },
+          "end" : {
+            "type" : "string"
           },
           "files" : {
             "type" : "array",
