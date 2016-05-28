@@ -40,14 +40,13 @@ public class AuthContainer {
 		AuthSession ret = ofy().load().type(AuthSession.class).id(key).now();
 		if (ret == null) {
 			return ret;
+		} else {
+			sessions.put(key, ret); //back-impl
 		}
-		if (ret.getTimeout() > System.currentTimeMillis()) {
-			List<AuthSession> clearList = ofy().load().type(AuthSession.class).filter("timeout > ", System.currentTimeMillis()).list();
+		if (ret.getTimeout() < System.currentTimeMillis()) {
+			List<AuthSession> clearList = ofy().load().type(AuthSession.class).filter("timeout < ", System.currentTimeMillis()).list();
 			ofy().delete().entities(clearList);
 			ret = null;
-		}
-		if (ret != null) {
-			sessions.put(key, ret); //back-impl
 		}
 		return ret;
 	}

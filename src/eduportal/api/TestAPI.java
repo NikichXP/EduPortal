@@ -18,6 +18,9 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
+		HashMap<String, String> test = new HashMap<>();
+		test.put("a", "A");
+		
 		ret.add("end");
 		return ret;
 	}

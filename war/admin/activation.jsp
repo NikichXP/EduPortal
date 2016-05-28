@@ -42,6 +42,19 @@
 			}
 		%>
 	</table>
+	<h1>User data</h1>
+	<table>
+	<%
+		for (String param : client.getUserData().keySet()) {
+	%>
+	<tr>
+	<td><%= param %></td>
+	<td><%= user.getData(param) %></td>
+	</tr>
+	<%
+		}
+	%>
+	</table>
 	<a href="moderator.jsp">Вернуться в прежнее меню</a>
 	<a href="activation.jsp?user=<%=client.getId()%>&act=true">Активировать</a>
 </body>

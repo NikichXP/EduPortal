@@ -28,17 +28,19 @@
 				}
 			}
 			user = AuthContainer.getUser(token);
-			List<Product> products = ProductDAO.getActual(false);
+			List<Product> products = ProductDAO.getAll();
 			List<UserEntity> users = UserDAO.getUnactiveClientsByCorp(user, false);
 		%>
 
-		<h1>Неактивные продукты:</h1>
+		<h1>Продукты:</h1>
 		
 		<div class='table-div'>
 			<table class='table-list'>
 				<tr class='table-list-header'>
 					<td>Имя</td>
 					<td>Файлы</td>
+					<td>Город</td>
+					<td>Статус</td>					
 					<td>Активация</td>
 				</tr>
 				<%
@@ -47,7 +49,9 @@
 				<tr>
 					<td><%=prod.getTitle()%></td>
 					<td>Файлов:<%=prod.getFiles().size()%></td>
-					<td><a href="prodactiv.jsp?user=<%=prod.getId()%>">Активация</a></td>
+					<td><%= prod.getCity().getCyrname() %>
+					<td><% out.print((prod.isActual()) ? "Активно" : "Неактивно"); %></td>
+					<td><a href="prodactiv.jsp?id=<%=prod.getId()%>">Активация</a></td>
 				</tr>
 				<%
 					}

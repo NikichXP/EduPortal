@@ -560,24 +560,16 @@
             "type" : "string"
           },
           "born" : {
-            "type" : "string",
-            "format" : "int64"
+            "type" : "string"
           },
           "passportActive" : {
-            "type" : "string",
-            "format" : "int64"
+            "type" : "string"
           },
           "keys" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
+            "type" : "string"
           },
           "values" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
+            "type" : "string"
           }
         }
       },

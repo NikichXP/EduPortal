@@ -28,11 +28,10 @@
 			String token = null;
 			for (Cookie c : request.getCookies()) {
 				if (c.getName().equals("sesToken")) {
-					token = c.getValue();
+					user = AuthContainer.getUser(c.getValue());
 				}
 			}
-			user = AuthContainer.getUser(token);
-			if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+			if (user == null || AccessLogic.canAccessAdminPanel(user) == false) {
 				out.print("</div></body></html>");
 				return;
 			}

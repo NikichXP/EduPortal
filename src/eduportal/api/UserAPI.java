@@ -118,13 +118,15 @@ public class UserAPI {
 		user.setPass(UUID.randomUUID().toString().substring(0, 8));
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
-		user.setBorn(new Date(deploy.born));
-		user.setPassportActive(new Date(deploy.passportActive));
-		if (deploy.values.length != deploy.keys.length) {
+		user.setBorn(new Date());
+		user.setPassportActive(new Date());
+		String[] keys = deploy.keys.split("ף");
+		String[] values = deploy.values.split("ף");
+		if (values.length != keys.length) {
 			return new Text ("Err in keys-values");
 		}
-		for (int i = 0; i < deploy.keys.length; i++) {
-			user.addData(deploy.keys[i], deploy.values[i]);
+		for (int i = 0; i < keys.length; i++) {
+			user.addData(keys[i], values[i]);
 		}
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
@@ -293,15 +295,16 @@ public class UserAPI {
 	
 	public static class UserDeploy {
 		public UserDeploy() {}
+		
 		private String name;
 		private String surname;
 		private String phone;
 		private String mail;
 		private String token;
-		private long born;
-		private long passportActive;
-		private String[] keys;
-		private String[] values;
+		private String born;
+		private String passportActive;
+		private String keys;
+		private String values;
 		
 		public boolean hasNull() {
 			if (name == null || surname == null || phone == null || mail == null) {
@@ -339,28 +342,28 @@ public class UserAPI {
 		public void setToken(String token) {
 			this.token = token;
 		}
-		public long getBorn() {
+		public String getBorn() {
 			return born;
 		}
-		public void setBorn(long born) {
+		public void setBorn(String born) {
 			this.born = born;
 		}
-		public long getPassportActive() {
+		public String getPassportActive() {
 			return passportActive;
 		}
-		public void setPassportActive(long passportActive) {
+		public void setPassportActive(String passportActive) {
 			this.passportActive = passportActive;
 		}
-		public String[] getKeys() {
+		public String getKeys() {
 			return keys;
 		}
-		public void setKeys(String[] keys) {
+		public void setKeys(String keys) {
 			this.keys = keys;
 		}
-		public String[] getValues() {
+		public String getValues() {
 			return values;
 		}
-		public void setValues(String[] values) {
+		public void setValues(String values) {
 			this.values = values;
 		}
 		
