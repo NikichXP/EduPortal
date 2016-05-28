@@ -10,7 +10,58 @@
 	<body>
 		
 		<div id="client-new">
-			<div class="client-new-fields-header">Регистрация нового клиента</div>
+			<div class="client-new-fields-header">Обязательные поля</div>
+			<table class='client-data-block' id="client-new-fields-req">
+				<tr>
+					<td class='col-left'>
+						Имя
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-1'>sas</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class='col-left'>
+						Фамилия
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-2'>sassaas</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class='col-left'>
+						Номер телефона
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-3'>+380501234567</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class='col-left'>
+						Email
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-4'>sas@sas.com</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class='col-left'>
+						Дата рождения
+					</td>
+					<td class='col-right'>
+						<select id='select-client-day'></select><select id='select-client-month'></select><select id='select-client-year'></select>
+					</td>
+				</tr>
+				<tr>
+					<td class='col-left'>
+						Дата окончания загранпаспорта
+					</td>
+					<td class='col-right'>
+						<select id='select-pas-day'></select><select id='select-pas-month'></select><select id='select-pas-year'></select>
+					</td>
+				</tr>
+			</table>
+			<div class="client-new-fields-header">Опциональные поля</div>
 			<table class='client-data-block' id="client-new-fields">
 
 			</table>

@@ -11,6 +11,10 @@ body {
 	/*overflow: hidden;*/
 }
 
+.t-a {
+	resize: none;
+	overflow: hidden;
+}
 
 #client-new {
 	/*margin: auto;*/
@@ -54,6 +58,10 @@ body {
 #client-comment {
 	resize: none;
 	overflow: hidden;
+}
+
+.col-right {
+	text-align: right;
 }
 
 

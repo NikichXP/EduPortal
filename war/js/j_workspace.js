@@ -338,7 +338,7 @@
 
 		var url = "client-create-table.html?token=" + getCookie("sesToken");
 		var windowName = "User creation";
-		var windowSize = ["width=450, height=900"];
+		var windowSize = ["width=520, height=900"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
