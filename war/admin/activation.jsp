@@ -19,9 +19,6 @@
 				token = c.getValue();
 			}
 		}
-		if (request.getParameter("token") != null) {
-			token = request.getParameter("token");
-		}
 		user = AuthContainer.getUser(token);
 		UserEntity client = UserDAO.get(request.getParameter("user"));
 		if (client == null) {

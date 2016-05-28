@@ -38,6 +38,9 @@ public class AuthContainer {
 			return null;
 		}
 		AuthSession ret = ofy().load().type(AuthSession.class).id(key).now();
+		if (ret == null) {
+			return ret;
+		}
 		if (ret.getTimeout() > System.currentTimeMillis()) {
 			List<AuthSession> clearList = ofy().load().type(AuthSession.class).filter("timeout > ", System.currentTimeMillis()).list();
 			ofy().delete().entities(clearList);

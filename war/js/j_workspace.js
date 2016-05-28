@@ -262,7 +262,7 @@
 	//Add order files 
 	$('#order-edit-file').on('click', function(){
 	
-		var url = "File.jsp?order=" + $('#input-order-Id').val() + "&token=" + getCookie("sesToken");
+		var url = "admin/file.jsp?order=" + $('#input-order-Id').val() + "&token=" + getCookie("sesToken");
 		var windowName = "File Upload";
 		var windowSize = ["width=500, height=500"];
 		window.open(url, windowName, windowSize);
