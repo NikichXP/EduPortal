@@ -220,6 +220,7 @@
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
 		data: tokenJson,
 		success: function(resData) { 
+			$('#table-order-payment').html("<tbody></tbody>");
 			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
 			
 			$('#table-order-payment tbody').append("<tr>" + 
@@ -309,6 +310,7 @@
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
 		data: tokenJson,
 		success: function(resData) {
+			$('#table-client-menu').html("<tbody></tbody>");
 			var imax = resData.items.length;
 			var count = 0;
 			for (var i = 0; i < resData.items.length; i++)
@@ -375,6 +377,7 @@
 		success: function(resData) {
 			var imax = resData.items.length;
 			var count = 0;
+			$('#table-product-menu').html("<tbody></tbody>");
 			for (var i = 0; i < resData.items.length; i++)
 			{
 				if (count == imax) break;
