@@ -12,7 +12,7 @@ import eduportal.model.*;
 @Api(name = "order", version = "v1", title = "Order/Product API")
 public class OrderAPI {
 
-	@ApiMethod(name = "getProducts", path = "products", httpMethod = "GET")
+	@ApiMethod(name = "getActualProducts", path = "products", httpMethod = "GET")
 	public List<Product> getActualProducts(@Named("token") String token) {
 		if (AccessLogic.canSeeProducts(token)) {
 			return ProductDAO.getActual(true);
@@ -21,11 +21,11 @@ public class OrderAPI {
 	}
 	
 	@ApiMethod(name = "getProductById", path = "getproductbyid", httpMethod = "GET")
-	public Product getById (@Named("id") Long id/*, @Named("token")String token*/) {
-//		if (AccessLogic.canSeeAllProducts(token)) {
+	public Product getById (@Named("id") Long id, @Named("token")String token) {
+		if (AccessLogic.canSeeAllProducts(token)) {
 			return ProductDAO.get(id);
-//		}
-//		return null;
+		}
+		return null;
 	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")

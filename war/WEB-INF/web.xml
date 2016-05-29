@@ -22,6 +22,14 @@
 		<servlet-name>FileProcessorServlet</servlet-name>
 		<url-pattern>/FileProcessorServlet</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>UserServlet</servlet-name>
+		<servlet-class>eduportal.servlet.UserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserServlet</servlet-name>
+		<url-pattern>/UserServlet</url-pattern>
+	</servlet-mapping>
 	<filter>
 		<filter-name>ObjectifyFilter</filter-name>
 		<filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>

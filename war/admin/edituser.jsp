@@ -84,8 +84,9 @@
 					%>
 				</table>
 				<input type="submit" value="Change the world">
+				</form>
 		</div>
-		</form>
+		
 	</div>
 </body>
 </html>
