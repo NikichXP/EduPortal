@@ -30,7 +30,26 @@
 				},
 			});		
 	}, 60000);
+
+	if (getCookie("accessLevel") == 'MODERATOR')
+	{
+		if (getCookie("accessLevel") == 'ADMIN')
+		{
+			$('#ul-side-menu').append('<li id="menu-adm">Меню администратора</li>');
+		}
+		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
+	}
+
+	$('#menu-adm').on('click', function(){
+		window.location = "admin/admin.jsp";
+	});
+
+	$('#menu-mod').on('click', function(){
+		window.location = "admin/moderator.jsp";
+	});
 	
+
+
 	//get user name	
 	$.ajax({
 		type: 'GET',
@@ -408,6 +427,7 @@
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
+
 	
 });
 

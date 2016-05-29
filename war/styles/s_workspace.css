@@ -16,8 +16,6 @@ body {
 	z-index: 500;
 }
 
-
-
 #order-client-name {
 	margin: auto;
 	width: 200px;
@@ -544,14 +542,14 @@ td.order-create-td-res {
 
 #ul-side-menu {
 	padding: 0;
-	width: 120px;
+	width: 145px;
 	float: right;
 }
 
 #ul-side-menu li {
 	list-style: none;
-	width: 110px;
-	line-height: 20px;
+	width: 135px;
+	line-height: 22px;
 	font-size: 12px;
 	padding-left: 10px;
 	cursor: pointer;
