@@ -115,7 +115,8 @@ public class UserAPI {
 		user.setCreator(creator);
 		user.setName(deploy.name);
 		user.setSurname(deploy.surname);
-		user.setPass(UUID.randomUUID().toString().substring(0, 8));
+		String pass = UUID.randomUUID().toString().substring(0, 8);
+		user.setPass(pass);
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
 		user.setBorn(new Date());
@@ -132,6 +133,7 @@ public class UserAPI {
 		if (u == null) {
 			return new Text("User is probably registered");
 		}
+		MailSender.sendAccountCreation(user.getMail(), pass, user.getName());
 		return new Text("SID=" + AuthContainer.authenticate(user.getMail(), user.getPass()).getSessionId());
 
 	}

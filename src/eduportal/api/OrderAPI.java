@@ -19,6 +19,14 @@ public class OrderAPI {
 		}
 		return null;
 	}
+	
+	@ApiMethod(name = "getProductById", path = "getproductbyid", httpMethod = "GET")
+	public Product getById (@Named("id") Long id/*, @Named("token")String token*/) {
+//		if (AccessLogic.canSeeAllProducts(token)) {
+			return ProductDAO.get(id);
+//		}
+//		return null;
+	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")
 	public List<Product> getAllProducts(@Named("token") String token) {

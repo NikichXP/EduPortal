@@ -5,7 +5,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
-import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Text;
 
 import eduportal.dao.*;
@@ -18,10 +17,9 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public ArrayList<Object> test(HttpServletRequest req) {
 		ArrayList<Object> ret = new ArrayList<>();
-		HashMap<String, String> test = new HashMap<>();
-		test.put("a", "A");
 		
-		ret.add("end");
+		MailSender.sendAccountCreation("nikichx2@gmail.com", "123", "1авы1");
+		
 		return ret;
 	}
 
@@ -37,16 +35,6 @@ public class TestAPI {
 	@ApiMethod(name = "listSessions", path = "listsession", httpMethod = "GET")
 	public List<String> listSession() {
 		return AuthContainer.testMethod();
-	}
-
-	@ApiMethod(name = "listParams", path = "listParams", httpMethod = "GET")
-	public List<String> listParams() {
-		List<String> ret = new ArrayList<>();
-		ret.add("ФИО отца");
-		ret.add("ФИО матери");
-		ret.add("Город-адрес школы");
-		ret.add("Наличие работы");
-		return ret;
 	}
 
 	@ApiMethod(name = "ping", path = "ping", httpMethod = "GET")
@@ -67,16 +55,16 @@ public class TestAPI {
 		Corporation corp = new Corporation("Vedi Tour Group");
 		corp.setOwnerCorp(true);
 		UserEntity[] admins = {
-				new UserEntity("AA555555", "Admin", "Adminov", "admin@corp.com", "pass",
-						"+123456789012", new Date()).setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("SQ512312", "New", "Order", "order@corp.com", "order",
-						"+123456789015", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus",
-						"+123456789016", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("VW155555", "User", "User", "user@corp.com", "user",
-						"+123456789013", new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014",
-						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
+				new UserEntity("AA555555", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
+						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
+				new UserEntity("SQ512312", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus", "+123456789016",
+						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("VW155555", "User", "User", "user@corp.com", "user", "+123456789013", new Date())
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
+				new UserEntity("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
+						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		corp.setOwner(admins[0]);
 		UserDAO.createCorp(corp);
 		admins[0].defineCorporation(corp);
