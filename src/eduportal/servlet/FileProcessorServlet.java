@@ -20,13 +20,15 @@ public class FileProcessorServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		UserEntity user = null;
+		for (Object o : req.getParameterMap().keySet()) {
+			System.out.println(o.toString());
+		}
 		String token = req.getParameter("token");
 		String userid = req.getParameter("userid");
 		String productid = req.getParameter("productid");
 		String orderid = req.getParameter("orderid");
 		if (token == null) {
 			for (Cookie c : req.getCookies()) {
-				System.out.println(c.getName() + "   " + c.getValue());
 				if (c.getName().equals("sesToken")) {
 					user = AuthContainer.getUser(c.getValue());
 				}
@@ -70,6 +72,9 @@ public class FileProcessorServlet extends HttpServlet {
 			if (product != null) {
 				product.addFile(file);
 				OrderDAO.saveProduct(product);
+				System.out.println("Prod != null");
+			} else {
+				System.out.println("Prod == null");
 			}
 			if (targetUser != null) {
 				targetUser.addFile(file);
@@ -82,8 +87,7 @@ public class FileProcessorServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		System.out.println("GET");
 		BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
-		blobstoreService.serve(blobKey, res);
+		blobstoreService.serve(blobKey, res); 
 	}
 }

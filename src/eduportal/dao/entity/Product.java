@@ -6,7 +6,8 @@ import com.googlecode.objectify.annotation.*;
 
 @Entity
 public class Product extends AbstractEntity {
-	
+
+	private static final long serialVersionUID = 8913130263468249461L;
 	@Index
 	private String title;
 	private String description;

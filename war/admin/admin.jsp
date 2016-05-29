@@ -21,7 +21,7 @@
 	</div>
 	<div id='main-div'>
 		<div class="div-form-button">
-			<a href=workspace.html>Назад на панель управления</a>
+			<a href=/admin/moderator.jsp>Назад на панель управления</a>
 		</div>
 		<%
 			UserEntity user = null;

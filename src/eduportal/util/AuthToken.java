@@ -28,7 +28,7 @@ public class AuthToken {
 		return this;
 	}
 	public void putAccessLevelInt(int al) {
-		this.accessLevel = ( (al == AccessSettings.MODERATOR_LEVEL) ? "MODERATOR" : (al == AccessSettings.ADMIN_LEVEL) ? "ADMIN" : "USER");
+		this.accessLevel = ( (al == AccessSettings.MODERATOR_LEVEL) ? "MODERATOR" : (al >= AccessSettings.ADMIN_LEVEL) ? "ADMIN" : "USER");
 	}
 	
 	

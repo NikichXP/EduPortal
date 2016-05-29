@@ -34,42 +34,97 @@
 		</div>
 	</div>
 
-	<form>
-		<input type="hidden" name="id" value="<%=product.getId()%>" id="prodid">
-		<table>
-			<tr>
-				<td>Название</td>
-				<td><input type="text" name="title" id="title"
-					value="<%=product.getTitle()%>"></td>
-			</tr>
-			<tr>
-				<td>Описание</td>
-				<td><input type="text" name="title" id="descr"
-					value="<%=product.getDescription()%>"></td>
-			</tr>
-			<tr>
-				<td>Цена</td>
-				<td><input type="text" name="title" id="price"
-					value="<%=product.getDefaultPrice()%>"></td>
-			</tr>
-			<tr>
-				<td>Дата начала</td>
-				<td><input type="text" name="title" id="begin"
-					value="<%=product.getStart()%>"></td>
-			</tr>
-			<tr>
-				<td>Дата окончания</td>
-				<td><input type="text" name="title" id="end"
-					value="<%=product.getEnd()%>"></td>
-			</tr>
-			<tr>
-				<td>Город проведения</td>
-				<td><input type="text" name="title" id="city"
-					value="<%=product.getCity().getCyrname()%>"></td>
-			</tr>
-		</table>
-		<input type="submit" value="Submit changes" id="prodSubmit">
+	<form action="prodactiv.jsp">
+		<div class='table-div'>
+			<input type="hidden" name="id" value="<%=product.getId()%>"
+				id="prodid">
+			<table>
+				<tr>
+					<td>Название</td>
+					<td><input type="text" name="title" id="title"
+						value="<%=product.getTitle()%>"></td>
+				</tr>
+				<tr>
+					<td>Описание</td>
+					<td><input type="text" name="descr" id="descr"
+						value="<%=product.getDescription()%>"></td>
+				</tr>
+				<tr>
+					<td>Цена</td>
+					<td><input type="text" name="price" id="price"
+						value="<%=product.getDefaultPrice()%>"></td>
+				</tr>
+				<tr>
+					<td>Дата начала</td>
+					<td><input type="text" name="begin" id="begin"
+						value="<%=product.getStart()%>"></td>
+				</tr>
+				<tr>
+					<td>Дата окончания</td>
+					<td><input type="text" name="end" id="end"
+						value="<%=product.getEnd()%>"></td>
+				</tr>
+				<tr>
+					<td>Город проведения</td>
+					<td><input type="text" name="city" id="city"
+						value="<%=product.getCity().getCyrname()%>"></td>
+				</tr>
+			</table>
+			<input type="submit" value="Submit changes" id="prodSubmit">
+			<% if (product.getFiles().size() == 0) {
+				out.print("<br>No files attached"); 
+			} else {
+				for (SavedFile file : product.getFiles()) {
+					out.println(file.toString());
+					System.out.println(file);
+				}
+			}	
+			if (request.getParameterMap().keySet().size() > 1) { 
+				out.println("<h3>Примечание: результаты могу обновляются. Если данные не обновились, то обновите страницу через " +
+				"пару секунд.</h3>");
+			}%>
+			<a href="file.jsp?product=<%=product.getId() %>&token="
+		</div>
 	</form>
 
+<!-- 
+	%
+		String val;
+		for (Object par : request.getParameterMap().keySet()) {
+			val = request.getParameter((String) par);
+			switch ((String)par) {
+			case "title":
+				product.setTitle(val);
+				break;
+			case "descr":
+				product.setDescription(val);
+				break;
+			case "price":
+				try {
+					product.setDefaultPrice(Double.parseDouble(val));
+				} catch (Exception e) {
+					out.println(
+							"<script>alert('Вы ввели неверный формат числа цены. Используйте следующий: \"12345.67\"')</script>");
+				}
+				break;
+			case "end":
+				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
+					product.setEnd(val);
+				} else {
+					out.println(
+							"<script>alert('Вы ввели неверный формат даты. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
+				}
+				break;
+			case "city":
+				break;
+			case "begin":
+				break;
+			default:
+				break;
+			}
+		}
+		ProductDAO.save(product);
+	%
+ -->
 </body>
 </html>

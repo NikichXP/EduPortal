@@ -70,14 +70,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.testAPI.testCookies" : {
-      "path" : "cookies",
+    "test.ping" : {
+      "path" : "ping",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
+      "rosyMethod" : "eduportal.api.TestAPI.ping",
       "request" : {
         "body" : "empty"
       },
@@ -122,6 +122,21 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "test.testAPI.testCookies" : {
+      "path" : "cookies",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "test.listSessions" : {
       "path" : "listsession",
       "httpMethod" : "GET",
@@ -145,21 +160,6 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.TestAPI.getAllObj",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "test.ping" : {
-      "path" : "ping",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.ping",
       "request" : {
         "body" : "empty"
       },
@@ -224,14 +224,19 @@
           "$ref" : "StringCollection"
         }
       },
-      "eduportal.api.TestAPI.testCookies" : {
+      "eduportal.api.TestAPI.ping" : {
         "response" : {
-          "$ref" : "_anyCollection"
+          "$ref" : "Text"
         }
       },
       "eduportal.api.TestAPI.rebuildDB" : {
         "response" : {
           "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.TestAPI.testCookies" : {
+        "response" : {
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.listSession" : {
@@ -242,11 +247,6 @@
       "eduportal.api.TestAPI.getAllObj" : {
         "response" : {
           "$ref" : "_anyCollection"
-        }
-      },
-      "eduportal.api.TestAPI.ping" : {
-        "response" : {
-          "$ref" : "Text"
         }
       }
     }

@@ -15,6 +15,13 @@
 	<%
 		String order = request.getParameter("order");
 		String token = request.getParameter("token");
+		if (token == null) {
+			for (Cookie c : request.getCookies()) {
+				if (c.getName().equals("sesToken")) {
+					token = c.getValue();
+				}
+			}
+		}
 		String user = request.getParameter("user");
 		String product = request.getParameter("product");
 	%>
