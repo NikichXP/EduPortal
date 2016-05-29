@@ -446,7 +446,7 @@
 	$('#product-menu-create').on("click", function() {
 
 		var url = "admin/createproduct.jsp?token=" + getCookie("sesToken");
-		var windowName = "User profile";
+		var windowName = "Product creation";
 		var windowSize = ["width=520, height=900"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
