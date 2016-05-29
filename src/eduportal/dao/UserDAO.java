@@ -124,7 +124,7 @@ public class UserDAO {
 
 	public static UserEntity create(UserEntity user) {
 		ofy().save().entity(user).now();
-		return user;
+		return ofy().load().type(UserEntity.class).id(user.getId()).now();
 	}
 
 	public static List<UserEntity> getClients(UserEntity u) {

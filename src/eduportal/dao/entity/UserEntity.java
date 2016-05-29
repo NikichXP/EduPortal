@@ -117,6 +117,11 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.userData.put(key, value);
 	}
 	
+	public void changeData(String key, String value) {
+		this.userData.remove(key);
+		this.userData.put(key, value);
+	}
+	
 	public String[][] getSimpleData () {
 		Set<String> params = userData.keySet();
 		String[][] ret = new String[params.size()][2];
