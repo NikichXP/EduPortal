@@ -423,7 +423,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail + ", passport="
+		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone + ", mail=" + mail + ", passport="
 				+ passport + ", permission=" + permission + ", corporation=" + corporation + ", name=" + name
 				+ ", surname=" + surname + ", creator=" + creator + ", accessLevel=" + accessLevel + ", isActive="
 				+ isActive + ", born=" + born + ", passportActive=" + passportActive + ", files=" + files
