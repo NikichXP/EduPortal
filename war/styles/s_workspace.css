@@ -614,3 +614,11 @@ td.order-create-td-res {
 
 
 
+#footer {
+	height: 100px;
+	width: 500px;
+	margin: auto;
+	text-align: center;
+	font-size: 11px;
+
+}
