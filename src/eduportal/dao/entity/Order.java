@@ -22,6 +22,7 @@ public class Order extends AbstractEntity {
 	private Key<UserEntity> createdBy;
 	private String comment;
 	private ArrayList<SavedFile> files;
+	private String currency;
 	
 	protected final long maxIdValue = 0;
 	
@@ -111,6 +112,14 @@ public class Order extends AbstractEntity {
 
 	public void setStart(Date start) {
 		this.start = start;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public void setEnd(Date end) {

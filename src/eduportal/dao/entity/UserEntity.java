@@ -116,6 +116,29 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	public void addData(String key, String value) {
 		this.userData.put(key, value);
 	}
+	
+	public String[][] getSimpleData () {
+		Set<String> params = userData.keySet();
+		String[][] ret = new String[params.size()][2];
+		int i = 0;
+		for (String param : params) {
+			ret[i][0] = param;
+			ret[i][1] = userData.get(param);
+			i++;
+		}
+		return ret;
+	}
+	
+	public String[][] getSimpleDataWithNull() {
+		String[][] ret = new String[userParams.length][2];
+		int i = 0;
+		for (String param : userParams) {
+			ret[i][0] = param;
+			ret[i][1] = userData.get(param);
+			i++;
+		}
+		return ret;
+	}
 
 	public String getData(String key) {
 		return this.userData.get(key);
@@ -287,4 +310,118 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		return ret;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + accessLevel;
+		result = prime * result + ((born == null) ? 0 : born.hashCode());
+		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((pass == null) ? 0 : pass.hashCode());
+		result = prime * result + ((passport == null) ? 0 : passport.hashCode());
+		result = prime * result + ((passportActive == null) ? 0 : passportActive.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof UserEntity)) {
+			return false;
+		}
+		UserEntity other = (UserEntity) obj;
+		if (accessLevel != other.accessLevel) {
+			return false;
+		}
+		if (born == null) {
+			if (other.born != null) {
+				return false;
+			}
+		} else if (!born.equals(other.born)) {
+			return false;
+		}
+		if (creator == null) {
+			if (other.creator != null) {
+				return false;
+			}
+		} else if (!creator.equals(other.creator)) {
+			return false;
+		}
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (mail == null) {
+			if (other.mail != null) {
+				return false;
+			}
+		} else if (!mail.equals(other.mail)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (pass == null) {
+			if (other.pass != null) {
+				return false;
+			}
+		} else if (!pass.equals(other.pass)) {
+			return false;
+		}
+		if (passport == null) {
+			if (other.passport != null) {
+				return false;
+			}
+		} else if (!passport.equals(other.passport)) {
+			return false;
+		}
+		if (passportActive == null) {
+			if (other.passportActive != null) {
+				return false;
+			}
+		} else if (!passportActive.equals(other.passportActive)) {
+			return false;
+		}
+		if (phone == null) {
+			if (other.phone != null) {
+				return false;
+			}
+		} else if (!phone.equals(other.phone)) {
+			return false;
+		}
+		if (surname == null) {
+			if (other.surname != null) {
+				return false;
+			}
+		} else if (!surname.equals(other.surname)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UserEntity [id=" + id + ", pass=" + pass + ", phone=" + phone + ", mail=" + mail + ", passport="
+				+ passport + ", permission=" + permission + ", corporation=" + corporation + ", name=" + name
+				+ ", surname=" + surname + ", creator=" + creator + ", accessLevel=" + accessLevel + ", isActive="
+				+ isActive + ", born=" + born + ", passportActive=" + passportActive + ", files=" + files
+				+ ", userData=" + userData + "]";
+	}
 }

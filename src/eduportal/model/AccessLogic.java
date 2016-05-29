@@ -150,5 +150,20 @@ public class AccessLogic {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean canEditUser(UserEntity admin, UserEntity user) {
+		if (admin.equals(user)) {
+			return true;
+		}
+		if (admin.getAccessLevel() < AccessSettings.CREATE_USER) {
+			return false;
+		}
+		if (admin.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+			if (admin.getCorporation() != user.getCorporation()) {
+				return false;
+			}
+		}
+		return true;
 	} 
 }

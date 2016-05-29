@@ -17,12 +17,14 @@
 <body>
 	<%
 		UserEntity user = null;
+		String token = null;
 		for (Cookie c : request.getCookies()) {
 			if (c.getName().equals("sesToken")) {
 				user = AuthContainer.getUser(c.getValue());
+				token = c.getValue();
 			}
 		}
-		if (user == null || AccessLogic.canAccessAdminPanel(user) == false) {
+		if (user == null || user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			out.print("</body></html>");
 			return;
 		}
@@ -71,28 +73,31 @@
 				</tr>
 			</table>
 			<input type="submit" value="Submit changes" id="prodSubmit">
-			<% if (product.getFiles().size() == 0) {
-				out.print("<br>No files attached"); 
-			} else {
-				for (SavedFile file : product.getFiles()) {
-					out.println(file.toString());
-					System.out.println(file);
+			<%
+				if (product.getFiles().size() == 0) {
+					out.print("<br>No files attached");
+				} else {
+					for (SavedFile file : product.getFiles()) {
+						out.println(file.toString());
+						System.out.println(file);
+					}
 				}
-			}	
-			if (request.getParameterMap().keySet().size() > 1) { 
-				out.println("<h3>Примечание: результаты могу обновляются. Если данные не обновились, то обновите страницу через " +
-				"пару секунд.</h3>");
-			}%>
-			<a href="file.jsp?product=<%=product.getId() %>&token="
+				if (request.getParameterMap().keySet().size() > 1) {
+					out.println(
+							"<h3>Примечание: результаты могу обновляются. Если данные не обновились, то обновите страницу через "
+									+ "пару секунд.</h3>");
+				}
+			%>
+			<a href="file.jsp?product=<%=product.getId()%>&token="<%=token%>">Добавить
+				файлы к продукту</a>
 		</div>
 	</form>
 
-<!-- 
-	%
+	<%
 		String val;
 		for (Object par : request.getParameterMap().keySet()) {
 			val = request.getParameter((String) par);
-			switch ((String)par) {
+			switch ((String) par) {
 			case "title":
 				product.setTitle(val);
 				break;
@@ -112,19 +117,30 @@
 					product.setEnd(val);
 				} else {
 					out.println(
-							"<script>alert('Вы ввели неверный формат даты. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
+							"<script>alert('Вы ввели неверный формат даты окончания. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
 				}
 				break;
 			case "city":
+				City c = GeoDAO.getCity("city");
+				if (c != null) {
+					product.setCity(c);
+				} else {
+					out.println("<script>alert('Город отсутствует в БД')</script>");
+				}
 				break;
 			case "begin":
+				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
+					product.setStart(val);
+				} else {
+					out.println(
+							"<script>alert('Вы ввели неверный формат даты начала. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
+				}
 				break;
 			default:
 				break;
 			}
 		}
 		ProductDAO.save(product);
-	%
- -->
+	%>
 </body>
 </html>

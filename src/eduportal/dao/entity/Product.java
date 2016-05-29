@@ -20,6 +20,7 @@ public class Product extends AbstractEntity {
 	private String start;
 	private String end;
 	private ArrayList<SavedFile> files;
+	private String currency;
 	
 	public Product () {
 		files = new ArrayList<>();
@@ -97,6 +98,14 @@ public class Product extends AbstractEntity {
 
 	public void setEnd(String end) {
 		this.end = end;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	@Override

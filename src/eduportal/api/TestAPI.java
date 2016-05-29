@@ -117,6 +117,8 @@ public class TestAPI {
 			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20)));
 			clients[i].setCreator(admins[i % admins.length]);
 			clients[i].setActive(Math.random() > 0.5);
+			clients[i].addData("Адрес Skype", "skuser" + i);
+			clients[i].addData("Год окончания обучения", (2010 + (int)(Math.random()*7)) + "");
 		}
 		if (prior != null) {
 			if (prior < admins.length) {

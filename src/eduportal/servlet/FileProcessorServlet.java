@@ -9,6 +9,7 @@ import com.google.appengine.api.blobstore.*;
 import eduportal.dao.OrderDAO;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
+import eduportal.model.AccessSettings;
 import eduportal.model.AuthContainer;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -27,14 +28,13 @@ public class FileProcessorServlet extends HttpServlet {
 		String userid = req.getParameter("userid");
 		String productid = req.getParameter("productid");
 		String orderid = req.getParameter("orderid");
-		if (token == null) {
+		user = AuthContainer.getUser(token);
+		if (user == null) {
 			for (Cookie c : req.getCookies()) {
 				if (c.getName().equals("sesToken")) {
 					user = AuthContainer.getUser(c.getValue());
 				}
 			}
-		} else {
-			user = AuthContainer.getUser(token);
 		}
 		if (user == null) {
 			res.sendRedirect("/auth.html");
@@ -80,9 +80,12 @@ public class FileProcessorServlet extends HttpServlet {
 				targetUser.addFile(file);
 				UserDAO.update(targetUser);
 			}
-			res.sendRedirect("/FileProcessorServlet?blob-key=" + blobKeys.get(0).getKeyString());
+			if (user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
+				res.sendRedirect("/admin/moderator.jsp");
+			} else {
+				res.sendRedirect("/workspace.html");
+			}
 		}
-
 	}
 
 	@Override

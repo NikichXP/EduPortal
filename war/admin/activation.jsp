@@ -2,6 +2,7 @@
 <%@page import="eduportal.dao.entity.*"%>
 <%@page import="eduportal.dao.*"%>
 <%@page import="eduportal.api.*"%>
+<%@page import="java.util.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -42,14 +43,15 @@
 			}
 		%>
 	</table>
-	<h1>User data</h1>
+	<h3>Указанные пользователем поля</h3>
 	<table>
 	<%
-		for (String param : client.getUserData().keySet()) {
+	HashMap<String, String> data = client.getUserData();
+		for (String[] param : client.getSimpleData()) {
 	%>
 	<tr>
-	<td><%= param %></td>
-	<td><%= user.getData(param) %></td>
+	<td><%= param[0] %></td>
+	<td><%= param[1] %></td>
 	</tr>
 	<%
 		}

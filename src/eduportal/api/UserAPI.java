@@ -1,6 +1,9 @@
 package eduportal.api;
 
 import java.util.*;
+
+import javax.annotation.Nullable;
+
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -14,13 +17,12 @@ import eduportal.dao.entity.*;
 import eduportal.model.*;
 import eduportal.util.*;
 
-@Api(name = "user", version = "v1", title = "User API") 
-//, auth =	@ApiAuth(allowCookieAuth = AnnotationBoolean.TRUE)
+@Api(name = "user", version = "v1", title = "User API")
 public class UserAPI {
-	
+
 	// Init Objectify
 	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
-			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, SavedFile.class};
+			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, SavedFile.class };
 
 	static {
 		ObjectifyService.begin();
@@ -28,25 +30,48 @@ public class UserAPI {
 			ObjectifyService.register(c);
 		}
 	}
-	
-	@ApiMethod (path = "fields", name = "Available_fields", httpMethod = "GET")
-	public String[] getFields () {
+
+	@ApiMethod(path = "fields", name = "Available_fields", httpMethod = "GET")
+	public String[] getFields() {
 		return UserEntity.userParams;
 	}
-	
-	@ApiMethod (path = "getUserFiles", httpMethod = "GET")
-	public List<SavedFile> getFiles (@Named("token") String token, @Named("user") @Nullable String user) {
+
+	@ApiMethod(path = "optvalues", httpMethod = "GET")
+	public String[][] getOptValues(@Named("token") String token, @Named("user") @Nullable String userid) {
 		UserEntity admin = AuthContainer.getUser(token);
-		//TODO AccessCheck
+		UserEntity user;
+		if (userid != null) {
+			user = UserDAO.get(userid);
+		} else {
+			user = admin;
+		}
+		if (AccessLogic.canEditUser(admin, user) == false) {
+			return null;
+		}
+		Set<String> params = user.getUserData().keySet();
+		String[][] ret = new String[params.size()][2];
+		int i = 0;
+		for (String param : params) {
+			ret[i][0] = param;
+			ret[i][1] = user.getData(param);
+			i++;
+		}
+		return ret;
+	}
+
+	@ApiMethod(path = "getUserFiles", httpMethod = "GET")
+	public List<SavedFile> getFiles(@Named("token") String token, @Named("user") @Nullable String user) {
+		UserEntity admin = AuthContainer.getUser(token);
+		// TODO AccessCheck
 		if (user != null) {
 			return UserDAO.get(user).getFiles();
 		} else {
 			return admin.getFiles();
 		}
 	}
-	
-	@ApiMethod (path = "getBlobPath", httpMethod = "GET")
-	public Text getBlobFile () {
+
+	@ApiMethod(path = "getBlobPath", httpMethod = "GET")
+	public Text getBlobFile() {
 		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 		String URL = blobstoreService.createUploadUrl("/FileProcessorServlet");
 		return new Text(URL);
@@ -63,14 +88,9 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "register", httpMethod = "GET", path = "register")
-	public AuthToken register(
-			@Named("name") String name, 
-			@Named("surname") String surname,
-			@Named("password") @Nullable String pass, 
-			@Named("phone") String phone, 
-			@Named("mail") String mail,
-			@Named("passport") @Nullable String passport,
-			@Named("token") String token,
+	public AuthToken register(@Named("name") String name, @Named("surname") String surname,
+			@Named("password") @Nullable String pass, @Named("phone") String phone, @Named("mail") String mail,
+			@Named("passport") @Nullable String passport, @Named("token") String token,
 			@Named("birthday") Long borned) {
 		UserEntity creator = AuthContainer.getUser(token);
 		if (creator == null || AccessLogic.canCreateUser(creator) == false) {
@@ -83,18 +103,52 @@ public class UserAPI {
 			return null;
 		}
 		if (pass == null) {
-			pass = "TEST"; //TODO Gen pass here
+			pass = "TEST"; // TODO Gen pass here
 		}
 		Date born;
 		if (borned == null) {
 			born = new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20));
 		} else {
-			born = new Date (borned);
+			born = new Date(borned);
 		}
 		UserDAO.create(passport, pass, name, surname, mail, phone, creator, born);
 		return AuthContainer.authenticate(mail, pass);
 	}
-	
+
+	@ApiMethod(name = "updateUser", httpMethod = "POST", path = "updateuser")
+	public Text update(UserDeploy deploy) {
+		UserEntity user = AuthContainer.getUser(deploy.token);
+		if (user == null) {
+			return new Text("Invalid login");
+		}
+		if (deploy.hasNull()) {
+			return new Text("One of fields are not filled");
+		}
+		if (!deploy.mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
+			return new Text("Mail is invalid");
+		}
+		if (!deploy.phone.matches("[+]{0,1}[0-9]{10,12}")) {
+			return new Text("Phone is invalid");
+		}
+		user.setName(deploy.name);
+		user.setSurname(deploy.surname);
+		user.setPhone(deploy.phone);
+		user.setMail(deploy.mail);
+		user.setBorn(new Date());
+		user.setPassportActive(new Date());
+		String[] keys = deploy.keys.split("ף");
+		String[] values = deploy.values.split("ף");
+		if (values.length != keys.length) {
+			return new Text("Err in keys-values");
+		}
+		for (int i = 0; i < keys.length; i++) {
+			user.addData(keys[i], values[i]);
+		}
+		UserDAO.create(user);
+		return new Text("SID=" + AuthContainer.authenticate(user.getMail(), user.getPass()).getSessionId());
+
+	}
+
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
 	public Text create(UserDeploy deploy) {
 		UserEntity user = new UserEntity();
@@ -124,7 +178,7 @@ public class UserAPI {
 		String[] keys = deploy.keys.split("ף");
 		String[] values = deploy.values.split("ף");
 		if (values.length != keys.length) {
-			return new Text ("Err in keys-values");
+			return new Text("Err in keys-values");
 		}
 		for (int i = 0; i < keys.length; i++) {
 			user.addData(keys[i], values[i]);
@@ -137,7 +191,7 @@ public class UserAPI {
 		return new Text("SID=" + AuthContainer.authenticate(user.getMail(), user.getPass()).getSessionId());
 
 	}
-	
+
 	@ApiMethod(name = "getMyClients", path = "getMyClients", httpMethod = "GET")
 	public List<UserEntity> getMyUsers(@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
@@ -152,32 +206,37 @@ public class UserAPI {
 	@ApiMethod(name = "user.filter", path = "user/filter", httpMethod = "GET")
 	public List<UserEntity> listUserFilter(@Named("login") @Nullable String login,
 			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
-			@Named("mail") @Nullable String mail, @Named ("token") String token) {
+			@Named("mail") @Nullable String mail, @Named("token") String token) {
 		return AccessLogic.listUsers(phone, name, mail, login, token);
 	}
-	
+
 	@ApiMethod(name = "user.filter.admin", path = "user/filterAll", httpMethod = "GET")
 	public List<UserEntity> listEveryUserFilter(@Named("login") @Nullable String login,
 			@Named("phone") @Nullable String phone, @Named("name") @Nullable String name,
-			@Named("mail") @Nullable String mail, @Named ("token") String token) {
+			@Named("mail") @Nullable String mail, @Named("token") String token) {
 		if (AccessLogic.canListAllUsers(token)) {
 			return UserDAO.searchUsers(phone, name, mail);
 		} else {
 			return null;
 		}
 	}
-	
-	@ApiMethod (path = "getInfo", httpMethod = "GET")
-	public UserEntity getInfo (@Named ("token") String token) {
-		final UserEntity u;
-		u = AuthContainer.getUser(token);
-		if (u == null) {
+
+	@ApiMethod(path = "getInfo", httpMethod = "GET")
+	public UserEntity getInfo(@Named("token") String token, @Named("clientid") @Nullable String client) {
+		UserEntity admin;
+		admin = AuthContainer.getUser(token);
+		if (admin == null) {
 			return null;
 		}
-		u.wipeSecData();
-		return u;
+		if (client != null) {
+			UserEntity ret = UserDAO.get(client);
+			ret.wipeSecData();
+			return ret;
+		}
+		admin.wipeSecData();
+		return admin;
 	}
-	
+
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
 	public Dummy getName(@Named("token") String token) {
 		final UserEntity u;
@@ -208,10 +267,10 @@ public class UserAPI {
 		return o;
 	}
 
-	@ApiMethod(name = "updateUser", httpMethod = "GET", path = "update")
-	public UserEntity updateUserInfo(@Named("name") @Nullable String name,
-			@Named("surname") @Nullable String surname, @Named("mail") @Nullable String mail,
-			@Named("phone") @Nullable String phone, @Named ("token") String token) {
+	@ApiMethod(name = "oldUpdateUser", httpMethod = "GET", path = "oldupdate")
+	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("surname") @Nullable String surname,
+			@Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone,
+			@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
 		if (u == null) {
 			return null;
@@ -240,7 +299,7 @@ public class UserAPI {
 	}
 
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
-	public Text changePass(@Named ("token") String token, @Named("exist") String exist, @Named("new") String newpass) {
+	public Text changePass(@Named("token") String token, @Named("exist") String exist, @Named("new") String newpass) {
 		UserEntity u = AuthContainer.getUser(token);
 		if (u == null) {
 			return new Text("No suitable token recieved");
@@ -262,7 +321,7 @@ public class UserAPI {
 		}
 		return new Text("fail");
 	}
-	
+
 	@ApiMethod(name = "setModerator", httpMethod = "GET", path = "setModerator")
 	public UserEntity promoteUser(@Named("token") String token, @Named("target") String target,
 			@Named("access") Integer access) {
@@ -278,9 +337,10 @@ public class UserAPI {
 		u.setPass(null);
 		return u;
 	}
-	
-	@ApiMethod (name = "allowCountry", httpMethod = "GET", path = "allowCountry")
-	public UserEntity allowCountry (@Named("token") String token, @Named("countryid") Long countryid, @Named("userid") String userid) {
+
+	@ApiMethod(name = "allowCountry", httpMethod = "GET", path = "allowCountry")
+	public UserEntity allowCountry(@Named("token") String token, @Named("countryid") Long countryid,
+			@Named("userid") String userid) {
 		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
 			return null;
 		}
@@ -294,10 +354,11 @@ public class UserAPI {
 
 	interface Dummy {
 	}
-	
+
 	public static class UserDeploy {
-		public UserDeploy() {}
-		
+		public UserDeploy() {
+		}
+
 		private String name;
 		private String surname;
 		private String phone;
@@ -307,67 +368,85 @@ public class UserAPI {
 		private String passportActive;
 		private String keys;
 		private String values;
-		
+
 		public boolean hasNull() {
 			if (name == null || surname == null || phone == null || mail == null) {
 				return true;
 			}
 			return false;
 		}
+
 		public String getName() {
 			return name;
 		}
+
 		public String getSurname() {
 			return surname;
 		}
+
 		public String getPhone() {
 			return phone;
 		}
+
 		public String getMail() {
 			return mail;
 		}
+
 		public String getToken() {
 			return token;
 		}
+
 		public void setName(String name) {
 			this.name = name;
 		}
+
 		public void setSurname(String surname) {
 			this.surname = surname;
 		}
+
 		public void setPhone(String phone) {
 			this.phone = phone;
 		}
+
 		public void setMail(String mail) {
 			this.mail = mail;
 		}
+
 		public void setToken(String token) {
 			this.token = token;
 		}
+
 		public String getBorn() {
 			return born;
 		}
+
 		public void setBorn(String born) {
 			this.born = born;
 		}
+
 		public String getPassportActive() {
 			return passportActive;
 		}
+
 		public void setPassportActive(String passportActive) {
 			this.passportActive = passportActive;
 		}
+
 		public String getKeys() {
 			return keys;
 		}
+
 		public void setKeys(String keys) {
 			this.keys = keys;
 		}
+
 		public String getValues() {
 			return values;
 		}
+
 		public void setValues(String values) {
 			this.values = values;
 		}
-		
+
 	}
 }
