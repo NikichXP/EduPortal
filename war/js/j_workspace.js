@@ -442,11 +442,10 @@
 		});	
 	}); 
 
-	open product reate
-	$('#menu-showprof').on("click", function() {
+	//open product reate
+	$('#product-menu-create').on("click", function() {
 
-		
-		var url = "user-profile.html?token=" + getCookie("sesToken");
+		var url = "admin/createproduct.jsp?token=" + getCookie("sesToken");
 		var windowName = "User profile";
 		var windowSize = ["width=520, height=900"];
 		window.open(url, windowName, windowSize);
