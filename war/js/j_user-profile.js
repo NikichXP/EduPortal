@@ -186,7 +186,7 @@
 			
 		$.ajax({
 			type: 'POST',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/createuser',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/updateuser',
 			data: clData,
 			processData: false,
 			contentType: false,
