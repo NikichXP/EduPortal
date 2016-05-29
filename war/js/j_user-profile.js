@@ -1,87 +1,30 @@
 ﻿$(function(){
 			
-	//open client menu
-	$('#menu-client-open').on("click", function() {
-				
-		$('#table-client-menu').html("<tbody></tbody>");
-		$('#client-menu-text-block').html("<H2>Мои клиенты</H2>");
-		$('#client-new').css('display', 'none');
-		
-		$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
-		data: tokenJson,
-		success: function(resData) {
-			var imax = resData.items.length;
-			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
-			{
-				if (count == imax) break;
-				$('#table-client-menu tbody').append("<tr id='tr-client-menu-" + (i + 1) + "'>");
-				for (var j = 0; j < 5; j++)
-				{
-					$('#tr-client-menu-' + (i + 1)).append(
-					"<td class='td-client-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-client-menu-input-1' value=" + resData.items[count].id + ">" +
-					"</td>"
-					);
-					count++;
-					if (count == imax) break;
-				}
-				$('#table-client-menu').append("</tr>");				
-			}
-			$('#client-menu').css('display', 'block');
-			$('#opacity').css('display', 'block');
-		},
-		});	
-	});
+	var countOfFields = 0;		
 	
-	//client creation menu
-	$('#client-menu-create').on('click', function() {
-		
-		$('#client-menu-create').html("Принять");
-		
-		if ($('#client-new').css('display') == 'block')
-		{
-			$('#client-new').css('display', 'none');
-			$('#client-menu-create').html("Добавить клиента");
-			$('#client-menu').css('height', '322px');
-			
-			var clData = new FormData();    
-			clData.append('token', authSesToken);
-			clData.append('mail', $('#client-new-email').val());
-			clData.append('name', $('#client-new-name').val());
-			clData.append('surname', $('#client-new-surname').val());
-			clData.append('phone', $('#client-new-phone').val());
-			clData.append('pass', '');
-			
-			$.ajax({
-			type: 'POST',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/createuser',
-			data: clData,
-			processData: false,
-			contentType: false,
-			success: location.reload(),	
-			});	
-		}
-		else 
-		{
-			$('#client-new').css('display', 'block');
-			$('#client-menu').css('height', '637px');
-			$('#client-menu-dismiss').css('display', 'block');
-		}
-		
-	});
-	//cancel client creation
-	$('#client-menu-dismiss').on('click', function() {
+	//fields
+	$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/fields',
+		success: function(resData) {
+			$('#client-new-fields').html(' ');
+			for (var i = 0; i < resData.items.length; i++) 
+			{
+				$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+					$('#field-' + i).append("<td class='col-left'>");
+						$('#field-' + i + ' .col-left').append(resData.items[i]);
+					$('#field-' + i).append('</td>');
 
-		$('#client-new').css('display', 'none');
-		$('#client-menu-create').html("Добавить клиента");
-		$('#client-menu').css('height', '322px');	
-		$('#client-menu-dismiss').css('display', 'none');	
-
-		window.close();
+					$('#field-' + i).append("<td class='col-right'>");
+						$('#field-' + i + ' .col-right').append("<textarea class='t-a' rows='2' cols='40' id='field-" + i + "'></textarea>");
+					$('#field-' + i).append('</td>');
+				$('#client-new-fields').append('</tr>');
+				countOfFields++;
+			}
+		},	
 	});
+
+
 
 	$('#select-client-day').html(" ");
 	for (var i = 1; i < 32; i++)
@@ -140,29 +83,6 @@
 	});
 
 	
-	$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
-		data: {'token' : getCookie("sesToken")},
-		success: function(resData) {
-			$('#client-new-emp').val(resData.name + " " + resData.surname);
-		},	
-	});
-
-	$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
-		data: {'token' : getCookie("sesToken")},
-		success: function(resData) {
-			for (var i = 0; i < resData.items.length; i++)
-			{
-				$('#select-product').append("<option id='product-" + i + "' value='" + resData.items[i].id + "'>" 
-					+ resData.items[i].title 
-					+ "</option>" 
-				);
-			}
-		},
-	});	
 	//get user's files
 	// $.ajax({
 	// 	type: 'GET',
@@ -172,8 +92,124 @@
 	// 		for (var i = 0; i < resData.items.length; i++)
 	// 			checkFiles(resData.items[i]) 
 	// 	},
-	// });		
+	// });
+	var userData = {
+		'token' : getCookie("sesToken"), 
+	}
+
+	if (getCookie('clientID')) userData["clientid"] = getCookie('clientID');
+		
+	$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+		data: userData,
+		success: function(resData) {
+			$('#field-req-1').html(resData.name);
+			$('#field-req-2').html(resData.surname);
+			$('#field-req-3').html(resData.phone);
+			$('#field-req-4').html(resData.mail);
+
+			var bdate = new Date(resData.born);	
+			var dd1 = bdate.getDate();
+		    var mm1 = bdate.getMonth() + 1;   
+		 	var yyyy1 = bdate.getFullYear();
+			$('#field-req-5').html(dd1 + "." + mm1 + "." + yyyy1);
+
+			var pdate = new Date(resData.passportActive);	
+			var dd2 = pdate.getDate();
+		    var mm2 = pdate.getMonth() + 1;   
+		 	var yyyy2 = pdate.getFullYear();
+			$('#field-req-6').html(dd2 + "." + mm2 + "." + yyyy2);
+
+			var k = 0;
+			for (var i = 0; i < resData.simpleDataWithNull.length; i++)
+			{
+				$('textarea#field-' + k).html(resData.simpleDataWithNull[i][1]);
+				k++;
+			}
+		},
+	});	
+
+	//client creation menu
+	$('#client-menu-send').on('click', function() {
+
+		var borndate = $('#field-req-5').html();
+		var pasdate = $('#field-req-6').html();
+
+		var clData = new FormData();    
+		clData.append('token', getCookie('sesToken'));
+		clData.append('mail', $('#field-req-4').val());
+		clData.append('name', $('#field-req-1').val());
+		clData.append('surname', $('#field-req-2').val());
+		clData.append('phone', $('#field-req-3').val());
+		clData.append('born', borndate);
+		clData.append('passportActive', pasdate);
+
+		var key = new Array();
+		var value = new Array();
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/fields',
+		// 	success: function(resData) {
+		// 		for (var i = 0; i < resData.items.length; i++) 
+		// 		{
+		// 			keys[i] = resData.items[i];
+		// 		}
+		// 	},	
+		// });
+		var j = 0;
+		for (var i = 0; i < countOfFields; i++) 
+		{
+			if ($('textarea#field-' + i).val().length > 0)
+			{
+				key[j] = $('input#select-' + i).val();
+				value[j] = $('textarea#field-' + i).val();
+				j++;
+			}
+		}
+
+		var keys = '';
+		var values = '';
+		for (var i = 0; i < key.length; i++) 
+		{
+			keys += key[i];
+			values += value[i];
+			if (i != key.length -1) 
+			{
+				keys += "ף";
+				values += "ף";
+			}  
+		}
+
+		clData.append('keys', keys);
+		clData.append('values', values);
+			
+		$.ajax({
+			type: 'POST',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/createuser',
+			data: clData,
+			processData: false,
+			contentType: false,
+			success: window.close(),	
+		});	
+
+	});
+
+	//product creation menu
+	$('#client-menu-pass').on('click', function() {
+
+		var url = "admin/changepass.jsp?token=" + getCookie("sesToken");
+		var windowName = "Смена пароля";
+		var windowSize = ["width=450, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+	});
+
+	
 });
+$(window).unload(function() {
+  		deleteCookie('clientID');
+	});
 
 function checkFiles(data)
 {

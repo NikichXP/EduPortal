@@ -1,5 +1,5 @@
 html {
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 body {
@@ -8,9 +8,13 @@ body {
 	font-size: 11px; 
 	/*background-color: #f1f1f1;*/
 	background-color: #fff;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
+.t-a {
+	resize: none;
+	overflow: hidden;
+}
 
 #client-new {
 	/*margin: auto;*/
@@ -20,18 +24,12 @@ body {
 }
 
 .client-data-block {
-	font-size: 11px;
+	width: 100%;
 	border: 2px solid #5269b1; 
-	background-color: #fff;
-	width: 90%;
+	font-size: 11px;
 }
 .client-data-block td {
-	background-color: #fff;
-	text-align: left;
-}
-
-.client-data-block td.field-td {
-	text-align: right;
+	border: 1px solid #d9e0e7;
 }
 
 .div-form-button {
@@ -60,6 +58,10 @@ body {
 #client-comment {
 	resize: none;
 	overflow: hidden;
+}
+
+.col-right {
+	text-align: right;
 }
 
 

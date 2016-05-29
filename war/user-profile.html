@@ -5,97 +5,71 @@
 		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
 		<script type="text/javascript" src="js/j_user-profile.js"></script>
 		<script type="text/javascript" src="js/cookie_func.js"></script>
-		<title>Добавить клиента</title>
+		<title>Профиль пользователя</title>
 	</head>
 	<body>
 		
 		<div id="client-new">
-			<div class="client-new-fields-header">Личная информация</div>
-			<table class='client-data-block' id="client-new-fields-personal">
+			<div class="client-new-fields-header">Обязательные поля</div>
+			<table class='client-data-block' id="client-new-fields-req">
 				<tr>
-					<td>NAME SURNAME THIRD NAME</td>
+					<td class='col-left'>
+						Имя
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-1'></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td>BIRTHDAY</td>
+					<td class='col-left'>
+						Фамилия
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-2'></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td>Гражданство</td>
+					<td class='col-left'>
+						Номер телефона
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-3'></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td>Email</td>
+					<td class='col-left'>
+						Email
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-4'></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td>Номер телефона:</td>
+					<td class='col-left'>
+						Дата рождения
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-5'></textarea>
+					</td>
 				</tr>
 				<tr>
-					<td>Страна:</td>
-				</tr>
-				<tr>
-					<td>СТРАНА, ИНДЕКС, ГОРОД, УЛИЦА, ДОМ</td>
-					<td class='field-td'><input type='text' id='client-new-city' value=''></td>
+					<td class='col-left'>
+						Дата окончания загранпаспорта
+					</td>
+					<td class='col-right'>
+						<textarea class='t-a' rows='2' cols='40' id='field-req-6'></textarea>
+					</td>
 				</tr>
 			</table>
-			<div class="client-new-fields-header">Данные заграничного паспорта</div>
-			<table class='client-data-block' id="client-new-fields-passport">
-				<tr>
-					<td>Имя латиницей:</td>
-				</tr>
-				<tr>
-					<td>Фамилия латиницей:</td>
-				</tr>
-				<tr>
-					<td>Серия и номер паспорта:</td>
-				</tr>
-				<tr>
-					<td>Срок действия паспорта:</td>
-				</tr>
+			<div class="client-new-fields-header">Опциональные поля</div>
+			<table class='client-data-block' id="client-new-fields">
 
 			</table>
-			<div class="client-new-fields-header">ЇЇЇЇЇЇЇЇ</div>
-			<table class='client-data-block' id="client-new-fields-zalog">
+			<table class='client-data-block' id="client-new-buttons">
 				<tr>
-					<td>Представитель:</td>
-					<td class='field-td'><input type='text' id='client-new-emp' readonly></td>
-				</tr>
-				<tr>
-					<td>Сумма залога в евро:</td>
-					<td class='field-td'><input type='text' id='client-new-sum-e' value='0' disabled></td>
-				</tr>
-				<tr>
-					<td>Сумма залога в кронах:</td>
-					<td class='field-td'><input type='text' id='client-new-sum-k' value='0' disabled></td>
-				</tr>
-				<tr>
-					<td>Номер договора(необязательно):</td>
-					<td class='field-td'><input type='text' id='client-new-order-id' value=''></td>
-				</tr>
-			</table>
-			<div class="client-new-fields-header">Запись на курсы</div>
-			<table class='client-data-block' id="client-new-fields-product">
-				<tr>
-					<td>Курсы:</td>
-				</tr>
-			</table>
-			<div class="client-new-fields-header">Учебный год</div>
-			<table class='client-data-block' id="client-new-fields-year">
-				<tr>
-					<td>Учебный год:</td>
-					</td>
-				</tr>
-			</table>
-			<table class='client-data-block' id="client-new-comment">
-				<tr>
-					<td>Комментарий:</td>
-				</tr>
-				<tr>
-					<td>
-						<textarea rows="7" cols="40" name="comment" id='client-comment'></textarea>
-					</td>
-				</tr>
-			</table>
-			<table class='client-data-block' id="client-new-fields-year">
-				<tr>
-					<td>FILES</td>
+					<td class='field-td' rowspan='2'> 
+						<div class="div-form-button" id="client-menu-send">Редактировать</div>	
+						<div class="div-form-button" id="client-menu-pass">Сменить пароль</div>		
 					</td>
 				</tr>
 			</table>

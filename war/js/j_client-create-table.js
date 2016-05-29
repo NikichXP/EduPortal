@@ -84,7 +84,7 @@
 			data: clData,
 			processData: false,
 			contentType: false,
-			// success: location.reload(),	
+			success: window.close(),	
 		});	
 
 	});

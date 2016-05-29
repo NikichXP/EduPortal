@@ -367,9 +367,20 @@
 	//open profile
 	$('#table-client-menu').on("click", "td.td-client-menu", function() {
 
-		var url = "user-profile.html?token=" + getCookie("sesToken") + "&clientid=" + $(this).children('input.inner-client-input-1').val();
+		setCookie('clientID', $(this).children('input.inner-client-menu-input-1').val());
+		var url = "user-profile.html?token=" + getCookie("sesToken");
 		var windowName = "User profile";
-		var windowSize = ["width=450, height=900"];
+		var windowSize = ["width=520, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+	});
+	//open my frofile
+	$('#menu-showprof').on("click", function() {
+
+		deleteCookie('clientID');
+		var url = "user-profile.html?token=" + getCookie("sesToken");
+		var windowName = "User profile";
+		var windowSize = ["width=520, height=900"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
