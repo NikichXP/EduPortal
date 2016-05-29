@@ -33,12 +33,24 @@
 
 	if (getCookie("accessLevel") == 'MODERATOR')
 	{
-		if (getCookie("accessLevel") == 'ADMIN')
-		{
-			$('#ul-side-menu').append('<li id="menu-adm">Меню администратора</li>');
-		}
 		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
 	}
+
+	if (getCookie("accessLevel") == 'ADMIN')
+	{
+		$('#ul-side-menu').append('<li id="menu-adm">Меню администратора</li>');
+		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
+	}
+
+	if (getCookie("accessLevel") == 'USER')
+	{
+		$('li#menu-client-open').toggle();
+		$('li#menu-create-order').toggle();
+		$('li#menu-product-page').toggle();
+		//$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
+	}
+
+
 
 	$('#menu-adm').on('click', function(){
 		window.location = "admin/admin.jsp";
