@@ -441,12 +441,25 @@
 		},
 		});	
 	}); 
-	//product creation menu
-	$('#product-menu-create').on('click', function() {
 
-		var url = "product-create-table.html?token=" + getCookie("sesToken");
+	open product reate
+	$('#menu-showprof').on("click", function() {
+
+		
+		var url = "user-profile.html?token=" + getCookie("sesToken");
+		var windowName = "User profile";
+		var windowSize = ["width=520, height=900"];
+		window.open(url, windowName, windowSize);
+		event.preventDefault();
+	});
+
+	//product profile menu
+	$('#table-product-menu').on("click", "td.td-product-menu", function() {
+
+		setCookie('productID', $(this).children('input.inner-product-menu-input-1').val());
+		var url = "product-profile.html?token=" + getCookie("sesToken");
 		var windowName = "Product creation";
-		var windowSize = ["width=450, height=900"];
+		var windowSize = ["width=520, height=900"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
