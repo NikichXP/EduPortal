@@ -134,7 +134,7 @@
 										: (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? "Модератор" : "Клиент");
 						%>
 					</td>
-					<td><a href="edituser.jsp?emp=<%=u.getId()%>">Edit</a></td>
+					<td><a href="edituser.jsp?id=<%=u.getId()%>">Edit</a></td>
 				</tr>
 				<%
 					}

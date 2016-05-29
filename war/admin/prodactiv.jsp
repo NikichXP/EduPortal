@@ -29,6 +29,53 @@
 			return;
 		}
 		Product product = OrderDAO.getProduct(request.getParameter("id"));
+		String val;
+		for (Object par : request.getParameterMap().keySet()) {
+			val = request.getParameter((String) par);
+			switch ((String) par) {
+			case "title":
+				product.setTitle(val);
+				break;
+			case "descr":
+				product.setDescription(val);
+				break;
+			case "price":
+				try {
+					product.setDefaultPrice(Double.parseDouble(val));
+				} catch (Exception e) {
+					out.println(
+							"<script>alert('Вы ввели неверный формат числа цены. Используйте следующий: \"12345.67\"')</script>");
+				}
+				break;
+			case "end":
+				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
+					product.setEnd(val);
+				} else {
+					out.println(
+							"<script>alert('Вы ввели неверный формат даты окончания. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
+				}
+				break;
+			case "city":
+				City c = GeoDAO.getCity("city");
+				if (c != null) {
+					product.setCity(c);
+				} else {
+					out.println("<script>alert('Город отсутствует в БД')</script>");
+				}
+				break;
+			case "begin":
+				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
+					product.setStart(val);
+				} else {
+					out.println(
+							"<script>alert('Вы ввели неверный формат даты начала. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		ProductDAO.save(product);
 	%>
 	<div id="header">
 		<div id="header-main">
@@ -84,7 +131,7 @@
 				}
 				if (request.getParameterMap().keySet().size() > 1) {
 					out.println(
-							"<h3>Примечание: результаты могу обновляются. Если данные не обновились, то обновите страницу через "
+							"<h3>Примечание: результаты могут обновляются. Если данные не старые, то обновите страницу через "
 									+ "пару секунд.</h3>");
 				}
 			%>
@@ -92,55 +139,5 @@
 				файлы к продукту</a>
 		</div>
 	</form>
-
-	<%
-		String val;
-		for (Object par : request.getParameterMap().keySet()) {
-			val = request.getParameter((String) par);
-			switch ((String) par) {
-			case "title":
-				product.setTitle(val);
-				break;
-			case "descr":
-				product.setDescription(val);
-				break;
-			case "price":
-				try {
-					product.setDefaultPrice(Double.parseDouble(val));
-				} catch (Exception e) {
-					out.println(
-							"<script>alert('Вы ввели неверный формат числа цены. Используйте следующий: \"12345.67\"')</script>");
-				}
-				break;
-			case "end":
-				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
-					product.setEnd(val);
-				} else {
-					out.println(
-							"<script>alert('Вы ввели неверный формат даты окончания. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
-				}
-				break;
-			case "city":
-				City c = GeoDAO.getCity("city");
-				if (c != null) {
-					product.setCity(c);
-				} else {
-					out.println("<script>alert('Город отсутствует в БД')</script>");
-				}
-				break;
-			case "begin":
-				if (val.matches("\\d\\d[\\/\\-.]\\d\\d") && val.length() <= 5) {
-					product.setStart(val);
-				} else {
-					out.println(
-							"<script>alert('Вы ввели неверный формат даты начала. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
-				}
-				break;
-			default:
-				break;
-			}
-		}
-		ProductDAO.save(product);
-	%>
 </body>
 </html>

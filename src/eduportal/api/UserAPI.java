@@ -142,7 +142,7 @@ public class UserAPI {
 			return new Text("Err in keys-values");
 		}
 		for (int i = 0; i < keys.length; i++) {
-			user.changeData(keys[i], values[i]);
+			user.putData(keys[i], values[i]);
 		}
 		UserEntity u2 = UserDAO.create(user);
 		return new Text("Resp:" + u2.toString());

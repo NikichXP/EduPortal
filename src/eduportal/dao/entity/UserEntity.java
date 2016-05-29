@@ -116,13 +116,15 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	public void addData(String key, String value) {
 		this.userData.put(key, value);
 	}
-	
-	public void changeData(String key, String value) {
-		this.userData.remove(key);
+
+	public void putData(String key, String value) {
+		if (userData.get(key) != null) {
+			this.userData.remove(key);
+		}
 		this.userData.put(key, value);
 	}
-	
-	public String[][] getSimpleData () {
+
+	public String[][] getSimpleData() {
 		Set<String> params = userData.keySet();
 		String[][] ret = new String[params.size()][2];
 		int i = 0;
@@ -133,7 +135,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		}
 		return ret;
 	}
-	
+
 	public String[][] getSimpleDataWithNull() {
 		String[][] ret = new String[userParams.length][2];
 		int i = 0;
@@ -423,10 +425,10 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone + ", mail=" + mail + ", passport="
-				+ passport + ", permission=" + permission + ", corporation=" + corporation + ", name=" + name
-				+ ", surname=" + surname + ", creator=" + creator + ", accessLevel=" + accessLevel + ", isActive="
-				+ isActive + ", born=" + born + ", passportActive=" + passportActive + ", files=" + files
-				+ ", userData=" + userData + "]";
+		return "UserEntity [id=" + id + ", pass=" + ((pass.length() == 128) ? "..." : pass) + ", phone=" + phone
+				+ ", mail=" + mail + ", passport=" + passport + ", permission=" + permission + ", corporation="
+				+ corporation + ", name=" + name + ", surname=" + surname + ", creator=" + creator + ", accessLevel="
+				+ accessLevel + ", isActive=" + isActive + ", born=" + born + ", passportActive=" + passportActive
+				+ ", files=" + files + ", userData=" + userData + "]";
 	}
 }

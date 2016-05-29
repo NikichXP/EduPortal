@@ -10,8 +10,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UserEditor</title>
+<link rel='stylesheet' type='text/css' href='s_admin.css' />
 </head>
 <body>
+	<div id="header">
+		<div id="header-main">
+			<H1>Управление пользователями</H1>
+		</div>
+	</div>
 	<%
 		UserEntity admin = null;
 		for (Cookie c : request.getCookies()) {
@@ -27,25 +33,59 @@
 			response.sendRedirect("/admin/moderator.jsp");
 			return;
 		}
+
+		if (request.getParameter("mail") != null) {
+			for (String param : UserEntity.userParams) {
+				if (request.getParameter(param) != null) {
+					user.putData(param, request.getParameter(param));
+				}
+			}
+		}
+		UserDAO.update(user);
 	%>
 
-	<form action="edituser.jsp">
-	<input type="hidden" name="id" id="<%=user.getId() %>">
-		<table>
-			<tr>
-				<td>E-mail:</td>
-				<td><input type="text" name="mail" value="<%=user.getMail()%>"></td>
-			</tr>
-			<tr>
-				<td>Номер телефона:</td>
-				<td><input type="text" name="phone" value="<%=user.getPhone()%>"></td>
-			</tr>
-			<tr>
-				<td>Паспорт:</td>
-				<td><input type="text" name="паспорт" value="<%=user.getPassport()%>"></td>
-			</tr>
-		</table>
-	</form>
-	<%= request.getParameter("паспорт") %>
+	<div id='main-div'>
+		<div class="div-form-button">
+			<a href=/admin/moderator.jsp>Назад на панель управления</a>
+		</div>
+		<div class='table-div'>
+			<form action="edituser.jsp">
+				<input type="hidden" name="id" value="<%=user.getId()%>">
+				<table class='table-list'>
+					<tr class='table-list-header'>
+						<td>Ключ</td>
+						<td>Значение</td>
+					</tr>
+					<tr>
+						<td>E-mail:</td>
+						<td><input type="text" name="mail"
+							value="<%=user.getMail()%>"></td>
+					</tr>
+					<tr>
+						<td>Номер телефона:</td>
+						<td><input type="text" name="phone"
+							value="<%=user.getPhone()%>"></td>
+					</tr>
+					<tr>
+						<td>Паспорт:</td>
+						<td><input type="text" name="паспорт"
+							value="<%=user.getPassport()%>"></td>
+					</tr>
+					<%
+						for (String param : UserEntity.userParams) {
+					%>
+					<tr>
+						<td><%=param%></td>
+						<td><input type="text" name="<%=param%>"
+							value="<%out.print(((user.getData(param) != null) ? user.getData(param) : ""));%>"></td>
+					</tr>
+					<%
+						}
+					%>
+				</table>
+				<input type="submit" value="Change the world">
+		</div>
+		</form>
+	</div>
 </body>
 </html>
