@@ -29,7 +29,11 @@ public class GeoDAO {
 	
 	public static City getCity(String cityname) {
 		try {
-			return ofy().load().type(City.class).filter("name", cityname).first().now();
+			City c = ofy().load().type(City.class).filter("name", cityname).first().now();
+			if (c == null) {
+				c = ofy().load().type(City.class).filter("cyrname", cityname).first().now();
+			}
+			return c;
 		} catch (Exception e) {
 			return null;
 		}

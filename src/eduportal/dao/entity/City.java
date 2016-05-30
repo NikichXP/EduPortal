@@ -9,6 +9,7 @@ public class City extends AbstractEntity {
 	private Key<Country> country;
 	@Index
 	private String name;
+	@Index
 	private String cyrname;
 	protected final int maxIdValue = 999_999;
 

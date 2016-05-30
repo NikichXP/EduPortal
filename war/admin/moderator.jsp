@@ -31,6 +31,10 @@
 			List<Product> products = ProductDAO.getAll();
 			List<UserEntity> users = UserDAO.getUnactiveClientsByCorp(user, false);
 		%>
+		
+		<div class="div-form-button">
+			<a href="/workspace.html">Главная страница</a>
+		</div>
 
 		<h1>Продукты:</h1>
 		
