@@ -94,6 +94,7 @@
 						"<td>" + resData.items[i].productName + "</td>" +
 						"<td>" + resData.items[i].creatorName + "</td>" +
 						"<td>" + resData.items[i].paid + "</td>" +
+						"<td>" + resData.items[i].currency + "</td>" +
 						"<td>" + checkFiles(resData.items[i]) + "</td>" +
 					"</tr>");	
 			};
