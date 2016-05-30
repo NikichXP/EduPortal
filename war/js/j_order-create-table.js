@@ -145,57 +145,59 @@
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/products',
 		data: {'token' : getCookie("sesToken")},
 		success: function(resData) {
 			for (var i = 0; i < resData.items.length; i++)
 			{
-				$('#select-product').append("<option id='product-" + i + "' value='" + resData.items[i].id + "'>" 
-					+ resData.items[i].title 
+				$('#select-product').append("<option class='" + resData.items[i].currency + "' value='" + resData.items[i].id + "'>" 
+					+ resData.items[i].title
 					+ "</option>" 
 				);
 			}
 		},
 	});	
 
+	$('#select-product').on('change', function() {
+			$('#order-currency').val($('#select-product').find(":selected").attr("class"));
+	});
+
+	$.ajax({
+		type: 'GET',
+		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
+		data: {'token' : getCookie("sesToken")},
+		success: function(resData) {
+			if (resData)
+				for (var i = 0; i < resData.items.length; i++)
+				{
+					$('#select-client').append("<option id='client-" + i + "' value='" + resData.items[i].id + "'>" 
+					+ resData.items[i].name + " " + resData.items[i].surname 
+					+ "</option>" 
+					);	
+				}
+		},
+	});	
+
 	//send new order
 	$('#order-menu-send').on('click', function() {
-		
-		// var pID = $('#input-order-product-id').val();
-		// var cID = $('#input-order-client-id').val();
-		// var paidSum = $('#create-input-paid').val();
-		
-		// if (!$.isNumeric(paidSum)) paidSum = 0;
-		// if (!$.isNumeric(pID)) alert ('Заполните обязательные поля');
-		// else if (!$.isNumeric(cID)) alert ('Заполните обязательные поля');
-		// else
-		// {
-		// 	var orderData = {
-		// 		token: authSesToken,
-		// 		productid: pID,
-		// 		clientid: cID,
-		// 		paid: paidSum,
-		// 	};
+				{
+			var orderData = {
+				token: getCookie("sesToken"),
+				productid: $('#select-product').find(":selected").val(),
+				clientid: $('#select-client').find(":selected").val(),
+				paid: $('#order-new-sum').val(),
+				year: $('#select-year').find(":selected").val(),
+				comment: $('#order-comment').val(),
+			};
 
-			// $.ajax({
-			// 	type: 'GET',
-			// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
-			// 	data: orderData,
-			// 	success: function(resData) { 
-			// 		if ($('#file-upload-chb').is(':checked'))
-			// 		{
-			// 			var url = "File.jsp?order=" + resData.id + "&token=" + getCookie("sesToken");
-			// 			var windowName = "File Upload";
-			// 			var windowSize = ["width=500, height=500"];
-			// 			window.open(url, windowName, windowSize);
-			// 			event.preventDefault();
-			// 			window.close();
-			// 		}
-			// 		else window.close();
-			// 	},
-			// });	
+			$.ajax({
+				type: 'GET',
+				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
+				data: orderData,
+				success: window.close(),
+			});	
 			
-		// };	
+		};	
 			
 	});	
 });

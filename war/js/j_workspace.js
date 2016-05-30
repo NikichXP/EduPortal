@@ -42,6 +42,14 @@
 		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
 	}
 
+	if (getCookie("accessLevel") == 'AGENT')
+	{
+		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
+		$('input#input-paid').css('display', 'none');
+
+	}
+
+
 	if (getCookie("accessLevel") == 'USER')
 	{
 		$('li#menu-client-open').toggle();
@@ -341,25 +349,28 @@
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
 		data: tokenJson,
 		success: function(resData) {
-			$('#table-client-menu').html("<tbody></tbody>");
-			var imax = resData.items.length;
-			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			if (resData.items)
 			{
-				if (count == imax) break;
-				$('#table-client-menu tbody').append("<tr id='tr-client-menu-" + (i + 1) + "'>");
-				for (var j = 0; j < 5; j++)
+				$('#table-client-menu').html("<tbody></tbody>");
+				var imax = resData.items.length;
+				var count = 0;
+				for (var i = 0; i < resData.items.length; i++)
 				{
-					$('#tr-client-menu-' + (i + 1)).append(
-					"<td class='td-client-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-client-menu-input-1' value=" + resData.items[count].id + ">" +
-					"</td>"
-					);
-					count++;
 					if (count == imax) break;
+					$('#table-client-menu tbody').append("<tr id='tr-client-menu-" + (i + 1) + "'>");
+					for (var j = 0; j < 5; j++)
+					{
+						$('#tr-client-menu-' + (i + 1)).append(
+						"<td class='td-client-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
+						"<input type='hidden' class='inner-client-menu-input-1' value=" + resData.items[count].id + ">" +
+						"</td>"
+						);
+						count++;
+						if (count == imax) break;
+					}
+					$('#table-client-menu').append("</tr>");				
 				}
-				$('#table-client-menu').append("</tr>");				
-			}
+			};
 			$('#client-menu').css('display', 'block');
 			$('#opacity').css('display', 'block');
 		},

@@ -13,18 +13,25 @@
 			<div class="order-new-fields-header">Продукт</div>
 			<table class='order-data-block' id="order-new-fields-product">
 				<tr>
-					<td>Курсы:</td>
+					<td>Продукт:</td>
 					<td class='field-td'><select id='select-product'></select></td>
 				</tr>
 				<tr>
 					<td>Учебный год:</td>
 					<td class='field-td'>
 						<select id='select-year'>
-							<option id='year-1'>2016-2017</option>
-							<option id='year-2'>2017-2018</option>
-							<option id='year-3'>2018-2019</option>
+							<option id='year-1' value='2016'>2016-2017</option>
+							<option id='year-2' value='2017'>2017-2018</option>
+							<option id='year-3' value='2018'>2018-2019</option>
 						</select>
 					</td>
+				</tr>
+			</table>
+			<div class="order-new-fields-header">Клиент</div>
+			<table class='order-data-block' id="order-new-fields-client">
+				<tr>
+					<td>Клиент:</td>
+					<td class='field-td'><select id='select-client'></select></td>
 				</tr>
 			</table>
 			<div class="order-new-fields-header">Доп.информация</div>
@@ -35,17 +42,12 @@
 				</tr>
 				<tr>
 					<td>Сумма залога:</td>
-					<td class='field-td'><input type='text' id='order-new-sum' value='0' disabled></td>
+					<td class='field-td'><input type='text' id='order-new-sum' value='0'></td>
 				</tr>
 				<tr>
 					<td>Валюта:</td>
 					<td class='field-td'>
-						<select id='select-year'>
-							<option id='cur-1'>UAH</option>
-							<option id='cur-2'>USD</option>
-							<option id='cur-3'>EUR</option>
-							<option id='cur-4'>CZK</option>
-						</select>
+						<input type='text' id='order-currency' readonly>
 					</td>
 				</tr>
 			</table>
