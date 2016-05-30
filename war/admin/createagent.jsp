@@ -15,7 +15,7 @@
 		<input type="text" name="mail" value="Owner mail"><br> <input
 			type="submit">
 	</form>
-	<a href = "Admin.jsp?token=<%=request.getParameter("token") %>">Go back</a>
+	<a href = "admin.jsp">Go back</a>
 
 	<%
 		if (request.getParameter("name") == null || request.getParameter("mail") == null) {

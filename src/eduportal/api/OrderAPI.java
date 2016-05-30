@@ -19,9 +19,9 @@ public class OrderAPI {
 		}
 		return null;
 	}
-	
+
 	@ApiMethod(name = "getProductById", path = "getproductbyid", httpMethod = "GET")
-	public Product getById (@Named("id") Long id, @Named("token")String token) {
+	public Product getById(@Named("id") Long id, @Named("token") String token) {
 		if (AccessLogic.canSeeAllProducts(token)) {
 			return ProductDAO.get(id);
 		}
@@ -55,7 +55,9 @@ public class OrderAPI {
 
 	@ApiMethod(path = "createorder", httpMethod = "GET")
 	public Order createOrder(@Named("productid") Long productid, @Named("clientid") String clientid,
-			@Named("token") String token, @Named("paid") @Nullable Double paid) { // Token to identify creator
+			@Named("token") String token, @Named("paid") @Nullable Double paid, @Named("year") Integer year,
+			@Named("comment") @Nullable String comment) { // Token to identify
+															// creator
 		UserEntity admin = AuthContainer.getUser(token);
 		if (admin == null) {
 			return null;
@@ -69,13 +71,17 @@ public class OrderAPI {
 		}
 		o.setCreatedBy(admin);
 		o.setUser(UserDAO.get(clientid));
+		o.setComment(comment);
+		//TODO year
+		o.setStart(new Date());
+		o.setEnd(new Date());
 		OrderDAO.saveOrder(o);
 		return o;
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
 	public Text editOrder(@Named("orderid") Long orderid, @Named("token") String token,
-			@Named("paid") @Nullable Double paid, @Named ("comment") @Nullable String comment) {
+			@Named("paid") @Nullable Double paid, @Named("comment") @Nullable String comment) {
 		UserEntity admin = AuthContainer.getUser(token);
 		Order order = OrderDAO.getOrder(orderid);
 		if (AccessLogic.canEditOrder(admin, order) == false) {
@@ -83,7 +89,7 @@ public class OrderAPI {
 		}
 		boolean flag = false;
 		if (paid != null) {
-			order.setPaid(order.getPaid()+paid);
+			order.setPaid(order.getPaid() + paid);
 			flag = true;
 		}
 		if (comment != null) {
@@ -95,15 +101,15 @@ public class OrderAPI {
 		}
 		return new Text(order.toString());
 	}
-	
-	@ApiMethod (path = "cancelOrder", httpMethod = "GET")
-	public Text cancelOrder (@Named("token") String token, @Named ("orderid") Long orderid) {
+
+	@ApiMethod(path = "cancelOrder", httpMethod = "GET")
+	public Text cancelOrder(@Named("token") String token, @Named("orderid") Long orderid) {
 		Order order = OrderDAO.getOrder(orderid);
 		if (!AccessLogic.canCancelOrder(token, order)) {
-			return new Text ("403 Forbidden");
+			return new Text("403 Forbidden");
 		}
 		OrderDAO.deleteOrder(order);
-		return new Text ("Order cancelled");
+		return new Text("Order cancelled");
 	}
 
 	/**
@@ -112,9 +118,11 @@ public class OrderAPI {
 	@ApiMethod(name = "getAllOrders", path = "allOrders", httpMethod = "GET")
 	public List<Order> getAllOrders(@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
-		return ((u == null) ? null : (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? OrderDAO.getCreatedOrdersByUser(u) : OrderDAO.getSelfOrdersByUser(u));
+		return ((u == null) ? null
+				: (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? OrderDAO.getCreatedOrdersByUser(u)
+						: OrderDAO.getSelfOrdersByUser(u));
 	}
-	
+
 	@ApiMethod(name = "getEveryOrders", path = "everyOrders", httpMethod = "GET")
 	public List<Order> getEveryOrders(@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
@@ -136,8 +144,7 @@ public class OrderAPI {
 	@ApiMethod(name = "filter_through_all_orders", path = "filter", httpMethod = "GET")
 	public List<Order> filterOrders( // TODO Move to DAO
 			@Named("client_name") String clientName, @Named("client_id") String clientId,
-			@Named("is_paid") Boolean isPaid, @Named("created_by") String createdBy, 
-			@Named("token") String token) {
+			@Named("is_paid") Boolean isPaid, @Named("created_by") String createdBy, @Named("token") String token) {
 		if (!AccessLogic.canSeeAllOrders(token)) {
 			return null;
 		}
@@ -156,7 +163,8 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "createCity", httpMethod = "GET", path = "create/city")
-	public Text addCity(@Named("city") String cityname, @Named("country") String country, @Named("token") String token) { 
+	public Text addCity(@Named("city") String cityname, @Named("country") String country,
+			@Named("token") String token) {
 		if (!AccessLogic.canCreateCity(token)) {
 			return new Text("403 Forbidden");
 		}
@@ -174,7 +182,8 @@ public class OrderAPI {
 
 	@ApiMethod(name = "addProduct", httpMethod = "GET", path = "product/add")
 	public Text addProduct(@Named("title") String title, @Named("description") String descr,
-			@Named("cityid") String cityname, @Named ("token") String token, @Named("price") Double price, @Named ("begin") String begin) {
+			@Named("cityid") String cityname, @Named("token") String token, @Named("price") Double price,
+			@Named("begin") String begin) {
 		if (!AccessLogic.canAddProduct(token).equals("GOOD")) {
 			return new Text("403 Forbidden " + AccessLogic.canAddProduct(token));
 		}

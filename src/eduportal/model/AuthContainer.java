@@ -58,13 +58,13 @@ public class AuthContainer {
 		ofy().save().entity(value.setToken(key));
 	}
 
-	private static void remove(String token) {
+	public static void remove(String token) {
 		try {
 			sessions.remove(token);
 		} catch (Exception e) {
 		}
 		cache.delete(token);
-		ofy().delete().type(AuthSession.class).id(token);
+		ofy().delete().type(AuthSession.class).id(token).now();
 	}
 
 	public static AuthToken authenticate(String login, String pass) {
@@ -80,6 +80,11 @@ public class AuthContainer {
 			ret.setSessionId(token);
 			ret.setTimeoutTimestamp(session.getTimeout());
 			ret.putAccessLevelInt(user.getAccessLevel());
+			if (user.getAccessLevel() > 10) {
+				if (user.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+					ret.putAccessLevelInt(-70);
+				}
+			}
 			return ret;
 		}
 	}

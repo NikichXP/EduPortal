@@ -41,6 +41,7 @@ public class Order extends AbstractEntity {
 		this.productName = p.getTitle();
 		files = new ArrayList<>();
 		files.ensureCapacity(5);
+		this.currency = p.getCurrency();
 	}
 
 	public long getUser() {

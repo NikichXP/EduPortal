@@ -144,6 +144,7 @@ public class TestAPI {
 		for (Product prod : p) {
 			prod.setActual(Math.random() < 0.75); // chance vary!
 			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);
+			prod.setCurrency("UAH");
 		}
 		ProductDAO.save(p);
 		Random r = new Random();

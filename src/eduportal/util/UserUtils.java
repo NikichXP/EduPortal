@@ -3,8 +3,16 @@ package eduportal.util;
 import java.security.*;
 import eduportal.dao.entity.UserEntity;
 import eduportal.model.AccessSettings;
+import eduportal.model.AuthContainer;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class UserUtils {
+	
+	public static void changePass (String acc, String newPass, String token) {
+		AuthContainer.remove(token);
+		UserEntity user = ofy().load().type(UserEntity.class).filter("mail", acc).first().now();
+		user.setPass(newPass);
+	}
 	
 	public static final int CRYPTOLENGTH = 128;
 	private static MessageDigest mDigest = null;
