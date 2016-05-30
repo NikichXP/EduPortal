@@ -12,6 +12,7 @@ public class UserUtils {
 		AuthContainer.remove(token);
 		UserEntity user = ofy().load().type(UserEntity.class).filter("mail", acc).first().now();
 		user.setPass(newPass);
+		ofy().save().entity(user);
 	}
 	
 	public static final int CRYPTOLENGTH = 128;

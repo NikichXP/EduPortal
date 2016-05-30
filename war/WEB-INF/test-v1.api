@@ -85,14 +85,29 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.listSessions" : {
-      "path" : "listsession",
+    "test.testAPI.testCookies" : {
+      "path" : "cookies",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.listSession",
+      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.testAPI.getAllObj" : {
+      "path" : "getAllObj",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.getAllObj",
       "request" : {
         "body" : "empty"
       },
@@ -137,29 +152,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.testAPI.getAllObj" : {
-      "path" : "getAllObj",
+    "test.listSessions" : {
+      "path" : "listsession",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.getAllObj",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "test.testAPI.testCookies" : {
-      "path" : "cookies",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
+      "rosyMethod" : "eduportal.api.TestAPI.listSession",
       "request" : {
         "body" : "empty"
       },
@@ -229,14 +229,9 @@
           "$ref" : "Text"
         }
       },
-      "eduportal.api.TestAPI.listSession" : {
+      "eduportal.api.TestAPI.testCookies" : {
         "response" : {
-          "$ref" : "StringCollection"
-        }
-      },
-      "eduportal.api.TestAPI.rebuildDB" : {
-        "response" : {
-          "$ref" : "StringCollection"
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.getAllObj" : {
@@ -244,9 +239,14 @@
           "$ref" : "_anyCollection"
         }
       },
-      "eduportal.api.TestAPI.testCookies" : {
+      "eduportal.api.TestAPI.rebuildDB" : {
         "response" : {
-          "$ref" : "_anyCollection"
+          "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.TestAPI.listSession" : {
+        "response" : {
+          "$ref" : "StringCollection"
         }
       }
     }
