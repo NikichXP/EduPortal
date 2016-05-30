@@ -2,6 +2,9 @@ package eduportal.dao;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
+
+import com.googlecode.objectify.Ref;
+
 import eduportal.dao.entity.*;
 
 public class GeoDAO {
@@ -25,6 +28,14 @@ public class GeoDAO {
 		city.setCountry(c);
 		ofy().save().entity(city);
 		return city;
+	}
+	
+	public static void saveCity (City c) {
+		ofy().save().entity(c).now();
+	}
+	
+	public static void saveCountry (Country c) {
+		ofy().save().entity(c).now();
 	}
 	
 	public static City getCity(String cityname) {
@@ -62,6 +73,9 @@ public class GeoDAO {
 	public static Country getCountry(String country) {
 		Country c = ofy().load().type(Country.class).filter("name", country).first().now();
 		if (c == null) {
+			c = ofy().load().type(Country.class).filter("cyrname", country).first().now();
+		}
+		if (c == null) {
 			Country ctr = new Country(country);
 			ofy().save().entity(ctr);
 			return ctr;
@@ -75,6 +89,19 @@ public class GeoDAO {
 
 	public static List<City> getCityList() {
 		return ofy().load().type(City.class).list();
+	}
+
+	public static int deleteCity(long parseLong) {
+		City city = ofy().load().type(City.class).id(parseLong).now();
+		if (ofy().load().type(Product.class).filter("city", Ref.create(city).getKey()).list().isEmpty() == false) {
+			return -1;
+		}
+		Country ctr = city.getCountry();
+		ofy().delete().entity(city).now();
+		if (ofy().load().type(City.class).filter("country",	Ref.create(ctr).getKey()).list().isEmpty() == true) {
+			ofy().delete().entity(ctr);
+		}
+		return 0;
 	}
 
 }

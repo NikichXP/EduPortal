@@ -29,6 +29,7 @@
 			for (Cookie c : request.getCookies()) {
 				if (c.getName().equals("sesToken")) {
 					user = AuthContainer.getUser(c.getValue());
+					token = c.getValue();
 				}
 			}
 			if (user == null || AccessLogic.canAccessAdminPanel(user) == false) {
@@ -70,7 +71,7 @@
 		<%
 			}
 		%>
-		
+
 		<br>
 		<h1>Сотрудники Вашей фирмы</h1>
 		<br>
@@ -140,6 +141,40 @@
 					}
 				%>
 			</table>
+			<h1>Города</h1>
+			<table class='table-list'>
+				<tr class='table-list-header'>
+					<td>ID</td>
+					<td>Название города</td>
+					<td>Название латиницей</td>
+					<td>Название страны</td>
+					<td>Название латиницей</td>
+					<td>Изменить город</td>
+					<td>Изменить страну</td>
+				</tr>
+				<%
+					for (City c : GeoDAO.getCityList()) {
+				%>
+				<tr>
+					<td><%=c.getId()%></td>
+					<td><%=c.getName()%></td>
+					<td><%=c.getCyrname()%></td>
+					<td><%=c.getCountry().getName()%></td>
+					<td><%=c.getCountry().getCyrname()%></td>
+					<td><a href="geoedit.jsp?type=city&id=<%=c.getId()%>">Город</a></td>
+					<td><a href="geoedit.jsp?type=country&id=<%=c.getCountry().getId()%>">Страна</a></td>
+					<td><a href="/_ah/api/util/v1/deletecity?token=<%=token%>&city=<%=c.getId()%>">Удалить город</a>
+				</tr>
+				<%
+					}
+				%>
+			</table>
+			<form action="/_ah/api/util/v1/createcity">
+			<input type="hidden" name="token" value="<%= token%>">
+			<input type="text" name = "city" value="Киев"><br>
+			<input type="text" name = "country" value="Украина">
+			<input type="submit" value = "Создать город">
+			</form>
 		</div>
 	</div>
 </body>
