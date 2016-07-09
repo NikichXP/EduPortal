@@ -106,6 +106,7 @@
 		success: function(resData) {
 			$('#field-req-1').html(resData.name);
 			$('#field-req-2').html(resData.surname);
+			$('#field-req-2-1').html(resData.fathersname);
 			$('#field-req-3').html(resData.phone);
 			$('#field-req-4').html(resData.mail);
 
