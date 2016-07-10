@@ -9,16 +9,52 @@
 			$('#client-new-fields').html(' ');
 			for (var i = 0; i < resData.items.length; i++) 
 			{
-				$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
-					$('#field-' + i).append("<td class='col-left'>");
-						$('#field-' + i + ' .col-left').append(resData.items[i]);
-					$('#field-' + i).append('</td>');
+				if (resData.items[i] == "Срок действия заграничного паспорта")
+				{
+					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+						$('#field-' + i).append("<td class='col-left'>");
+							$('#field-' + i + ' .col-left').append(resData.items[i]);
+						$('#field-' + i).append('</td>');
 
-					$('#field-' + i).append("<td class='col-right'>");
-						$('#field-' + i + ' .col-right').append("<textarea class='t-a' rows='2' cols='40' id='field-" + i + "'></textarea>");
-					$('#field-' + i).append('</td>');
-				$('#client-new-fields').append('</tr>');
-				countOfFields++;
+						$('#field-' + i).append("<td class='col-right'>");
+							$('#field-' + i + ' .col-right').append("<select id='select-pas-day'>"); 
+								for (var s = 1; s < 32; s++)
+								{
+									$('#field-' + i + ' .col-right select#select-pas-day').append("<option value='" + s + "'>" + s + "</option>");
+								}
+							$('#field-' + i + ' .col-right').append("</select><select id='select-pas-month'>"); 
+							 	for (var s = 1; s < 13; s++)
+								{
+									$('#field-' + i + ' .col-right select#select-pas-month').append("<option value='" + s + "'>" + s + "</option>");
+								}
+							$('#field-' + i + ' .col-right').append("</select><select id='select-pas-year'>"); 
+								for (var s = 1; s < 6; s++)
+								{
+									$('#field-' + i + ' .col-right select#select-pas-year').append("<option value='" + (s + 2015) + "'>" + (s + 2015) + "</option>");
+								}
+							$('#field-' + i + ' .col-right').append("</select>");
+						$('#field-' + i).append('</td>');
+					$('#client-new-fields').append('</tr>');
+
+					// <td class='col-right'>
+					// 	<select id='select-pas-day'></select><select id='select-pas-month'></select><select id='select-pas-year'></select>
+					// </td>
+					countOfFields++;
+				}
+				else
+				{
+					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+						$('#field-' + i).append("<td class='col-left'>");
+							$('#field-' + i + ' .col-left').append(resData.items[i]);
+						$('#field-' + i).append('</td>');
+
+						$('#field-' + i).append("<td class='col-right'>");
+							$('#field-' + i + ' .col-right').append("<textarea class='t-a' rows='2' cols='40' id='field-" + i + "'></textarea>");
+						$('#field-' + i).append('</td>');
+					$('#client-new-fields').append('</tr>');
+					countOfFields++;
+				}	
+				
 			}
 		},	
 	});
@@ -122,11 +158,21 @@
 		}
 	});
 
-	$('#select-pas-day').html(" ");
-	for (var i = 1; i < 32; i++)
-	{
-		$('#select-pas-day').append("<option value='" + i + "'>" + i + "</option>");
-	}
+//$('#table-client-list').on("click", "td.td-client-list", function() {
+
+	// $('#select-pas-day').html(" ");
+	// for (var i = 1; i < 32; i++)
+	// {
+	// 	$('#select-pas-day').append("<option value='" + i + "'>" + i + "</option>");
+	// }
+
+	$('#select-pas-day').load(function() {
+		for (var i = 1; i < 32; i++)
+		{
+			$('#select-pas-day').append("<option value='" + i + "'>" + i + "</option>");
+		}
+	});
+
 	$('#select-pas-month').html(" ");
 	for (var i = 1; i < 13; i++)
 	{
@@ -151,5 +197,6 @@
 	});
 			
 });
+
 
 
