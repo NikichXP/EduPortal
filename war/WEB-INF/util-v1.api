@@ -115,6 +115,10 @@
             "type" : "string",
             "format" : "int64"
           },
+          "maxIdValue" : {
+            "type" : "string",
+            "format" : "int64"
+          },
           "country" : {
             "$ref" : "Country"
           },
@@ -137,6 +141,10 @@
         "type" : "object",
         "properties" : {
           "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "maxIdValue" : {
             "type" : "string",
             "format" : "int64"
           },

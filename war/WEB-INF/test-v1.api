@@ -70,36 +70,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.ping" : {
-      "path" : "ping",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.ping",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "test.testAPI.testCookies" : {
-      "path" : "cookies",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "test.testAPI.getAllObj" : {
       "path" : "getAllObj",
       "httpMethod" : "GET",
@@ -108,6 +78,21 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.TestAPI.getAllObj",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.ping" : {
+      "path" : "ping",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.ping",
       "request" : {
         "body" : "empty"
       },
@@ -160,6 +145,21 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.TestAPI.listSession",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.testAPI.testCookies" : {
+      "path" : "cookies",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
       "request" : {
         "body" : "empty"
       },
@@ -224,19 +224,14 @@
           "$ref" : "StringCollection"
         }
       },
-      "eduportal.api.TestAPI.ping" : {
-        "response" : {
-          "$ref" : "Text"
-        }
-      },
-      "eduportal.api.TestAPI.testCookies" : {
-        "response" : {
-          "$ref" : "_anyCollection"
-        }
-      },
       "eduportal.api.TestAPI.getAllObj" : {
         "response" : {
           "$ref" : "_anyCollection"
+        }
+      },
+      "eduportal.api.TestAPI.ping" : {
+        "response" : {
+          "$ref" : "Text"
         }
       },
       "eduportal.api.TestAPI.rebuildDB" : {
@@ -247,6 +242,11 @@
       "eduportal.api.TestAPI.listSession" : {
         "response" : {
           "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.TestAPI.testCookies" : {
+        "response" : {
+          "$ref" : "_anyCollection"
         }
       }
     }

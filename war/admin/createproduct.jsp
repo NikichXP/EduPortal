@@ -19,10 +19,10 @@
 				admin = AuthContainer.getUser(c.getValue());
 			}
 		}
-		if (admin.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+		if (((Employee)admin).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			return;
 		}
-		if (admin.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+		if (((Employee)admin).getCorporation().equals(AccessSettings.OWNERCORP_NAME)) {
 			return;
 		}
 		String title = request.getParameter("title");

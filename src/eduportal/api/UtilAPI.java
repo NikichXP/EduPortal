@@ -6,11 +6,8 @@ import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 
 import eduportal.dao.GeoDAO;
-import eduportal.dao.entity.City;
-import eduportal.dao.entity.Country;
-import eduportal.dao.entity.UserEntity;
-import eduportal.model.AccessSettings;
-import eduportal.model.AuthContainer;
+import eduportal.dao.entity.*;
+import eduportal.model.*;
 
 @Api(name = "util", version = "v1", title = "Misc features") 
 public class UtilAPI {
@@ -22,8 +19,8 @@ public class UtilAPI {
 	
 	@ApiMethod (path = "createcity", httpMethod = "GET")
 	public Text createcity (@Named("city") String cityname, @Named("country") String countryname, @Named ("token") String token) {
-		UserEntity user = AuthContainer.getUser(token);
-		if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL || user.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+		Employee user = AuthContainer.getEmp(token);
+		if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL || user.getCorporation().equals(AccessSettings.OWNERCORP_NAME)) {
 			return null;
 		}
 		Country ctr = GeoDAO.getCountry(countryname);

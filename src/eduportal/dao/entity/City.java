@@ -3,7 +3,14 @@ package eduportal.dao.entity;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 @Entity
+@Data 
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class City extends AbstractEntity {
 	private static final long serialVersionUID = -2792000127515334576L;
 	private Key<Country> country;
@@ -11,7 +18,7 @@ public class City extends AbstractEntity {
 	private String name;
 	@Index
 	private String cyrname;
-	protected final int maxIdValue = 999_999;
+	protected final long maxIdValue = 999_999;
 
 	public Country getCountry() {
 		return Ref.create(country).get();
@@ -21,60 +28,7 @@ public class City extends AbstractEntity {
 		this.country = Ref.create(country).getKey();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getCyrname() {
 		return ((cyrname != null) ? cyrname : name);
 	}
-
-	public void setCyrname(String cyrname) {
-		this.cyrname = cyrname;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		City other = (City) obj;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "City [id=" + id + ", country=" + country + ", name=" + name + "]";
-	}
-	
-	
 }

@@ -2,8 +2,7 @@ package eduportal.model;
 
 import eduportal.dao.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import eduportal.dao.entity.Corporation;
-import eduportal.dao.entity.Country;
+import eduportal.dao.entity.*;
 
 public class AccessSettings {
 	
@@ -13,11 +12,7 @@ public class AccessSettings {
 	
 	public static final String[] ACCESSNAMES = {"User", "Moderator", "Admin"};
 	public static final int[] ACCESSVALUES = {EVERYONE, MODERATOR_LEVEL, ADMIN_LEVEL};
-	
-	public static final Corporation OWNERCORP() { if (ownercorp == null) { ownercorp = UserDAO.getOwnerCorp();} return ownercorp; }
 	public static final Country DEFAULT_COUNTRY = ofy().load().type(Country.class).filter("name", "Ukraine").first().now();
-	
-	private static Corporation ownercorp;
 	
 	public static final String OWNERCORP_NAME = "Vedi Tour Group";
 	

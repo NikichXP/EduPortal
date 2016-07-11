@@ -5,14 +5,12 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 import com.google.api.server.spi.config.*;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.impl.Keys;
 
-import eduportal.dao.GeoDAO;
-import eduportal.dao.UserDAO;
+import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
 import eduportal.util.*;
@@ -22,7 +20,7 @@ public class UserAPI {
 
 	// Init Objectify
 	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
-			Country.class, City.class, Order.class, Corporation.class, AuthSession.class, SavedFile.class };
+			Country.class, City.class, Order.class, AuthSession.class, SavedFile.class, Employee.class, ClientEntity.class };
 
 	static {
 		ObjectifyService.begin();
@@ -33,7 +31,7 @@ public class UserAPI {
 
 	@ApiMethod(path = "fields", name = "Available_fields", httpMethod = "GET")
 	public String[] getFields() {
-		return UserEntity.userParams;
+		return ClientEntity.userParams;
 	}
 
 	@ApiMethod(path = "optvalues", httpMethod = "GET")
@@ -92,7 +90,7 @@ public class UserAPI {
 			@Named("password") @Nullable String pass, @Named("phone") String phone, @Named("mail") String mail,
 			@Named("passport") @Nullable String passport, @Named("token") String token,
 			@Named("birthday") Long borned) {
-		UserEntity creator = AuthContainer.getUser(token);
+		Employee creator = AuthContainer.getEmp(token);
 		if (creator == null || AccessLogic.canCreateUser(creator) == false) {
 			return null;
 		}
@@ -114,45 +112,24 @@ public class UserAPI {
 		UserDAO.create(passport, pass, name, surname, mail, phone, creator, born);
 		return AuthContainer.authenticate(mail, pass);
 	}
-
-	@ApiMethod(name = "updateUser", httpMethod = "POST", path = "updateuser")
-	public Text update(UserDeploy deploy) {
-		UserEntity user = AuthContainer.getUser(deploy.token);
-		if (user == null) {
-			return new Text("Invalid login");
-		}
-		if (deploy.hasNull()) {
-			return new Text("One of fields are not filled");
-		}
-		if (!deploy.mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
-			return new Text("Mail is invalid");
-		}
-		if (!deploy.phone.matches("[+]{0,1}[0-9]{10,12}")) {
-			return new Text("Phone is invalid");
-		}
-		user.setName(deploy.name);
-		user.setSurname(deploy.surname);
-		user.setPhone(deploy.phone);
-		user.setMail(deploy.mail);
-		user.setBorn(new Date());
-		user.setPassportActive(new Date());
-		String[] keys = deploy.keys.split("ף");
-		String[] values = deploy.values.split("ף");
-		if (values.length != keys.length) {
-			return new Text("Err in keys-values");
-		}
-		for (int i = 0; i < keys.length; i++) {
-			user.putData(keys[i], values[i]);
-		}
-		UserEntity u2 = UserDAO.create(user);
-		return new Text("Resp:" + u2.toString());
-
+	
+	private UserDeploy entityProxy (UserEntity userEntity) {
+		return null;
+	}
+	
+	private UserEntity deployProxy (UserDeploy deploy) {
+		return null;
+	}
+	
+	@ApiMethod (name = "updateUser", httpMethod = "POST", path = "updateuser")
+	public Text updateUser (UserDeploy deploy) {
+		return null;
 	}
 
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
 	public Text create(UserDeploy deploy) {
-		UserEntity user = new UserEntity();
-		UserEntity creator = AuthContainer.getUser(deploy.token);
+		ClientEntity user = new ClientEntity();
+		Employee creator = AuthContainer.getEmp(deploy.token);
 		if (creator == null || AccessLogic.canCreateUser(creator) == false) {
 			return new Text("Invalid login");
 		}
@@ -165,16 +142,14 @@ public class UserAPI {
 		if (!deploy.phone.matches("[+]{0,1}[0-9]{10,12}")) {
 			return new Text("Phone is invalid");
 		}
-		user.setPermission(new Permission());
 		user.setCreator(creator);
 		user.setName(deploy.name);
 		user.setSurname(deploy.surname);
+		user.setFathersname(deploy.fathersname);
 		String pass = UUID.randomUUID().toString().substring(0, 8);
 		user.setPass(pass);
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
-		user.setBorn(new Date());
-		user.setPassportActive(new Date());
 		String[] keys = deploy.keys.split("ף");
 		String[] values = deploy.values.split("ף");
 		if (values.length != keys.length) {
@@ -267,36 +242,36 @@ public class UserAPI {
 		return o;
 	}
 
-	@ApiMethod(name = "oldUpdateUser", httpMethod = "GET", path = "oldupdate")
-	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("surname") @Nullable String surname,
-			@Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone,
-			@Named("token") String token) {
-		UserEntity u = AuthContainer.getUser(token);
-		if (u == null) {
-			return null;
-		}
-		if (mail != null && !mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
-			mail = null;
-		}
-		if (phone != null && !phone.matches("[+]{0,1}[0-9]{10,12}")) {
-			phone = null;
-		}
-		if (name != null) {
-			u.setName(name);
-		}
-		if (surname != null) {
-			u.setSurname(surname);
-		}
-		if (phone != null) {
-			u.setPhone(phone);
-		}
-		if (mail != null) {
-			u.setMail(mail);
-		}
-		UserDAO.update(u);
-		u.setPass(null);
-		return u;
-	}
+//	@ApiMethod(name = "oldUpdateUser", httpMethod = "GET", path = "oldupdate")
+//	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("surname") @Nullable String surname,
+//			@Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone,
+//			@Named("token") String token) {
+//		UserEntity u = AuthContainer.getUser(token);
+//		if (u == null) {
+//			return null;
+//		}
+//		if (mail != null && !mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
+//			mail = null;
+//		}
+//		if (phone != null && !phone.matches("[+]{0,1}[0-9]{10,12}")) {
+//			phone = null;
+//		}
+//		if (name != null) {
+//			u.setName(name);
+//		}
+//		if (surname != null) {
+//			u.setSurname(surname);
+//		}
+//		if (phone != null) {
+//			u.setPhone(phone);
+//		}
+//		if (mail != null) {
+//			u.setMail(mail);
+//		}
+//		UserDAO.update(u);
+//		u.setPass(null);
+//		return u;
+//	}
 
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
 	public Text changePass(@Named("token") String token, @Named("exist") String exist, @Named("new") String newpass) {
@@ -331,31 +306,37 @@ public class UserAPI {
 		UserEntity u = UserDAO.get(target);
 		if (u == null) {
 			return u;
-		}
-		u.setAccessLevel(access);
-		UserDAO.update(u);
-		u.setPass(null);
-		return u;
-	}
-
-	@ApiMethod(name = "allowCountry", httpMethod = "GET", path = "allowCountry")
-	public UserEntity allowCountry(@Named("token") String token, @Named("countryid") Long countryid,
-			@Named("userid") String userid) {
-		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
+		} else if (u instanceof Employee == false) {
 			return null;
 		}
-		Country c = GeoDAO.getCountryById(countryid);
-		UserEntity user = UserDAO.get(userid);
-		user.getPermission().addCountry(c);
-		UserDAO.update(user);
-		user.wipeSecData();
-		return user;
+		Employee emp = (Employee) u;
+		emp.setAccessLevel(access);
+		UserDAO.update(emp);
+		emp.setPass(null);
+		return emp;
 	}
+
+	// TODO FUUUUUUCK REPAIR DAMN
+//	@ApiMethod(name = "allowCountry", httpMethod = "GET", path = "allowCountry")
+//	public UserEntity allowCountry(@Named("token") String token, @Named("countryid") Long countryid,
+//			@Named("userid") String userid) {
+//		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
+//			return null;
+//		}
+//		Country c = GeoDAO.getCountryById(countryid);
+//		UserEntity user = UserDAO.get(userid);
+//		user.getEmpData().getPermission().addCountry(c);
+//		UserDAO.update(user);
+//		user.wipeSecData();
+//		return user;
+//	}
 
 	interface Dummy {
 	}
 
 	public static class UserDeploy {
+		public String fathersname;
+
 		public UserDeploy() {
 		}
 
@@ -448,5 +429,12 @@ public class UserAPI {
 			this.values = values;
 		}
 
+		public String getFathersname() {
+			return fathersname;
+		}
+
+		public void setFathersname(String fathersname) {
+			this.fathersname = fathersname;
+		}
 	}
 }

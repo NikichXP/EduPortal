@@ -4,8 +4,12 @@ import java.util.*;
 
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
+import lombok.*;
 
 @Entity
+@ToString(callSuper = true)
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Order extends AbstractEntity {
 	private static final long serialVersionUID = -8893348970030751098L;
 	@Index
@@ -19,7 +23,7 @@ public class Order extends AbstractEntity {
 	private Date start;
 	private Date end;
 	@Index
-	private Key<UserEntity> createdBy;
+	private Key<Employee> createdBy;
 	private String comment;
 	private ArrayList<SavedFile> files;
 	private String currency;
@@ -60,27 +64,11 @@ public class Order extends AbstractEntity {
 		return Ref.create(product).get();
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public double getPaid() {
-		return paid;
-	}
-
-	public Date getStart() {
-		return start;
-	}
-
-	public Date getEnd() {
-		return end;
-	}
-
 	public long getCreatedBy() {
 		return createdBy.getId();
 	}
 
-	public UserEntity createdByEntity() {
+	public Employee createdByEntity() {
 		return Ref.create(createdBy).get();
 	}
 
@@ -111,23 +99,7 @@ public class Order extends AbstractEntity {
 		donePaid = false;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public void setEnd(Date end) {
-		this.end = end;
-	}
-
-	public void setCreatedBy(UserEntity user) {
+	public void setCreatedBy(Employee user) {
 		this.createdBy = Ref.create(user).getKey();
 		this.creatorName = user.getSurname() + " " + user.getName();
 	}
@@ -139,65 +111,14 @@ public class Order extends AbstractEntity {
 		return false;
 	}
 
-	public void setDonePaid(boolean donePaid) {
-		this.donePaid = donePaid;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	
-	public void addFile (SavedFile file) {
-		this.files.add(file);
-	}
-
-	public ArrayList<SavedFile> getFiles() {
-		return files;
-	}
-
-	public void setFiles(ArrayList<SavedFile> files) {
-		this.files = files;
-	}
-
-	@Override
-	public String toString() {
-		return "Order [user=" + user + ", product=" + product + ", price=" + price + ", paid=" + paid + ", donePaid="
-				+ donePaid + ", start=" + start + ", end=" + end + ", createdBy=" + createdBy + ", comment=" + comment
-				+ "]";
-	}
-
 	// <!--- For frontend-only! ---!>
 
 	private String clientName;
 	private String productName;
 	private String creatorName;
 
-	public String getClientName() {
-		return clientName;
-	}
-
-	public String getProductName() {
-		return productName;
-	}
-
-	public String getCreatorName() {
-		return creatorName;
-	}
-
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-	}
-
-	public void setProductName(String orderName) {
-		this.productName = orderName;
-	}
-
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
+	public void addFile(SavedFile file) {
+		this.files.add(file);
 	}
 
 }

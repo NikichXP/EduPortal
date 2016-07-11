@@ -5,7 +5,12 @@ import java.util.Random;
 
 import com.googlecode.objectify.annotation.*;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Entity
+@Data
+@EqualsAndHashCode
 public abstract class AbstractEntity implements Serializable {
 	
 	/**
@@ -18,13 +23,13 @@ public abstract class AbstractEntity implements Serializable {
 	/**
 	 * Max ID value, use 0 to unlimit it
 	 */
-	protected final int maxIdValue = Integer.MAX_VALUE;
+	protected final long maxIdValue = Integer.MAX_VALUE;
 
 	@SuppressWarnings("unused")
 	public AbstractEntity () {
 		if (maxIdValue != 0) {
 			do {
-				id = new Random().nextInt(maxIdValue);
+				id = new Random().nextInt((int)maxIdValue);
 			} while (id <= 0);
 		} else {
 			do {
@@ -33,19 +38,11 @@ public abstract class AbstractEntity implements Serializable {
 		}
 	}
 	
-	public long getId() {
-		return id;
-	}
-	
 	public String getIdString () {
 		return Long.toString(id);
 	}
 	
 	public String getIdHexString () {
 		return Long.toHexString(id);
-	}
-
-	public void setId (long id) {
-		this.id = id;
 	}
 }

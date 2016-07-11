@@ -17,7 +17,7 @@
 	</form>
 	<a href = "admin.jsp">Go back</a>
 
-	<%
+	<!--% TODO CreateAgent module 
 		if (request.getParameter("name") == null || request.getParameter("mail") == null) {
 			out.print("</body>	</html>");
 			return;
@@ -34,6 +34,6 @@
 	u.setAccessLevel(AccessSettings.ADMIN_LEVEL);
 	UserDAO.createCorp(corp);
 	UserDAO.update(u);
-	%>
+	% -->
 </body>
 </html>

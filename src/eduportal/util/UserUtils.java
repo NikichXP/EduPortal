@@ -37,10 +37,10 @@ public class UserUtils {
 	
 	
 	
-	public UserEntity setModerator (UserEntity u) {
-		u.setAccessLevel(AccessSettings.MODERATOR_LEVEL);
-		return u;
-	}
+//	public UserEntity setModerator (UserEntity u) {
+//		u.setAccessLevel(AccessSettings.MODERATOR_LEVEL);
+//		return u;
+//	}
 	
 	/**
 	 * Here - other methods - adding country etc

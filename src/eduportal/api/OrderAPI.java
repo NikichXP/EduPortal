@@ -58,7 +58,7 @@ public class OrderAPI {
 			@Named("token") String token, @Named("paid") @Nullable Double paid, @Named("year") Integer year,
 			@Named("comment") @Nullable String comment) { // Token to identify
 															// creator
-		UserEntity admin = AuthContainer.getUser(token);
+		Employee admin = AuthContainer.getEmp(token);
 		if (admin == null) {
 			return null;
 		}
@@ -72,7 +72,7 @@ public class OrderAPI {
 		o.setCreatedBy(admin);
 		o.setUser(UserDAO.get(clientid));
 		o.setComment(comment);
-		//TODO year
+		// TODO year
 		o.setStart(new Date());
 		o.setEnd(new Date());
 		OrderDAO.saveOrder(o);
@@ -119,8 +119,8 @@ public class OrderAPI {
 	public List<Order> getAllOrders(@Named("token") String token) {
 		UserEntity u = AuthContainer.getUser(token);
 		return ((u == null) ? null
-				: (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? OrderDAO.getCreatedOrdersByUser(u)
-						: OrderDAO.getSelfOrdersByUser(u));
+				: (u instanceof Employee && ((Employee) u).getAccessLevel() >= AccessSettings.MODERATOR_LEVEL)
+						? OrderDAO.getCreatedOrdersByUser(u) : OrderDAO.getSelfOrdersByUser(u));
 	}
 
 	@ApiMethod(name = "getEveryOrders", path = "everyOrders", httpMethod = "GET")

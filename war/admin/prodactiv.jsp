@@ -27,7 +27,7 @@
 				token = c.getValue();
 			}
 		}
-		if (user == null || user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+		if (user == null || ((Employee)user).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			out.print("</body></html>");
 			return;
 		}

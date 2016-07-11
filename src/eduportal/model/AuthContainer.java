@@ -55,7 +55,7 @@ public class AuthContainer {
 		value.setToken(key);
 		sessions.put(key, value);
 		cache.put(key, value, Expiration.byDeltaSeconds(3600*24)); //1 day
-		ofy().save().entity(value.setToken(key));
+		ofy().save().entity(value);
 	}
 
 	public static void remove(String token) {
@@ -79,9 +79,10 @@ public class AuthContainer {
 			AuthToken ret = new AuthToken();
 			ret.setSessionId(token);
 			ret.setTimeoutTimestamp(session.getTimeout());
-			ret.putAccessLevelInt(user.getAccessLevel());
-			if (user.getAccessLevel() > 10) {
-				if (user.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+			ret.putAccessLevelInt(session.getAccessLevel());
+			//TODO Re-do this
+			if (session.getAccessLevel() > 10) {
+				if (((Employee)user).getCorporation().equals(AccessSettings.OWNERCORP_NAME) == false) {
 					ret.putAccessLevelInt(-70);
 				}
 			}
@@ -124,6 +125,15 @@ public class AuthContainer {
 					remove(token);
 				}
 			}
+			return null;
+		}
+	}
+	
+	public static Employee getEmp (String token) {
+		UserEntity user = getUser(token);
+		if (user instanceof Employee) {
+			return (Employee) user;
+		} else {
 			return null;
 		}
 	}
@@ -171,7 +181,7 @@ public class AuthContainer {
 				ret.add("Session: " + s + "  ==  " + sessions.get(s).user());
 				ret.add("Token_t: " + s + "  ==  "
 						+ (((double) sessions.get(s).getTimeout() - System.currentTimeMillis()) / (1000 * 3600)));
-				ret.add("Access : " + s + "  ==  " + sessions.get(s).user().getAccessLevel());
+				ret.add("Access : " + s + "  ==  " + sessions.get(s).user().getClass().getName());
 			}
 			return ret;
 		}

@@ -80,7 +80,7 @@ public class FileProcessorServlet extends HttpServlet {
 				targetUser.addFile(file);
 				UserDAO.update(targetUser);
 			}
-			if (user.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) {
+			if (user instanceof Employee) {
 				res.sendRedirect("/admin/moderator.jsp");
 			} else {
 				res.sendRedirect("/workspace.html");

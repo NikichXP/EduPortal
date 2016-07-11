@@ -11,18 +11,16 @@ public class UserDAO {
 
 	private static String[] credentialVariables = { "mail", "phone" };
 
-	private static List<Corporation> corpList = ofy().load().type(Corporation.class).list();
-
 	public static List<UserEntity> listAll() {
 		return ofy().load().type(UserEntity.class).list();
 	}
 
-	public static List<UserEntity> getCorpEmployees(Corporation corp) {
-		return ofy().load().type(UserEntity.class).filter("corporation", corp.getId()).list();
+	public static List<UserEntity> getCorpEmployees(String corp) {
+		return ofy().load().type(UserEntity.class).filter("corporation", corp).list();
 	}
 
 	public static UserEntity create(String passport, String pass, String name, String surname, String mail,
-			String phone, UserEntity creator, Date born) {
+			String phone, Employee creator, Date born) {
 		if (ofy().load().type(UserEntity.class).filter("mail == ", mail).list().isEmpty() == false) {
 			return null;
 		}
@@ -34,20 +32,14 @@ public class UserDAO {
 			passport = ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A')) + "" + ((char) (r.nextInt(('Z' - 'A' + 1)) + 'A'))
 					+ (r.nextInt(900_000) + 100_000);
 		}
-		UserEntity u = new UserEntity(passport, name, surname, mail, pass, phone, born);
+		ClientEntity u = new ClientEntity(passport, name, surname, mail, pass, phone, born);
 		u.setCreator(creator);
-
 		ofy().save().entity(u);
 		return u;
 	}
 
-	public static List<Corporation> getCorpList() {
-		return corpList;
-	}
-
-	public static List<UserEntity> getUnactiveClientsByCorp(UserEntity user, boolean active) {
-		return ofy().load().type(UserEntity.class).filter("corporation", user.getCorporation())
-				.filter("isActive", active).list();
+	public static List<UserEntity> getUnactiveClients(boolean active) {
+		return ofy().load().type(UserEntity.class).filter("isActive", active).list();
 	}
 
 	/**
@@ -128,16 +120,11 @@ public class UserDAO {
 	}
 
 	public static List<UserEntity> getClients(UserEntity u) {
-		return ofy().load().type(UserEntity.class).filter("creator", Ref.create(u).getKey()).list();
+		return ofy().load().type(UserEntity.class).filter("creator", u.getId()).list();
 	}
 
-	public static List<UserEntity> searchUsers(String phone, String name, String mail, Corporation corp) {
-		return userFilter(ofy().load().type(UserEntity.class).filter("corpId", corp.getId()), phone, name, mail);
-	}
-
-	public static List<UserEntity> searchUsers(String phone, String name, String mail, long corp) {
-		System.out.println(corp);
-		return userFilter(ofy().load().type(UserEntity.class).filter("corpId", corp), phone, name, mail);
+	public static List<UserEntity> searchUsers(String phone, String name, String mail, String corp) {
+		return userFilter(ofy().load().type(UserEntity.class), phone, name, mail);
 	}
 
 	public static List<UserEntity> searchUsers(String phone, String name, String mail) {
@@ -178,37 +165,4 @@ public class UserDAO {
 		return ofy().load().type(UserEntity.class).filter("mail", mail).first().now();
 	}
 
-	public static void createCorp(Corporation... corp) {
-		ofy().save().entities(corp);
-		for (Corporation c : corp) {
-			corpList.add(c);
-		}
-	}
-
-	public static Corporation getCorp(long id) {
-		for (Corporation c : corpList) {
-			if (c.getId() == id) {
-				return c;
-			}
-		}
-		return null;
-	}
-
-	public static Corporation getCorp(String name) {
-		for (Corporation c : corpList) {
-			if (c.getName().equals(name)) {
-				return c;
-			}
-		}
-		return null;
-	}
-
-	public static Corporation getOwnerCorp() {
-		for (Corporation c : corpList) {
-			if (c.isOwnerCorp() == true) {
-				return c;
-			}
-		}
-		return null;
-	}
 }

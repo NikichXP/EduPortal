@@ -22,7 +22,7 @@
 		}
 		if (user == null) {
 			return;
-		} else if (user.getAccessLevel() < 10 || user.getCorporation() != AccessSettings.OWNERCORP().getId()) {
+		} else if (((Employee)user).getAccessLevel() < 10 || ((Employee)user).getCorporation().equals(AccessSettings.OWNERCORP_NAME)) {
 			return;
 		}
 		String id = request.getParameter("id");

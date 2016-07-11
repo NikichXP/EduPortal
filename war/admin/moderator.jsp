@@ -29,7 +29,7 @@
 			}
 			user = AuthContainer.getUser(token);
 			List<Product> products = ProductDAO.getAll();
-			List<UserEntity> users = UserDAO.getUnactiveClientsByCorp(user, false);
+			List<UserEntity> users = UserDAO.getUnactiveClients(false);
 		%>
 		
 		<div class="div-form-button">

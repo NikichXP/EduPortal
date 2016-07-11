@@ -15,11 +15,9 @@ import eduportal.model.*;
 public class TestAPI {
 
 	@ApiMethod(path = "test", httpMethod = "GET")
-	public ArrayList<Object> test(HttpServletRequest req) {
+	public List<Object> test() {
 		ArrayList<Object> ret = new ArrayList<>();
-		
-		MailSender.sendAccountCreation("nikichx2@gmail.com", "123", "1авы1");
-		
+		ret.add(ofy().load().type(UserEntity.class).filter("creator", "a7179e66").list());
 		return ret;
 	}
 
@@ -52,29 +50,21 @@ public class TestAPI {
 				ofy().delete().entity(u).now();
 			}
 		}
-		Corporation corp = new Corporation("Vedi Tour Group");
-		corp.setOwnerCorp(true);
-		UserEntity[] admins = {
-				new UserEntity("AA555555", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
+		Employee[] admins = {
+				new Employee("AA555555", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
 						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new UserEntity("SQ512312", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
+				new Employee("SQ512312", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus", "+123456789016",
+				new Employee("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus", "+123456789016",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("VW155555", "User", "User", "user@corp.com", "user", "+123456789013", new Date())
+				new Employee("VW155555", "User", "User", "user@corp.com", "user", "+123456789013", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new UserEntity("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
+				new Employee("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
-		corp.setOwner(admins[0]);
-		UserDAO.createCorp(corp);
-		admins[0].defineCorporation(corp);
-		ofy().save().entity(corp).now();
 		for (UserEntity user : admins) {
-			user.setPermission(new Permission());
-			user.defineCorporation(corp);
-			user.setCreator(admins[0]);
+			user.setCreator(admins[0].getId());
 		}
-		UserEntity[] clients;
+		ClientEntity[] clients;
 		int dbsize;
 		if (size == null) {
 			size = "norm";
@@ -99,32 +89,32 @@ public class TestAPI {
 			dbsize = 20;
 			break;
 		}
-		if (usersize != null) {
-			clients = new UserEntity[usersize];
-		} else {
-			clients = new UserEntity[100];
+		if (usersize == null) {
+			usersize = 100;
 		}
+		clients = new ClientEntity[usersize];
 		Order o[] = new Order[clients.length];
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
-			clients[i] = new UserEntity();
-			clients[i].defineCorporation(corp);
+			clients[i] = new ClientEntity();
 			clients[i].setName(clientName[2 * i]);
 			clients[i].setSurname(clientName[2 * i + 1]);
 			clients[i].setPass("pass" + i);
 			clients[i].setMail("user" + i + "@corp.com");
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
-			clients[i].setBorn(new Date(System.currentTimeMillis() - (3600L * 24 * 365 * 20)));
-			clients[i].setCreator(admins[i % admins.length]);
+			clients[i].setCreator(admins[i % admins.length].getId());
+			clients[i].setCurator(admins[i % admins.length]);
 			clients[i].setActive(Math.random() > 0.5);
+			clients[i].setBirthDate(
+					new Date((long) (System.currentTimeMillis() - (16 + Math.random() * 10) * 3600 * 24 * 365)));
 			clients[i].addData("Адрес Skype", "skuser" + i);
-			clients[i].addData("Год окончания обучения", (2010 + (int)(Math.random()*7)) + "");
+			clients[i].addData("Год окончания обучения", (2010 + (int) (Math.random() * 7)) + "");
 		}
 		if (prior != null) {
 			if (prior < admins.length) {
 				for (UserEntity u : clients) {
 					if (Math.random() > 0.33) {
-						u.setCreator(admins[prior]);
+						u.setCreator(admins[prior].getId());
 					}
 				}
 			}
@@ -175,7 +165,7 @@ public class TestAPI {
 	public List<String> getAll() {
 		List<String> ret = new ArrayList<>();
 		for (Class<?> clazz : UserAPI.objectifiedClasses) {
-			for (Object o : ofy().load().kind(clazz.getSimpleName()).list()) {
+			for (Object o : ofy().load().type(clazz).list()) {
 				ret.add(o.toString());
 			}
 		}

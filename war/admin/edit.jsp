@@ -13,7 +13,7 @@
 </head>
 <body>
 	<%
-		Corporation corp = UserDAO.getCorp(Long.parseLong(request.getParameter("corp")));
+		Corporation corp = UserDAO.getCorp(request.getParameter("corp"));
 	%>
 	<h1>
 		<%=corp.getName()%>
@@ -26,7 +26,7 @@
 			<%
 				String ownerid = corp.getOwner().getId();
 				List<UserEntity> users = ObjectifyService.ofy().load().type(UserEntity.class).list();
-				for (UserEntity user : UserDAO.getCorpEmployees(corp)) {
+				for (UserEntity user : UserDAO.getCorpEmployees(corp.getName())) {
 					out.println("<option " + ((user.getId() == ownerid) ? " selected " : "") + " value=\"" + user.getId()
 							+ "\">" + user.getName() + " " + user.getSurname() + "</option>");
 

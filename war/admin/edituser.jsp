@@ -26,7 +26,7 @@
 			}
 		}
 		UserEntity user = UserDAO.get(request.getParameter("id"));
-		if (admin.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+		if (((Employee)user).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			return;
 		}
 		if (user == null) {
@@ -65,11 +65,6 @@
 						<td>Номер телефона:</td>
 						<td><input type="text" name="phone"
 							value="<%=user.getPhone()%>"></td>
-					</tr>
-					<tr>
-						<td>Паспорт:</td>
-						<td><input type="text" name="паспорт"
-							value="<%=user.getPassport()%>"></td>
 					</tr>
 					<%
 						for (String param : UserEntity.userParams) {

@@ -24,11 +24,11 @@
 			<a href=/admin/moderator.jsp>Назад на панель управления</a>
 		</div>
 		<%
-			UserEntity user = null;
+			Employee user = null;
 			String token = null;
 			for (Cookie c : request.getCookies()) {
 				if (c.getName().equals("sesToken")) {
-					user = AuthContainer.getUser(c.getValue());
+					user = AuthContainer.getEmp(c.getValue());
 					token = c.getValue();
 				}
 			}
@@ -55,10 +55,9 @@
 				%>
 				<tr>
 					<td><%=comp.getName()%></td>
-					<td><%=comp.getId()%></td>
 					<td><%=comp.getOwner().getName() + " " + comp.getOwner().getSurname()%></td>
 					<td><%=comp.getOwner().getMail()%></td>
-					<td><a href="edit.jsp?corp=<%=comp.getId()%>&token=<%=token%>">Edit</a></td>
+					<td><a href="edit.jsp?corp=<%=comp.getName()%>&token=<%=token%>">Edit</a></td>
 				</tr>
 				<%
 					}
@@ -91,7 +90,7 @@
 					<td>Редактирование</td>
 				</tr>
 				<%
-					List<UserEntity> users = UserDAO.getCorpEmployees(user.corporationEntity());
+					List<UserEntity> users = UserDAO.getCorpEmployees(user.getCorporation());
 					UserEntity tmp;
 					int minIndex;
 					for (int i = 0; i < users.size(); i++) {
@@ -109,7 +108,7 @@
 					}
 					for (UserEntity u : users) {
 						if (request.getParameter("all") == null) {
-							if (u.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+							if (((Employee)u).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 								continue;
 							}
 						}
@@ -123,7 +122,7 @@
 					<td>
 						<%
 							sb = new StringBuilder();
-								for (Country c : u.getPermission().countryList()) {
+								for (Country c : ((Employee)u).getCountryList()) {
 									sb.append(c.getName() + ", ");
 								}
 								out.println(sb.toString());
@@ -131,8 +130,8 @@
 					</td>
 					<td>
 						<%
-							out.print((u.getAccessLevel() > 1000) ? "Администратор"
-										: (u.getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? "Модератор" : "Клиент");
+							out.print((((Employee)u).getAccessLevel() > 1000) ? "Администратор"
+										: (((Employee)u).getAccessLevel() >= AccessSettings.MODERATOR_LEVEL) ? "Модератор" : "Клиент");
 						%>
 					</td>
 					<td><a href="edituser.jsp?id=<%=u.getId()%>">Edit</a></td>
