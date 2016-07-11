@@ -40,33 +40,7 @@
 			if (AccessLogic.canAccessAdminPanel(user)) {
 		%>
 		<h1>Компании</h1>
-		<div class='table-div'>
-			<br>
-			<table class='table-list'>
-				<tr class='table-list-header'>
-					<td>Name</td>
-					<td>ID</td>
-					<td>Owner</td>
-					<td>Mail</td>
-					<td>Editor</td>
-				</tr>
-				<%
-					for (Corporation comp : UserDAO.getCorpList()) {
-				%>
-				<tr>
-					<td><%=comp.getName()%></td>
-					<td><%=comp.getOwner().getName() + " " + comp.getOwner().getSurname()%></td>
-					<td><%=comp.getOwner().getMail()%></td>
-					<td><a href="edit.jsp?corp=<%=comp.getName()%>&token=<%=token%>">Edit</a></td>
-				</tr>
-				<%
-					}
-				%>
-			</table>
-		</div>
-		<div class="div-form-button">
-			<a href="createagent.jsp">Добавить новую компанию</a>
-		</div>
+		Данный функционал временно изменен и недоступен.
 		<%
 			}
 		%>
