@@ -141,10 +141,13 @@
 		var pasdate = $('#field-req-6').html();
 
 		var clData = new FormData();    
+		if (getCookie('clientID').length) clData.append('id', getCookie('clientID'));
+
 		clData.append('token', getCookie('sesToken'));
 		clData.append('mail', $('#field-req-4').val());
 		clData.append('name', $('#field-req-1').val());
 		clData.append('surname', $('#field-req-2').val());
+		clData.append('fathersname', $('#field-req-2-1').val());
 		clData.append('phone', $('#field-req-3').val());
 		clData.append('born', borndate);
 		clData.append('passportActive', pasdate);
@@ -190,11 +193,11 @@
 			
 		$.ajax({
 			type: 'POST',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/updateuser',
+			url: 'https://eduportal-1277.appspot.com/_ah/api/user/v1/updateuser',
 			data: clData,
 			processData: false,
 			contentType: false,
-			success: window.close(),	
+			//success: window.close(),	
 		});	
 
 	});
