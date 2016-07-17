@@ -109,18 +109,21 @@
 			$('#field-req-2-1').html(resData.fathersname);
 			$('#field-req-3').html(resData.phone);
 			$('#field-req-4').html(resData.mail);
+			
+			var bdate = resData.birthDate.split('-');
 
-			var bdate = new Date(resData.born);	
-			var dd1 = bdate.getDate();
-		    var mm1 = bdate.getMonth() + 1;   
-		 	var yyyy1 = bdate.getFullYear();
-			$('#field-req-5').html(dd1 + "." + mm1 + "." + yyyy1);
+			$('#field-req-5').html(bdate[2] + "-" + bdate[1] + "-" + bdate[0]);
 
-			var pdate = new Date(resData.passportActive);	
-			var dd2 = pdate.getDate();
-		    var mm2 = pdate.getMonth() + 1;   
-		 	var yyyy2 = pdate.getFullYear();
-			$('#field-req-6').html(dd2 + "." + mm2 + "." + yyyy2);
+			// var dd1 = bdate.getDate();
+		 //    var mm1 = bdate.getMonth() + 1;   
+		 // 	var yyyy1 = bdate.getFullYear();
+			// $('#field-req-5').html(dd1 + "." + mm1 + "." + yyyy1);
+
+			// var pdate = new Date(resData.passportActive);	
+			// var dd2 = pdate.getDate();
+		 //    var mm2 = pdate.getMonth() + 1;   
+		 // 	var yyyy2 = pdate.getFullYear();
+			// $('#field-req-6').html(dd2 + "." + mm2 + "." + yyyy2);
 
 			var k = 0;
 			for (var i = 0; i < resData.simpleDataWithNull.length; i++)
@@ -206,6 +209,7 @@
 		event.preventDefault();
 	});
 
+	if (getCookie("clientID")) if (getCookie("accessLevel") == "ADMIN") $('#client-menu-del').css('display', 'block');
 	
 });
 $(window).unload(function() {

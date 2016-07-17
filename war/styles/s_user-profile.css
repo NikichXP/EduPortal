@@ -64,5 +64,9 @@ body {
 	text-align: right;
 }
 
+#client-menu-del {
+	width: 300px;
+	display: none;
+}
 
 

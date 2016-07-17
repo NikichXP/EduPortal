@@ -63,8 +63,8 @@
 	//client creation menu
 	$('#client-menu-send').on('click', function() {
 
-		var borndate = $('#select-client-day').find(":selected").val() + "." + $('#select-client-month').find(":selected").val() + "." + $('#select-client-year').find(":selected").val();
-		var pasdate = $('#select-pas-day').find(":selected").val() + "." + $('#select-pas-month').find(":selected").val() + "." + $('#select-pas-year').find(":selected").val();
+		var borndate = $('#select-client-year').find(":selected").val() + "-" + $('#select-client-month').find(":selected").val() + "-" + $('#select-client-day').find(":selected").val();
+		var pasdate = $('#select-pas-day').find(":selected").val() + "-" + $('#select-pas-month').find(":selected").val() + "-" + $('#select-pas-year').find(":selected").val();
 
 		var clData = new FormData();    
 		clData.append('token', getCookie('sesToken'));
@@ -91,12 +91,23 @@
 		var j = 0;
 		for (var i = 0; i < countOfFields; i++) 
 		{
-			if ($('textarea#field-' + i).val().length > 0)
+			if (i != 4)
 			{
-				key[j] = $('input#select-' + i).val();
-				value[j] = $('textarea#field-' + i).val();
-				j++;
+				if ($('textarea#field-' + i).val().length > 0)
+				{
+					key[j] = $('input#select-' + i).val();
+					value[j] = $('textarea#field-' + i).val();
+					j++;
+				}
 			}
+				
+			else 
+				{
+					key[j] = $('input#select-' + i).val();
+					value[j] = pasdate;
+					j++;
+				}
+
 		}
 
 		var keys = '';
@@ -121,7 +132,7 @@
 			data: clData,
 			processData: false,
 			contentType: false,
-			success: window.close(),	
+			//success: window.close(),	
 		});	
 
 	});
