@@ -1,19 +1,17 @@
 package eduportal.api;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
-
-import javax.annotation.Nullable;
-
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Text;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.impl.Keys;
-
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
 import eduportal.util.*;
+import lombok.Data;
 
 @Api(name = "user", version = "v1", title = "User API")
 public class UserAPI {
@@ -36,7 +34,7 @@ public class UserAPI {
 
 	@ApiMethod(path = "optvalues", httpMethod = "GET")
 	public String[][] getOptValues(@Named("token") String token, @Named("user") @Nullable String userid) {
-		UserEntity admin = AuthContainer.getUser(token);
+		Employee admin = AuthContainer.getEmp(token);
 		UserEntity user;
 		if (userid != null) {
 			user = UserDAO.get(userid);
@@ -113,17 +111,39 @@ public class UserAPI {
 		return AuthContainer.authenticate(mail, pass);
 	}
 	
-	private UserDeploy entityProxy (UserEntity userEntity) {
-		return null;
-	}
-	
-	private UserEntity deployProxy (UserDeploy deploy) {
-		return null;
-	}
-	
 	@ApiMethod (name = "updateUser", httpMethod = "POST", path = "updateuser")
-	public Text updateUser (UserDeploy deploy) {
-		return null;
+	public Text updateUser (UserDeploy deploy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException { //cause fuck exception handling
+		UserEntity user = AuthContainer.getUser(deploy.token);
+		if (deploy.id == null) {
+			deploy.id = user.getId();
+		}
+		UserEntity target = UserDAO.get(deploy.id);
+		if (target.isFinal()) {
+			return new Text ("Profile is final");
+		}
+		if (!AccessLogic.canEditUser(user, target)) {
+			return new Text ("Cannot edit user");
+		}
+		
+		//Reflection: brain warning [below]
+		
+		String name;
+		for (Method newMeth : deploy.getClass().getMethods()) {
+			name = newMeth.getName().substring(3);
+			for (Method oldMeth : target.getClass().getMethods()) {
+				if (oldMeth.getName().substring(3).equals(name)) {
+					Object newData = newMeth.invoke(deploy);
+					if (newData == null || newData.toString().length()<1) {
+						continue;
+					}
+					if (newData.equals(oldMeth.invoke(target)) == false) {
+						target.getClass().getMethod("set"+name).invoke(target, newData);
+					}
+				}
+			}
+		}
+		
+		return new Text (target.toString());
 	}
 
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
@@ -142,11 +162,15 @@ public class UserAPI {
 		if (!deploy.phone.matches("[+]{0,1}[0-9]{10,12}")) {
 			return new Text("Phone is invalid");
 		}
+		if (UserDAO.getUserByMail(deploy.mail) != null) {
+			return new Text ("This mail is already in use");
+		}
 		user.setCreator(creator);
 		user.setName(deploy.name);
 		user.setSurname(deploy.surname);
 		user.setFathersname(deploy.fathersname);
 		String pass = UUID.randomUUID().toString().substring(0, 8);
+		user.setBirthDate(deploy.born);
 		user.setPass(pass);
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
@@ -242,37 +266,6 @@ public class UserAPI {
 		return o;
 	}
 
-//	@ApiMethod(name = "oldUpdateUser", httpMethod = "GET", path = "oldupdate")
-//	public UserEntity updateUserInfo(@Named("name") @Nullable String name, @Named("surname") @Nullable String surname,
-//			@Named("mail") @Nullable String mail, @Named("phone") @Nullable String phone,
-//			@Named("token") String token) {
-//		UserEntity u = AuthContainer.getUser(token);
-//		if (u == null) {
-//			return null;
-//		}
-//		if (mail != null && !mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
-//			mail = null;
-//		}
-//		if (phone != null && !phone.matches("[+]{0,1}[0-9]{10,12}")) {
-//			phone = null;
-//		}
-//		if (name != null) {
-//			u.setName(name);
-//		}
-//		if (surname != null) {
-//			u.setSurname(surname);
-//		}
-//		if (phone != null) {
-//			u.setPhone(phone);
-//		}
-//		if (mail != null) {
-//			u.setMail(mail);
-//		}
-//		UserDAO.update(u);
-//		u.setPass(null);
-//		return u;
-//	}
-
 	@ApiMethod(name = "changePassword", httpMethod = "GET", path = "changepass")
 	public Text changePass(@Named("token") String token, @Named("exist") String exist, @Named("new") String newpass) {
 		UserEntity u = AuthContainer.getUser(token);
@@ -334,14 +327,16 @@ public class UserAPI {
 	interface Dummy {
 	}
 
-	public static class UserDeploy {
-		public String fathersname;
+	public @Data static class UserDeploy {
+		
 
 		public UserDeploy() {
 		}
 
+		private String id;
 		private String name;
 		private String surname;
+		private String fathersname;
 		private String phone;
 		private String mail;
 		private String token;
@@ -357,84 +352,5 @@ public class UserAPI {
 			return false;
 		}
 
-		public String getName() {
-			return name;
-		}
-
-		public String getSurname() {
-			return surname;
-		}
-
-		public String getPhone() {
-			return phone;
-		}
-
-		public String getMail() {
-			return mail;
-		}
-
-		public String getToken() {
-			return token;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public void setSurname(String surname) {
-			this.surname = surname;
-		}
-
-		public void setPhone(String phone) {
-			this.phone = phone;
-		}
-
-		public void setMail(String mail) {
-			this.mail = mail;
-		}
-
-		public void setToken(String token) {
-			this.token = token;
-		}
-
-		public String getBorn() {
-			return born;
-		}
-
-		public void setBorn(String born) {
-			this.born = born;
-		}
-
-		public String getPassportActive() {
-			return passportActive;
-		}
-
-		public void setPassportActive(String passportActive) {
-			this.passportActive = passportActive;
-		}
-
-		public String getKeys() {
-			return keys;
-		}
-
-		public void setKeys(String keys) {
-			this.keys = keys;
-		}
-
-		public String getValues() {
-			return values;
-		}
-
-		public void setValues(String values) {
-			this.values = values;
-		}
-
-		public String getFathersname() {
-			return fathersname;
-		}
-
-		public void setFathersname(String fathersname) {
-			this.fathersname = fathersname;
-		}
 	}
 }

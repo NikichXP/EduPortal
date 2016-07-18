@@ -1,6 +1,5 @@
 package eduportal.model;
 
-import eduportal.dao.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.entity.*;
 

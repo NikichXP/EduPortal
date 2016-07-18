@@ -13,17 +13,17 @@ public class AuthContainer {
 
 	private static HashMap<String, AuthSession> sessions = new HashMap<>();
 	private static AsyncMemcacheService cache;
-	
+
 	static {
 		cache = MemcacheServiceFactory.getAsyncMemcacheService();
 		cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	}
-	
+
 	private static Set<String> keySet() {
 		Set<String> ret = sessions.keySet();
 		return ret;
 	}
-	
+
 	private static AuthSession get(String key) {
 		if (sessions.get(key) != null) {
 			return sessions.get(key);
@@ -41,10 +41,11 @@ public class AuthContainer {
 		if (ret == null) {
 			return ret;
 		} else {
-			sessions.put(key, ret); //back-impl
+			sessions.put(key, ret); // back-impl
 		}
 		if (ret.getTimeout() < System.currentTimeMillis()) {
-			List<AuthSession> clearList = ofy().load().type(AuthSession.class).filter("timeout < ", System.currentTimeMillis()).list();
+			List<AuthSession> clearList = ofy().load().type(AuthSession.class)
+					.filter("timeout < ", System.currentTimeMillis()).list();
 			ofy().delete().entities(clearList);
 			ret = null;
 		}
@@ -54,7 +55,7 @@ public class AuthContainer {
 	private static void put(String key, AuthSession value) {
 		value.setToken(key);
 		sessions.put(key, value);
-		cache.put(key, value, Expiration.byDeltaSeconds(3600*24)); //1 day
+		cache.put(key, value, Expiration.byDeltaSeconds(3600 * 24)); // 1 day
 		ofy().save().entity(value);
 	}
 
@@ -68,26 +69,27 @@ public class AuthContainer {
 	}
 
 	public static AuthToken authenticate(String login, String pass) {
-		synchronized (sessions) {
-			UserEntity user = UserDAO.get(login, pass);
-			if (user == null) {
-				return new AuthToken().setAccessLevel("FAIL");
-			}
-			String token = UUID.randomUUID().toString();
-			AuthSession session = new AuthSession(user);
-			put(token, session);
-			AuthToken ret = new AuthToken();
-			ret.setSessionId(token);
-			ret.setTimeoutTimestamp(session.getTimeout());
-			ret.putAccessLevelInt(session.getAccessLevel());
-			//TODO Re-do this
-			if (session.getAccessLevel() > 10) {
-				if (((Employee)user).getCorporation().equals(AccessSettings.OWNERCORP_NAME) == false) {
-					ret.putAccessLevelInt(-70);
-				}
-			}
-			return ret;
+		UserEntity user = UserDAO.get(login, pass);
+		if (user == null) {
+			return new AuthToken().setAccessLevel("FAIL");
 		}
+		String token = UUID.randomUUID().toString();
+		AuthSession session = new AuthSession(user);
+		synchronized (sessions) {
+			put(token, session);
+		}
+		AuthToken ret = new AuthToken();
+		ret.setSessionId(token);
+		ret.setTimeoutTimestamp(session.getTimeout());
+		ret.putAccessLevelInt(session.getAccessLevel());
+		// TODO Re-do this
+		if (session.getAccessLevel() > 10) {
+			if (((Employee) user).getCorporation().equals(AccessSettings.OWNERCORP_NAME) == false) {
+				ret.putAccessLevelInt(-70);
+			}
+		}
+		return ret;
+
 	}
 
 	public static boolean checkReq(String token, int acclvl) {
@@ -128,8 +130,8 @@ public class AuthContainer {
 			return null;
 		}
 	}
-	
-	public static Employee getEmp (String token) {
+
+	public static Employee getEmp(String token) {
 		UserEntity user = getUser(token);
 		if (user instanceof Employee) {
 			return (Employee) user;

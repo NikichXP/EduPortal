@@ -26,13 +26,14 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	protected String surname;
 	@Index
 	protected String fathersname;
-	protected Date birthDate;
+	protected String birthDate;
 	protected ArrayList<SavedFile> files;
 	protected HashMap<String, String> userData;
 	@Index
 	protected String creator;
 	@Index
 	protected boolean isActive;
+	protected boolean isFinal;
 	
 	public final static String[] userParams = { "Test data", "Test1", "Test2" };
 
@@ -65,6 +66,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.surname = "Noname";
 		this.files = new ArrayList<>();
 		this.userData = new HashMap<>();
+		this.isFinal = false;
 	}
 
 	public UserEntity(String passport, String name, String surname, String mail, String pass, String phone, Date date) {
@@ -78,6 +80,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.pass = UserUtils.encodePass(pass);
 		this.files = new ArrayList<>();
 		this.userData = new HashMap<>();
+		this.isFinal = false;
 	}
 
 	public void addData(String key, String value) {
@@ -124,6 +127,17 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	
 	public Employee creatorEntity() {
 		return (Employee) UserDAO.get(creator);
+	}
+	
+	public String[][] getSimpleDataWithNull() {
+		String[][] ret = new String[userParams.length][2];
+		int i = 0;
+		for (String param : userParams) {
+			ret[i][0] = param;
+			ret[i][1] = userData.get(param);
+			i++;
+		}
+		return ret;
 	}
 
 	@Override

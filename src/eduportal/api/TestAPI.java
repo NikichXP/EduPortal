@@ -61,8 +61,11 @@ public class TestAPI {
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
 				new Employee("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
-		for (UserEntity user : admins) {
+		for (Employee user : admins) {
 			user.setCreator(admins[0].getId());
+			user.setCorporation(AccessSettings.OWNERCORP_NAME);
+			user.setBirthDate("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
+					+ "-" + (1 + (int) (Math.random() * 31)));
 		}
 		ClientEntity[] clients;
 		int dbsize;
@@ -105,8 +108,8 @@ public class TestAPI {
 			clients[i].setCreator(admins[i % admins.length].getId());
 			clients[i].setCurator(admins[i % admins.length]);
 			clients[i].setActive(Math.random() > 0.5);
-			clients[i].setBirthDate(
-					new Date((long) (System.currentTimeMillis() - (16 + Math.random() * 10) * 3600 * 24 * 365)));
+			clients[i].setBirthDate("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
+					+ "-" + (1 + (int) (Math.random() * 31)));
 			clients[i].addData("Адрес Skype", "skuser" + i);
 			clients[i].addData("Год окончания обучения", (2010 + (int) (Math.random() * 7)) + "");
 		}
