@@ -126,11 +126,15 @@
 			// $('#field-req-6').html(dd2 + "." + mm2 + "." + yyyy2);
 
 			var k = 0;
-			for (var i = 0; i < resData.simpleDataWithNull.length; i++)
+			for (var i = 0; i < resData.simpleData.length; i++)
 			{
-				$('textarea#field-' + k).html(resData.simpleDataWithNull[i][1]);
-				k++;
+				for (var j = 0; j < 30; j++)
+				{
+					if ($('tr#field-' + j + 'td.col-left').html() == resData.simpleData[i][0]) 
+						$('tr#field-' + j + 'td.col-right textarea').html(resData.simpleData[i][1]);
+				}
 			}
+
 		},
 	});	
 
@@ -138,10 +142,11 @@
 	$('#client-menu-send').on('click', function() {
 
 		var borndate = $('#field-req-5').html();
-		var pasdate = $('#field-req-6').html();
+		//var pasdate = $('#field-req-6').html();
 
 		var clData = new FormData();    
-		if (getCookie('clientID').length) clData.append('id', getCookie('clientID'));
+		if (getCookie('clientID')) clData.append('id', getCookie('clientID'));
+		else clData.append('id', getCookie('sesToken'));
 
 		clData.append('token', getCookie('sesToken'));
 		clData.append('mail', $('#field-req-4').val());
@@ -150,7 +155,7 @@
 		clData.append('fathersname', $('#field-req-2-1').val());
 		clData.append('phone', $('#field-req-3').val());
 		clData.append('born', borndate);
-		clData.append('passportActive', pasdate);
+		//clData.append('passportActive', '111');
 
 		var key = new Array();
 		var value = new Array();
@@ -183,8 +188,8 @@
 			values += value[i];
 			if (i != key.length -1) 
 			{
-				keys += "ף";
-				values += "ף";
+				keys += 'Ʉ';
+				values += 'Ʉ';
 			}  
 		}
 
