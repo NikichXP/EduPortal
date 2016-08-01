@@ -17,7 +17,20 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public List<Object> test() {
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add(ofy().load().type(UserEntity.class).filter("creator", "a7179e66").list());
+		UserEntity u = UserDAO.get("admin@corp.com", "pass");
+		u.addData("" + Math.random(), "" + Math.random());
+		UserDAO.update(u);
+		ret.add(u);
+		ret.add(u.toString());
+		return ret;
+	}
+	
+	@ApiMethod(path = "test1", httpMethod = "GET")
+	public List<Object> test1() {
+		ArrayList<Object> ret = new ArrayList<>();
+		UserEntity u = UserDAO.get("admin@corp.com", "pass");
+		ret.add(u);
+		ret.add(u.toString());
 		return ret;
 	}
 
@@ -66,6 +79,7 @@ public class TestAPI {
 			user.setCorporation(AccessSettings.OWNERCORP_NAME);
 			user.setBirthDate("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
 					+ "-" + (1 + (int) (Math.random() * 31)));
+			user.addData("This is works", "YEAH");
 		}
 		ClientEntity[] clients;
 		int dbsize;

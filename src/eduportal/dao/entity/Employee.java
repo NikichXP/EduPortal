@@ -11,6 +11,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Index
 public class Employee extends UserEntity {
 	
 	private static final long serialVersionUID = 32648756287346L;

@@ -90,5 +90,16 @@ public class ClientEntity extends UserEntity {
 		}
 		curator = Ref.create((Employee)emp).getKey();
 	}
+	
+	public String[][] getSimpleDataWithNull() {
+		String[][] ret = new String[userParams.length][2];
+		int i = 0;
+		for (String param : userParams) {
+			ret[i][0] = param;
+			ret[i][1] = this.toMap().get(param);
+			i++;
+		}
+		return ret;
+	}
 
 }

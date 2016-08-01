@@ -28,14 +28,13 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	protected String fathersname;
 	protected String birthDate;
 	protected ArrayList<SavedFile> files;
+	@Serialize
 	protected HashMap<String, String> userData;
 	@Index
 	protected String creator;
 	@Index
 	protected boolean isActive;
 	protected boolean isFinal;
-	
-	public final static String[] userParams = { "Test data", "Test1", "Test2" };
 
 	public boolean hasNull() {
 		if (fathersname == null) {
@@ -88,19 +87,20 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	}
 
 	public void putData(String key, String value) {
-		if (userData.get(key) != null) {
-			this.userData.remove(key);
-		}
 		this.userData.put(key, value);
 	}
 
+	public HashMap<String, String> toMap() {
+		return userData;
+	}
+
 	public String[][] getSimpleData() {
-		Set<String> params = userData.keySet();
+		Set<String> params = this.toMap().keySet();
 		String[][] ret = new String[params.size()][2];
 		int i = 0;
 		for (String param : params) {
 			ret[i][0] = param;
-			ret[i][1] = userData.get(param);
+			ret[i][1] = this.toMap().get(param);
 			i++;
 		}
 		return ret;
@@ -110,8 +110,9 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		return this.userData.get(key);
 	}
 
-	public void wipeSecData() {
+	public UserEntity wipeSecData() {
 		this.pass = null;
+		return this;
 	}
 
 	public void addFile(SavedFile file) {
@@ -124,27 +125,16 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		}
 		this.pass = UserUtils.encodePass(pass);
 	}
-	
+
 	public Employee creatorEntity() {
 		return (Employee) UserDAO.get(creator);
-	}
-	
-	public String[][] getSimpleDataWithNull() {
-		String[][] ret = new String[userParams.length][2];
-		int i = 0;
-		for (String param : userParams) {
-			ret[i][0] = param;
-			ret[i][1] = userData.get(param);
-			i++;
-		}
-		return ret;
 	}
 
 	@Override
 	public int compareTo(UserEntity o) {
-//		if (this.getAccessLevel() != o.getAccessLevel()) {
-//			return o.getAccessLevel() - this.getAccessLevel();
-//		}
+		// if (this.getAccessLevel() != o.getAccessLevel()) {
+		// return o.getAccessLevel() - this.getAccessLevel();
+		// }
 		int ret = this.name.compareToIgnoreCase(o.getName());
 		if (ret == 0) {
 			ret = this.surname.compareToIgnoreCase(o.getName());

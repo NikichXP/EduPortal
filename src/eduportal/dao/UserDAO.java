@@ -99,12 +99,28 @@ public class UserDAO {
 		return null;
 	}
 
-	public static void update(UserEntity u) {
+	public static UserEntity update(final UserEntity u) {
+		// ofy().delete().type(UserEntity.class).id(u.getId()).now();
+		// Key<UserEntity> k =
+		ofy().clear();
+		ofy().flush();
 		ofy().save().entity(u).now();
+		return null;// ofy().load().key(k).now();
+		// ofy().flush();
+		// UserEntity th = ofy().deadline(1.0).transact(new Work<UserEntity>() {
+		// public UserEntity run() {
+		// ofy().cache(false).save().entity(u).now();
+		// return
+		// ofy().cache(false).load().type(u.getClass()).id(u.getId()).now();
+		// }
+		// });
+		// return th;
 	}
 
 	public static UserEntity get(String id) {
-		return ofy().load().type(UserEntity.class).id(id).now();
+		ofy().clear();
+		ofy().flush();
+		return ofy().cache(false).load().type(UserEntity.class).id(id).now();
 	}
 
 	public static void delete(String target) {

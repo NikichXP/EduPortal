@@ -35,7 +35,7 @@
 		}
 
 		if (request.getParameter("mail") != null) {
-			for (String param : UserEntity.userParams) {
+			for (String param : user.toMap().keySet()) {
 				if (request.getParameter(param) != null) {
 					user.putData(param, request.getParameter(param));
 				}
@@ -67,7 +67,7 @@
 							value="<%=user.getPhone()%>"></td>
 					</tr>
 					<%
-						for (String param : UserEntity.userParams) {
+						for (String param : user.toMap().keySet()) {
 					%>
 					<tr>
 						<td><%=param%></td>

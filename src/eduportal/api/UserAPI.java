@@ -18,10 +18,13 @@ public class UserAPI {
 
 	// Init Objectify
 	public final static Class<?>[] objectifiedClasses = { UserEntity.class, DeletedUser.class, Product.class,
-			Country.class, City.class, Order.class, AuthSession.class, SavedFile.class, Employee.class, ClientEntity.class };
+			Country.class, City.class, Order.class, AuthSession.class, SavedFile.class, Employee.class,
+			ClientEntity.class };
 
+	static final String LINESEPARATOR = "Ʉ"; //U001e
 	static {
 		ObjectifyService.begin();
+		ObjectifyService.ofy().cache(false).deadline(5.0);
 		for (Class<?> c : objectifiedClasses) {
 			ObjectifyService.register(c);
 		}
@@ -44,7 +47,7 @@ public class UserAPI {
 		if (AccessLogic.canEditUser(admin, user) == false) {
 			return null;
 		}
-		Set<String> params = user.getUserData().keySet();
+		Set<String> params = user.toMap().keySet();
 		String[][] ret = new String[params.size()][2];
 		int i = 0;
 		for (String param : params) {
@@ -110,40 +113,70 @@ public class UserAPI {
 		UserDAO.create(passport, pass, name, surname, mail, phone, creator, born);
 		return AuthContainer.authenticate(mail, pass);
 	}
-	
-	@ApiMethod (name = "updateUser", httpMethod = "POST", path = "updateuser")
-	public Text updateUser (UserDeploy deploy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException { //cause fuck exception handling
+
+	@ApiMethod(name = "updateUser", httpMethod = "POST", path = "updateuser")
+	public Text updateUser(UserDeploy deploy) {
 		UserEntity user = AuthContainer.getUser(deploy.token);
-		if (deploy.id == null) {
+		if (deploy.id == null || deploy.id.equals(deploy.token)) {
 			deploy.id = user.getId();
 		}
 		UserEntity target = UserDAO.get(deploy.id);
 		if (target.isFinal()) {
-			return new Text ("Profile is final");
+			return new Text("Profile is final");
 		}
 		if (!AccessLogic.canEditUser(user, target)) {
-			return new Text ("Cannot edit user");
+			return new Text("Cannot edit user");
 		}
-		
-		//Reflection: brain warning [below]
-		
-		String name;
-		for (Method newMeth : deploy.getClass().getMethods()) {
-			name = newMeth.getName().substring(3);
-			for (Method oldMeth : target.getClass().getMethods()) {
-				if (oldMeth.getName().substring(3).equals(name)) {
-					Object newData = newMeth.invoke(deploy);
-					if (newData == null || newData.toString().length()<1) {
-						continue;
-					}
-					if (newData.equals(oldMeth.invoke(target)) == false) {
-						target.getClass().getMethod("set"+name).invoke(target, newData);
+
+		// Reflection: brain warning [below]
+
+		HashMap<String, Method> other = new HashMap<>(); // deploy
+		HashMap<String, Method> had = new HashMap<>(); // entity
+		HashMap<String, Method> setters = new HashMap<>(); // setters of avail.
+
+		for (Method meth : target.getClass().getMethods()) {
+			if (meth.getName().startsWith("get")) {
+				had.put(meth.getName().substring(3), meth);
+			}
+		}
+		for (Method meth : deploy.getClass().getMethods()) {
+			if (meth.getName().startsWith("get")) {
+				other.put(meth.getName().substring(3), meth);
+			}
+		}
+		for (Method meth : target.getClass().getMethods()) {
+			if (meth.getName().startsWith("set")) {
+				setters.put(meth.getName().substring(3), meth);
+			}
+		}
+		for (String name : other.keySet()) {
+			if (name.toLowerCase().equals("userdata") == false) {
+				if (had.get(name) != null && setters.get(name) != null) {
+					try {
+						if (other.get(name).invoke(deploy) != null && other.get(name).invoke(deploy).toString().length() > 1) {
+							setters.get(name).invoke(target, other.get(name).invoke(deploy));
+						}
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
 					}
 				}
 			}
 		}
-		
-		return new Text (target.toString());
+
+		if (deploy.keys != null && deploy.values != null) {
+			String[] keys = deploy.keys.split(LINESEPARATOR);
+			String[] values = deploy.values.split(LINESEPARATOR);
+			if (values.length != keys.length) {
+				return new Text("Err in keys-values");
+			}
+			for (int i = 0; i < keys.length; i++) {
+				target.addData(keys[i], values[i]);
+			}
+		}
+
+		UserDAO.update(target);
+
+		return new Text("Success");
 	}
 
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
@@ -163,7 +196,7 @@ public class UserAPI {
 			return new Text("Phone is invalid");
 		}
 		if (UserDAO.getUserByMail(deploy.mail) != null) {
-			return new Text ("This mail is already in use");
+			return new Text("This mail is already in use");
 		}
 		user.setCreator(creator);
 		user.setName(deploy.name);
@@ -174,8 +207,8 @@ public class UserAPI {
 		user.setPass(pass);
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
-		String[] keys = deploy.keys.split("ף");
-		String[] values = deploy.values.split("ף");
+		String[] keys = deploy.keys.split(LINESEPARATOR);
+		String[] values = deploy.values.split(LINESEPARATOR);
 		if (values.length != keys.length) {
 			return new Text("Err in keys-values");
 		}
@@ -229,11 +262,21 @@ public class UserAPI {
 		}
 		if (client != null) {
 			UserEntity ret = UserDAO.get(client);
-			ret.wipeSecData();
-			return ret;
+			if (ret instanceof ClientEntity) {
+				return (ClientEntity) ret.wipeSecData();
+			}
+			if (ret instanceof Employee) {
+				return (Employee) ret.wipeSecData();
+			}
+			return UserDAO.get(ret.getId());
 		}
-		admin.wipeSecData();
-		return admin;
+		if (admin instanceof ClientEntity) {
+			return (ClientEntity) UserDAO.get(admin.getId()).wipeSecData();
+		}
+		if (admin instanceof Employee) {
+			return (Employee) UserDAO.get(admin.getId()).wipeSecData();
+		}
+		return UserDAO.get(admin.getId());
 	}
 
 	@ApiMethod(name = "getName", httpMethod = "GET", path = "getname")
@@ -310,25 +353,26 @@ public class UserAPI {
 	}
 
 	// TODO FUUUUUUCK REPAIR DAMN
-//	@ApiMethod(name = "allowCountry", httpMethod = "GET", path = "allowCountry")
-//	public UserEntity allowCountry(@Named("token") String token, @Named("countryid") Long countryid,
-//			@Named("userid") String userid) {
-//		if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
-//			return null;
-//		}
-//		Country c = GeoDAO.getCountryById(countryid);
-//		UserEntity user = UserDAO.get(userid);
-//		user.getEmpData().getPermission().addCountry(c);
-//		UserDAO.update(user);
-//		user.wipeSecData();
-//		return user;
-//	}
+	// @ApiMethod(name = "allowCountry", httpMethod = "GET", path =
+	// "allowCountry")
+	// public UserEntity allowCountry(@Named("token") String token,
+	// @Named("countryid") Long countryid,
+	// @Named("userid") String userid) {
+	// if (AuthContainer.getAccessGroup(token) < AccessSettings.ADMIN_LEVEL) {
+	// return null;
+	// }
+	// Country c = GeoDAO.getCountryById(countryid);
+	// UserEntity user = UserDAO.get(userid);
+	// user.getEmpData().getPermission().addCountry(c);
+	// UserDAO.update(user);
+	// user.wipeSecData();
+	// return user;
+	// }
 
 	interface Dummy {
 	}
 
 	public @Data static class UserDeploy {
-		
 
 		public UserDeploy() {
 		}
@@ -341,7 +385,6 @@ public class UserAPI {
 		private String mail;
 		private String token;
 		private String born;
-		private String passportActive;
 		private String keys;
 		private String values;
 

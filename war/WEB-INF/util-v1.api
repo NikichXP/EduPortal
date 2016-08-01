@@ -41,31 +41,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "util.utilAPI.deleteCity" : {
-      "path" : "deletecity",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.UtilAPI.deleteCity",
-      "request" : {
-        "parameters" : {
-          "city" : {
-            "type" : "string",
-            "required" : true
-          },
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "util.utilAPI.createcity" : {
       "path" : "createcity",
       "httpMethod" : "GET",
@@ -81,6 +56,31 @@
             "required" : true
           },
           "country" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "util.utilAPI.deleteCity" : {
+      "path" : "deletecity",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.UtilAPI.deleteCity",
+      "request" : {
+        "parameters" : {
+          "city" : {
             "type" : "string",
             "required" : true
           },
@@ -181,12 +181,12 @@
           "$ref" : "CityCollection"
         }
       },
-      "eduportal.api.UtilAPI.deleteCity" : {
+      "eduportal.api.UtilAPI.createcity" : {
         "response" : {
           "$ref" : "Text"
         }
       },
-      "eduportal.api.UtilAPI.createcity" : {
+      "eduportal.api.UtilAPI.deleteCity" : {
         "response" : {
           "$ref" : "Text"
         }
