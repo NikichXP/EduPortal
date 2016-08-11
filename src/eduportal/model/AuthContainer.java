@@ -188,4 +188,10 @@ public class AuthContainer {
 			return ret;
 		}
 	}
+
+	public static void reinit(List<AuthSession> l) {
+		for (AuthSession as : l) {
+			sessions.put(as.getToken(), as);
+		}
+	}
 }

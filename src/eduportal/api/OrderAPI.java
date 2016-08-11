@@ -70,7 +70,7 @@ public class OrderAPI {
 			o.setPaid(paid);
 		}
 		o.setCreatedBy(admin);
-		o.setUser(UserDAO.get(clientid));
+		o.setClient((ClientEntity)UserDAO.get(clientid));
 		o.setComment(comment);
 		// TODO year
 		o.setStart(new Date());

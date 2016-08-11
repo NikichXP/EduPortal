@@ -62,12 +62,13 @@
 				%>
 			</table>
 		</div>
-
+<% Employee temp; %>
 		<h1>Неактивированные клиенты:</h1>
 		<div class='table-div'>
 			<table class='table-list'>
 				<tr class='table-list-header'>
 					<td>Имя</td>
+					<td>Создатель</td>
 					<td>Файлы</td>
 					<td>Активация</td>
 				</tr>
@@ -75,7 +76,9 @@
 					for (UserEntity client : users) {
 				%>
 				<tr>
+				<% temp = client.creatorEntity(); %>
 					<td><%=client.getName() + " " + client.getSurname()%></td>
+					<td><%= temp.getName() + " " + temp.getSurname()  %></td>
 					<td>Файлов:<%=client.getFiles().size()%></td>
 					<td><a href="activation.jsp?user=<%=client.getId()%>">Обзор</a></td>
 				</tr>

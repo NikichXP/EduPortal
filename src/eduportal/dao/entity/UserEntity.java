@@ -21,12 +21,12 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	@Index
 	protected String mail;
 	@Index
-	protected String name;
+	@Getter @Setter protected String name;
 	@Index
 	protected String surname;
 	@Index
 	protected String fathersname;
-	protected String birthDate;
+	protected String born;
 	protected ArrayList<SavedFile> files;
 	@Serialize
 	protected HashMap<String, String> userData;
@@ -34,8 +34,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	protected String creator;
 	@Index
 	protected boolean isActive;
-	protected boolean isFinal;
-
+	
 	public boolean hasNull() {
 		if (fathersname == null) {
 			return true;
@@ -65,13 +64,12 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.surname = "Noname";
 		this.files = new ArrayList<>();
 		this.userData = new HashMap<>();
-		this.isFinal = false;
 	}
 
-	public UserEntity(String passport, String name, String surname, String mail, String pass, String phone, Date date) {
+	public UserEntity(String fathersName, String name, String surname, String mail, String pass, String phone, Date date) {
 		super();
 		genId();
-		this.fathersname = passport;
+		this.fathersname = fathersName;
 		this.name = name;
 		this.surname = surname;
 		this.mail = mail;
@@ -79,7 +77,6 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.pass = UserUtils.encodePass(pass);
 		this.files = new ArrayList<>();
 		this.userData = new HashMap<>();
-		this.isFinal = false;
 	}
 
 	public void addData(String key, String value) {
@@ -92,6 +89,10 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 
 	public HashMap<String, String> toMap() {
 		return userData;
+	}
+	
+	public boolean getRealActive() {
+		return isActive;
 	}
 
 	public String[][] getSimpleData() {

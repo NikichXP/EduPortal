@@ -31,6 +31,9 @@ public class Employee extends UserEntity {
 		super(string, string2, string3, string4, string5, string6, date);
 		country = new HashSet<>();
 	}
+	
+	
+	
 	public Employee setAccessLevel(int accessLevel) {
 		this.accessLevel = accessLevel;
 		return this;

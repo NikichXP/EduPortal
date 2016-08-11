@@ -1,19 +1,24 @@
 package eduportal.dao.entity;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
+
+import eduportal.dao.UserDAO;
 import lombok.*;
 
 @Entity
 @ToString(callSuper = true)
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Order extends AbstractEntity {
+@EqualsAndHashCode
+public class Order implements Serializable {
 	private static final long serialVersionUID = -8893348970030751098L;
+	@Id
+	private String id;
 	@Index
-	private Key<UserEntity> user;
+	private Key<ClientEntity> client;
 	@Index
 	private Key<Product> product;
 	private double price;
@@ -31,14 +36,14 @@ public class Order extends AbstractEntity {
 	protected final long maxIdValue = 0;
 	
 	public Order() {
-		super();
+		this.id = UUID.randomUUID().toString().substring(4, 13);
 		comment = "";
 		files = new ArrayList<>();
 		files.ensureCapacity(5);
 	}
 
 	public Order(Product p) {
-		super();
+		this.id = UUID.randomUUID().toString().substring(4, 13);
 		this.product = Ref.create(p).getKey();
 		comment = new String();
 		this.price = p.getDefaultPrice();
@@ -47,33 +52,23 @@ public class Order extends AbstractEntity {
 		files.ensureCapacity(5);
 		this.currency = p.getCurrency();
 	}
-
-	public long getUser() {
-		return user.getId();
-	}
-
-	public UserEntity userEntity() {
-		return Ref.create(user).get();
-	}
-
-	public long getProduct() {
-		return product.getId();
+	
+	public UserEntity clientEntity() {
+		return Ref.create(client).get();
 	}
 
 	public Product productEntity() {
 		return Ref.create(product).get();
 	}
-
-	public long getCreatedBy() {
-		return createdBy.getId();
-	}
-
+	
 	public Employee createdByEntity() {
 		return Ref.create(createdBy).get();
 	}
 
-	public void setUser(UserEntity user) {
-		this.user = Ref.create(user).getKey();
+	public void setClient (ClientEntity user) {
+		this.client = Ref.create(user).getKey();
+		user.setOrderid(this.id);
+		UserDAO.update(user);
 		this.clientName = user.getSurname() + " " + user.getName();
 	}
 
@@ -120,5 +115,18 @@ public class Order extends AbstractEntity {
 	public void addFile(SavedFile file) {
 		this.files.add(file);
 	}
+	
+	// <!-- Somehow it should be here --!>
+	
+	public long getClient() {
+		return client.getId();
+	}
 
+	public long getProduct() {
+		return product.getId();
+	}
+	
+	public long getCreatedBy() {
+		return createdBy.getId();
+	}
 }

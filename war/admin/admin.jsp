@@ -32,6 +32,7 @@
 					token = c.getValue();
 				}
 			}
+			out.print("USER:" + user.toString());
 			if (user == null || AccessLogic.canAccessAdminPanel(user) == false) {
 				out.print("</div></body></html>");
 				return;

@@ -17,9 +17,19 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public List<Object> test() {
 		ArrayList<Object> ret = new ArrayList<>();
-		UserEntity u = UserDAO.get("admin@corp.com", "pass");
-		u.addData("" + Math.random(), "" + Math.random());
+		UserEntity u = UserDAO.get("test@qwe.rty", "test");
+		String has = "has=";
+		String hasnt = "hasnt=";
+		for (String str : ClientEntity.userParams) {
+			if (u.getData(str) != null) {
+				has = has + str + ", ";
+			} else {
+				hasnt = hasnt + str + ", ";
+			}
+		}
 		UserDAO.update(u);
+		ret.add(has);
+		ret.add(hasnt);
 		ret.add(u);
 		ret.add(u.toString());
 		return ret;
@@ -77,7 +87,7 @@ public class TestAPI {
 		for (Employee user : admins) {
 			user.setCreator(admins[0].getId());
 			user.setCorporation(AccessSettings.OWNERCORP_NAME);
-			user.setBirthDate("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
+			user.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
 					+ "-" + (1 + (int) (Math.random() * 31)));
 			user.addData("This is works", "YEAH");
 		}
@@ -121,8 +131,7 @@ public class TestAPI {
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
 			clients[i].setCreator(admins[i % admins.length].getId());
 			clients[i].setCurator(admins[i % admins.length]);
-			clients[i].setActive(Math.random() > 0.5);
-			clients[i].setBirthDate("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
+			clients[i].setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
 					+ "-" + (1 + (int) (Math.random() * 31)));
 			clients[i].addData("Адрес Skype", "skuser" + i);
 			clients[i].addData("Год окончания обучения", (2010 + (int) (Math.random() * 7)) + "");
@@ -136,6 +145,21 @@ public class TestAPI {
 				}
 			}
 		}
+		ClientEntity test1 = new ClientEntity("Testovich", "Test", "Testov", "test@qwe.rty", "test", "+123455556789", new Date());
+		test1.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
+					+ "-" + (1 + (int) (Math.random() * 31)));
+		test1.setActive(true);
+		for (String str : ClientEntity.userParams) {
+			StringBuilder sb = new StringBuilder();
+			for (String nnn: NameGen.genNames((int)(Math.random()*10) + 1)) {
+				sb.append(nnn);
+			}
+			test1.addData(str, sb.toString());
+		}
+		test1.setCreator(admins[0].getId());
+		test1.setCurator(admins[0]);
+		test1.setActive(true);
+		ofy().save().entity(test1);
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);
 		City[] c = { GeoDAO.createCity("Kiev", "Ukraine"), GeoDAO.createCity("Lvov", "Ukraine"),
@@ -162,9 +186,9 @@ public class TestAPI {
 			shuffled = false;
 		}
 		int i = 0;
-		for (UserEntity u : clients) {
+		for (ClientEntity u : clients) {
 			if (u.isActive()) {
-				o[i].setUser(u);
+				o[i].setClient(u);
 				o[i].setCreatedBy(admins[i % admins.length]);
 				if (Math.random() > 0.5) {
 					o[i].setPaid(o[i].getPrice());
@@ -175,7 +199,19 @@ public class TestAPI {
 				i++;
 			}
 		}
+		Order ordt = new Order();
+		ordt.setClient(test1);
+		ordt.setProduct(p[0]);
+		ordt.setCreatedBy(admins[0]);
+		ofy().save().entity(ordt);
 		return getAll();
+	}
+	
+	@ApiMethod(path="getauth", httpMethod = "GET")
+	public ArrayList<String> getAllAuth() {
+		List<AuthSession> l = ofy().load().type(AuthSession.class).list();
+		AuthContainer.reinit(l);
+		return AuthContainer.testMethod();
 	}
 
 	@ApiMethod(path = "getAll", httpMethod = "GET")
@@ -205,7 +241,6 @@ public class TestAPI {
 	@ApiMethod(path = "getCountry", httpMethod = "GET")
 	public List<Object> getCountry() {
 		return ofy().load().kind("Country").list();
-
 	}
 
 	private static class NameGen {

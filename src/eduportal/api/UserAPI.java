@@ -21,7 +21,8 @@ public class UserAPI {
 			Country.class, City.class, Order.class, AuthSession.class, SavedFile.class, Employee.class,
 			ClientEntity.class };
 
-	static final String LINESEPARATOR = "Ʉ"; //U001e
+	static final String LINESEPARATOR = "Ʉ"; // U001e
+
 	static {
 		ObjectifyService.begin();
 		ObjectifyService.ofy().cache(false).deadline(5.0);
@@ -121,8 +122,11 @@ public class UserAPI {
 			deploy.id = user.getId();
 		}
 		UserEntity target = UserDAO.get(deploy.id);
-		if (target.isFinal()) {
-			return new Text("Profile is final");
+		if (target instanceof ClientEntity) {
+			if (((ClientEntity)target).isFinal()) {
+				return new Text("Profile is final");
+			}
+			
 		}
 		if (!AccessLogic.canEditUser(user, target)) {
 			return new Text("Cannot edit user");
@@ -149,20 +153,27 @@ public class UserAPI {
 				setters.put(meth.getName().substring(3), meth);
 			}
 		}
+		String ret = "Q";
 		for (String name : other.keySet()) {
-			if (name.toLowerCase().equals("userdata") == false) {
+			ret = ret + name + " & " + name.toLowerCase() + " ; ";
+			switch (name.toLowerCase()) {
+			case "userdata":
+				break;
+			default:
 				if (had.get(name) != null && setters.get(name) != null) {
 					try {
-						if (other.get(name).invoke(deploy) != null && other.get(name).invoke(deploy).toString().length() > 1) {
+						if (other.get(name).invoke(deploy) != null
+								&& other.get(name).invoke(deploy).toString().length() > 1) {
 							setters.get(name).invoke(target, other.get(name).invoke(deploy));
 						}
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						e.printStackTrace();
 					}
 				}
+				break;
 			}
 		}
-
+		
 		if (deploy.keys != null && deploy.values != null) {
 			String[] keys = deploy.keys.split(LINESEPARATOR);
 			String[] values = deploy.values.split(LINESEPARATOR);
@@ -173,10 +184,23 @@ public class UserAPI {
 				target.addData(keys[i], values[i]);
 			}
 		}
-
+		
+		target.setActive(checkActive(target));
 		UserDAO.update(target);
 
-		return new Text("Success");
+		return new Text(deploy.toString() + "\n" + target.toString());
+	}
+
+	private boolean checkActive(UserEntity target) {
+		if (target instanceof Employee) {
+			return true;
+		}
+		for (String str : ClientEntity.userParams) {
+			if (target.getData(str) == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@ApiMethod(name = "createUser", httpMethod = "POST", path = "createuser")
@@ -203,7 +227,7 @@ public class UserAPI {
 		user.setSurname(deploy.surname);
 		user.setFathersname(deploy.fathersname);
 		String pass = UUID.randomUUID().toString().substring(0, 8);
-		user.setBirthDate(deploy.born);
+		user.setBorn(deploy.born);
 		user.setPass(pass);
 		user.setPhone(deploy.phone);
 		user.setMail(deploy.mail);
@@ -215,6 +239,7 @@ public class UserAPI {
 		for (int i = 0; i < keys.length; i++) {
 			user.addData(keys[i], values[i]);
 		}
+		user.setActive(checkActive(user));
 		UserEntity u = UserDAO.create(user);
 		if (u == null) {
 			return new Text("User is probably registered");

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Entity
-@Data 
+@Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class City extends AbstractEntity {

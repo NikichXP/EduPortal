@@ -19,7 +19,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class ClientEntity extends UserEntity {
 	private static final long serialVersionUID = -8053723799106370206L;
-
+	private String orderid;
 	private Key<Employee> curator;
 
 	public final static String[] userParams = { "Серия и номер паспорта", "Имя латиницей (как в загран.паспорте)",
@@ -41,6 +41,7 @@ public class ClientEntity extends UserEntity {
 	public ClientEntity(String string, String string2, String string3, String string4, String string5, String string6,
 			Date date) {
 		super(string, string2, string3, string4, string5, string6, date);
+		this.orderid = null;
 	}
 
 	public ClientEntity(UserEntity user) {
@@ -67,6 +68,13 @@ public class ClientEntity extends UserEntity {
 				}
 			}
 		}
+	}
+	
+	public boolean isFinal() {
+		if (orderid == null) {
+			return false;
+		}
+		return true;
 	}
 
 	public void setCreator(Employee emp) {
