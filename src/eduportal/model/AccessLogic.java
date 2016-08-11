@@ -77,7 +77,14 @@ public class AccessLogic {
 	}
 
 	public static boolean canSeeProducts(String token) {
-		if (AuthContainer.getEmp(token).getAccessLevel() >= AccessSettings.LIST_ACTUAL_PRODUCTS) {
+		
+		//EVERYONE CAN. IF NOT - RECOMMENT THIS
+		
+//		if (AuthContainer.getEmp(token).getAccessLevel() >= AccessSettings.LIST_ACTUAL_PRODUCTS) {
+//			return true;
+//		}
+//		return false;
+		if (AuthContainer.getUser(token) != null) {
 			return true;
 		}
 		return false;
