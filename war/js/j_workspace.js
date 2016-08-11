@@ -53,7 +53,7 @@
 	if (getCookie("accessLevel") == 'USER')
 	{
 		$('li#menu-client-open').toggle();
-		$('li#menu-create-order').toggle();
+		//$('li#menu-create-order').toggle();
 		$('li#menu-product-page').toggle();
 		//$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
 	}
@@ -330,12 +330,34 @@
 	
 	//open order creation menu
 	$('#menu-create-order').on('click', function() {
-
-		var url = "order-create-table.html?token=" + getCookie("sesToken");
-		var windowName = "Order creation";
-		var windowSize = ["width=450, height=900"];
-		window.open(url, windowName, windowSize);
-		event.preventDefault();
+		if (getCookie('accessLevel') == 'USER')
+		{
+			$.ajax({
+				type: 'GET',
+				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+				data: {'token' : getCookie("sesToken")},
+				success: function(resData) {
+					if (resData.active)
+					{
+						var url = "order-create-table.html?token=" + getCookie("sesToken");
+						var windowName = "Order creation";
+						var windowSize = ["width=450, height=900"];
+						window.open(url, windowName, windowSize);
+						event.preventDefault();
+					}
+					else
+						alert("Вы должны заполнить все поля в профиле чтоб оформить заказ!");
+				}
+			});
+		}
+		else 
+		{
+			var url = "order-create-table.html?token=" + getCookie("sesToken");
+			var windowName = "Order creation";
+			var windowSize = ["width=450, height=900"];
+			window.open(url, windowName, windowSize);
+			event.preventDefault();
+		}		
 	});
 	
 	//open client menu

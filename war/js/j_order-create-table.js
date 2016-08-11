@@ -133,15 +133,33 @@
 		}
 	});
 
+	if (getCookie('accessLevel') != "USER")
+	{
+		$.ajax({
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
+			data: {'token' : getCookie("sesToken")},
+			success: function(resData) {
+				$('#order-new-emp').val(resData.name + " " + resData.surname);
+			},	
+		});
+	}
+	else
+	{
+
+		$.ajax({
+			type: 'GET',
+			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+			data: {'token' : getCookie("sesToken")},
+			success: function(resData) {
+				$('#select-client').append("<option id='client-" + i + "' value='" + resData.id + "'>" 
+						+ resData.name + " " + resData.surname 
+						+ "</option>" );
+			},	
+		});
+		
+	}
 	
-	$.ajax({
-		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
-		data: {'token' : getCookie("sesToken")},
-		success: function(resData) {
-			$('#order-new-emp').val(resData.name + " " + resData.surname);
-		},	
-	});
 
 	$.ajax({
 		type: 'GET',
@@ -170,10 +188,12 @@
 			if (resData)
 				for (var i = 0; i < resData.items.length; i++)
 				{
-					$('#select-client').append("<option id='client-" + i + "' value='" + resData.items[i].id + "'>" 
-					+ resData.items[i].name + " " + resData.items[i].surname 
-					+ "</option>" 
-					);	
+					if (resData.items[i].active)
+					{
+						$('#select-client').append("<option id='client-" + i + "' value='" + resData.items[i].id + "'>" 
+						+ resData.items[i].name + " " + resData.items[i].surname 
+						+ "</option>" );
+					}						
 				}
 		},
 	});	

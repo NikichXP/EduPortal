@@ -110,9 +110,10 @@
 			$('#field-req-3').html(resData.phone);
 			$('#field-req-4').html(resData.mail);
 			
-			var bdate = resData.birthDate.split('-');
+			//var bdate = resData.born.split('-');
 
-			$('#field-req-5').html(bdate[2] + "-" + bdate[1] + "-" + bdate[0]);
+			//$('#field-req-5').html(bdate[2] + "-" + bdate[1] + "-" + bdate[0]);
+			$('#field-req-5').html(resData.born);
 
 			// var dd1 = bdate.getDate();
 		 //    var mm1 = bdate.getMonth() + 1;   
@@ -135,6 +136,11 @@
 						$('tr#field-' + j + ' td.col-right textarea').html(resData.simpleData[i][1]);
 					}
 				}
+			}
+
+			if (resData.final) 
+			{
+				$('textarea.t-a').attr('readonly','readonly');
 			}
 
 		},
@@ -204,7 +210,7 @@
 			data: clData,
 			processData: false,
 			contentType: false,
-			//success: window.close(),	
+			success: window.close(),	
 		});	
 
 	});
@@ -222,9 +228,9 @@
 	if (getCookie("clientID")) if (getCookie("accessLevel") == "ADMIN") $('#client-menu-del').css('display', 'block');
 	
 });
-$(window).unload(function() {
-  		deleteCookie('clientID');
-	});
+// $(window).unload(function() {
+//   		deleteCookie('clientID');
+// 	});
 
 function checkFiles(data)
 {
