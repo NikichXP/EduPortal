@@ -56,6 +56,10 @@ a {
 	background-color: #82a8bc;
 }
 
+.table-list-selector:hover {
+	background-color: #bed1dc;
+}
+
 .table-list td {
 	border: 1px solid #d9e0e7;
 	border-spacing: 0px;

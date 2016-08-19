@@ -80,7 +80,7 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
-	public Text editOrder(@Named("orderid") Long orderid, @Named("token") String token,
+	public Text editOrder(@Named("orderid") String orderid, @Named("token") String token,
 			@Named("paid") @Nullable Double paid, @Named("comment") @Nullable String comment) {
 		UserEntity admin = AuthContainer.getUser(token);
 		Order order = OrderDAO.getOrder(orderid);
@@ -103,7 +103,7 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(path = "cancelOrder", httpMethod = "GET")
-	public Text cancelOrder(@Named("token") String token, @Named("orderid") Long orderid) {
+	public Text cancelOrder(@Named("token") String token, @Named("orderid") String orderid) {
 		Order order = OrderDAO.getOrder(orderid);
 		if (!AccessLogic.canCancelOrder(token, order)) {
 			return new Text("403 Forbidden");

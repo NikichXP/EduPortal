@@ -6,6 +6,7 @@ import java.util.*;
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
+import eduportal.dao.OrderDAO;
 import eduportal.dao.UserDAO;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class Order implements Serializable {
 	@Index
 	private Key<ClientEntity> client;
 	@Index
-	private Key<Product> product;
+	private String product;
 	private double price;
 	private double paid;
 	@Index
@@ -44,9 +45,10 @@ public class Order implements Serializable {
 
 	public Order(Product p) {
 		this.id = UUID.randomUUID().toString().substring(4, 13);
-		this.product = Ref.create(p).getKey();
+		this.product = p.getId();
 		comment = new String();
-		this.price = p.getDefaultPrice();
+		this.price = (double)p.getDefaultPrice();
+		this.paid = 0.0;
 		this.productName = p.getTitle();
 		files = new ArrayList<>();
 		files.ensureCapacity(5);
@@ -58,7 +60,7 @@ public class Order implements Serializable {
 	}
 
 	public Product productEntity() {
-		return Ref.create(product).get();
+		return OrderDAO.getProduct(product);
 	}
 	
 	public Employee createdByEntity() {
@@ -73,8 +75,9 @@ public class Order implements Serializable {
 	}
 
 	public Order setProduct(Product product) {
-		this.product = Ref.create(product).getKey();
+		this.product = product.getId();
 		this.productName = product.getTitle();
+		this.setPrice(product.getDefaultPrice());
 		return this;
 	}
 
@@ -120,10 +123,6 @@ public class Order implements Serializable {
 	
 	public long getClient() {
 		return client.getId();
-	}
-
-	public long getProduct() {
-		return product.getId();
 	}
 	
 	public long getCreatedBy() {

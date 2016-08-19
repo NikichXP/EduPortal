@@ -19,7 +19,7 @@ public abstract class AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 3463460744465924474L;
 	
 	@Id
-	protected long id;
+	protected String id;
 	/**
 	 * Max ID value, use 0 to unlimit it
 	 */
@@ -27,6 +27,7 @@ public abstract class AbstractEntity implements Serializable {
 
 	@SuppressWarnings("unused")
 	public AbstractEntity () {
+		long id;
 		if (maxIdValue != 0) {
 			do {
 				id = new Random().nextInt((int)maxIdValue);
@@ -36,13 +37,6 @@ public abstract class AbstractEntity implements Serializable {
 				id = new Random().nextLong();
 			} while (id <= 0);
 		}
-	}
-	
-	public String getIdString () {
-		return Long.toString(id);
-	}
-	
-	public String getIdHexString () {
-		return Long.toHexString(id);
+		this.id = "" + id;
 	}
 }

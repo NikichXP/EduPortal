@@ -1,7 +1,6 @@
 package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.util.*;
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
@@ -17,21 +16,12 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public List<Object> test() {
 		ArrayList<Object> ret = new ArrayList<>();
-		UserEntity u = UserDAO.get("test@qwe.rty", "test");
-		String has = "has=";
-		String hasnt = "hasnt=";
-		for (String str : ClientEntity.userParams) {
-			if (u.getData(str) != null) {
-				has = has + str + ", ";
-			} else {
-				hasnt = hasnt + str + ", ";
-			}
+		List<Product> prodlist = OrderDAO.getProductsByCompany(AccessSettings.OWNERCORP_NAME);
+		ret.add(prodlist);
+		for (Product prod: prodlist) {
+			ret.add(OrderDAO.getOrdersByProduct(prod));
 		}
-		UserDAO.update(u);
-		ret.add(has);
-		ret.add(hasnt);
-		ret.add(u);
-		ret.add(u.toString());
+		ret.add(ofy().load().type(Order.class).list());
 		return ret;
 	}
 	
@@ -120,7 +110,6 @@ public class TestAPI {
 			usersize = 100;
 		}
 		clients = new ClientEntity[usersize];
-		Order o[] = new Order[clients.length];
 		String[] clientName = NameGen.genNames(clients.length * 2);
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new ClientEntity();
@@ -135,6 +124,16 @@ public class TestAPI {
 					+ "-" + (1 + (int) (Math.random() * 31)));
 			clients[i].addData("Адрес Skype", "skuser" + i);
 			clients[i].addData("Год окончания обучения", (2010 + (int) (Math.random() * 7)) + "");
+			if (Math.random() < 0.7) {
+				for (String str : ClientEntity.userParams) {
+					StringBuilder sb = new StringBuilder();
+					for (String nnn: NameGen.genNames((int)(Math.random()*10) + 1)) {
+						sb.append(nnn);
+					}
+					clients[i].addData(str, sb.toString());
+				}
+				clients[i].setActive(true);
+			}
 		}
 		if (prior != null) {
 			if (prior < admins.length) {
@@ -170,33 +169,31 @@ public class TestAPI {
 				new Product("Prague Study School", "Nice Prague school of english, .......", c[2]),
 				new Product("Высшая школа Будапешта", "Описание программы", c[3]),
 				new Product("Высшая школа Лондона", "Описание программы", c[4]),
-				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
+				new Product("LSE", "Описание программы", c[4]), 
+				new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
 		for (Product prod : p) {
 			prod.setActual(Math.random() < 0.75); // chance vary!
 			prod.setDefaultPrice((double) Math.round(Math.random() * 100_000_00) / 100);
+			prod.setProvider((Math.random() < 0.66) ? AccessSettings.OWNERCORP_NAME : "GlobalEdu");
 			prod.setCurrency("UAH");
 		}
 		ProductDAO.save(p);
 		Random r = new Random();
-		for (int ptr = 0; ptr < o.length; ptr++) {
-			o[ptr] = new Order(p[r.nextInt(p.length)]);
-		}
-		if (shuffled == null) {
-			shuffled = false;
-		}
 		int i = 0;
-		for (ClientEntity u : clients) {
-			if (u.isActive()) {
-				o[i].setClient(u);
-				o[i].setCreatedBy(admins[i % admins.length]);
+		for (ClientEntity cli : clients) {
+			if (cli.isActive()) {
+				Order ord = new Order();
+				cli.setOrderid(ord.getId());
+				ord.setClient(cli);
+				ord.setProduct(p[r.nextInt(p.length)]);
+				ord.setCreatedBy(admins[i++ % admins.length]);
 				if (Math.random() > 0.5) {
-					o[i].setPaid(o[i].getPrice());
+					ord.setPaid(ord.getPrice());
 				} else {
-					o[i].setPaid((double) Math.round(Math.random() * 10 * o[i].getPrice()) / 100);
+					ord.setPaid((double) Math.round(Math.random() * 100.0 * ord.getPrice()) / 100);
 				}
-				OrderDAO.saveOrder(o[i]);
-				i++;
+				OrderDAO.saveOrder(ord);
 			}
 		}
 		Order ordt = new Order();

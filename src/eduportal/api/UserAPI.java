@@ -58,6 +58,12 @@ public class UserAPI {
 		}
 		return ret;
 	}
+	
+	@ApiMethod (path = "resetpass", httpMethod = "GET")
+	public Text resetPass (@Named ("user") String userid, @Named("token") String token, @Named ("newpass") String newpass) {
+		//TODO Do reset
+		return new Text ("Good");
+	}
 
 	@ApiMethod(path = "getUserFiles", httpMethod = "GET")
 	public List<SavedFile> getFiles(@Named("token") String token, @Named("user") @Nullable String user) {

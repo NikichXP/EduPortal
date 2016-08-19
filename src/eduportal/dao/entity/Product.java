@@ -28,6 +28,7 @@ public class Product extends AbstractEntity {
 	private String end;
 	private ArrayList<SavedFile> files;
 	private String currency;
+	@Index
 	private String provider;
 	
 	public Product () {
