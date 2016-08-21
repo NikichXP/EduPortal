@@ -21,7 +21,9 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	@Index
 	protected String mail;
 	@Index
-	@Getter @Setter protected String name;
+	@Getter
+	@Setter
+	protected String name;
 	@Index
 	protected String surname;
 	@Index
@@ -34,7 +36,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	protected String creator;
 	@Index
 	protected boolean isActive;
-	
+
 	public boolean hasNull() {
 		if (fathersname == null) {
 			return true;
@@ -66,7 +68,8 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		this.userData = new HashMap<>();
 	}
 
-	public UserEntity(String fathersName, String name, String surname, String mail, String pass, String phone, Date date) {
+	public UserEntity(String fathersName, String name, String surname, String mail, String pass, String phone,
+			Date date) {
 		super();
 		genId();
 		this.fathersname = fathersName;
@@ -90,7 +93,7 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 	public HashMap<String, String> toMap() {
 		return userData;
 	}
-	
+
 	public boolean getRealActive() {
 		return isActive;
 	}
@@ -124,7 +127,11 @@ public class UserEntity implements Serializable, Comparable<UserEntity> {
 		if (pass == null) {
 			return;
 		}
-		this.pass = UserUtils.encodePass(pass);
+		if (pass.length() == 128) {
+			this.pass = pass;
+		} else {
+			this.pass = UserUtils.encodePass(pass);
+		}
 	}
 
 	public Employee creatorEntity() {

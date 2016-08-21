@@ -61,8 +61,20 @@ public class UserAPI {
 	
 	@ApiMethod (path = "resetpass", httpMethod = "GET")
 	public Text resetPass (@Named ("user") String userid, @Named("token") String token, @Named ("newpass") String newpass) {
-		//TODO Do reset
-		return new Text ("Good");
+		Employee emp = AuthContainer.getEmp(token);
+		if (emp == null) {
+			return new Text ("Сессия окончилась или не была начата. Залогиньтесь на главной странице.");
+		}
+		UserEntity user = UserDAO.get(userid);
+		if (user == null) {
+			return new Text ("Пользователь с таким идентификатором не найден. Перезапустите систему и попробуйте вновь.");
+		}
+		if (AccessLogic.canEditUser(emp, user)) {
+			int length = user.getMail().indexOf('@');
+			user.setPass(user.getMail().substring(0, (length != -1) ? length : 8));
+			return new Text (user.getMail().substring(0, (length != -1) ? length : 8));
+		}
+		return new Text ("Не удалось сменить пароль. Недостаточно прав доступа.");
 	}
 
 	@ApiMethod(path = "getUserFiles", httpMethod = "GET")

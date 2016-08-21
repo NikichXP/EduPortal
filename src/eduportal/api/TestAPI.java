@@ -54,9 +54,7 @@ public class TestAPI {
 	}
 
 	@ApiMethod(name = "Rebuild__DB", path = "rebuildDB", httpMethod = "GET")
-	public List<String> rebuildDB(@Named("size") String size, @Named("usersize") @Nullable Integer usersize,
-			@Named("ordersize") @Nullable Integer ordersize, @Named("shuffled") @Nullable Boolean shuffled,
-			@Named("prior") @Nullable Integer prior) {
+	public List<String> rebuildDB(@Named("size") String size) {
 		ofy().cache(true).flush();
 		for (Class<?> clazz : UserAPI.objectifiedClasses) {
 			for (Object u : ofy().load().kind(clazz.getSimpleName()).list()) {
@@ -64,15 +62,15 @@ public class TestAPI {
 			}
 		}
 		Employee[] admins = {
-				new Employee("AA555555", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
+				new Employee("Adminovich", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
 						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
-				new Employee("SQ512312", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
+				new Employee("Ordovich", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new Employee("RZ412231", "Adminus", "Maximus", "adminus@corp.com", "adminus", "+123456789016",
+				new Employee("Superus", "Adminus", "Maximus", "adminus@corp.com", "adminus", "+123456789016",
 						new Date()).setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new Employee("VW155555", "User", "User", "user@corp.com", "user", "+123456789013", new Date())
+				new Employee("User", "User", "User", "user@corp.com", "user", "+123456789013", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),
-				new Employee("JD151995", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
+				new Employee("Wax", "John", "Doe", "john@doe.com", "johndoe", "+123456789014", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL) };
 		for (Employee user : admins) {
 			user.setCreator(admins[0].getId());
@@ -86,35 +84,37 @@ public class TestAPI {
 		if (size == null) {
 			size = "norm";
 		}
-		switch (size) {
-		case "big":
-			dbsize = 100;
-			break;
-		case "large":
-			dbsize = 500;
-			break;
-		case "ultra":
-			dbsize = 1_000;
-			break;
-		case "mega":
-			dbsize = 10_000;
-			break;
-		case "fuck":
-			dbsize = 512_000;
-			break;
-		default:
-			dbsize = 20;
-			break;
+		try {
+			dbsize = Integer.parseInt(size);
+		} catch (Exception e) {
+			switch (size) {
+			case "big":
+				dbsize = 100;
+				break;
+			case "large":
+				dbsize = 500;
+				break;
+			case "ultra":
+				dbsize = 1_000;
+				break;
+			case "mega":
+				dbsize = 10_000;
+				break;
+			case "fuck":
+				dbsize = 512_000;
+				break;
+			default:
+				dbsize = 20;
+				break;
+			}
 		}
-		if (usersize == null) {
-			usersize = 100;
-		}
-		clients = new ClientEntity[usersize];
-		String[] clientName = NameGen.genNames(clients.length * 2);
+		clients = new ClientEntity[dbsize];
+		String[] clientName = NameGen.genNames(clients.length * 3);
 		for (int i = 0; i < clients.length; i++) {
 			clients[i] = new ClientEntity();
-			clients[i].setName(clientName[2 * i]);
-			clients[i].setSurname(clientName[2 * i + 1]);
+			clients[i].setName(clientName[3 * i]);
+			clients[i].setSurname(clientName[3 * i + 1]);
+			clients[i].setFathersname(clientName[3 * i] + "vych");
 			clients[i].setPass("pass" + i);
 			clients[i].setMail("user" + i + "@corp.com");
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
@@ -135,15 +135,8 @@ public class TestAPI {
 				clients[i].setActive(true);
 			}
 		}
-		if (prior != null) {
-			if (prior < admins.length) {
-				for (UserEntity u : clients) {
-					if (Math.random() > 0.33) {
-						u.setCreator(admins[prior].getId());
-					}
-				}
-			}
-		}
+		
+		//Test testovich 
 		ClientEntity test1 = new ClientEntity("Testovich", "Test", "Testov", "test@qwe.rty", "test", "+123455556789", new Date());
 		test1.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
 					+ "-" + (1 + (int) (Math.random() * 31)));
@@ -161,6 +154,11 @@ public class TestAPI {
 		ofy().save().entity(test1);
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);
+		
+		//End creating users
+		
+		
+		
 		City[] c = { GeoDAO.createCity("Kiev", "Ukraine"), GeoDAO.createCity("Lvov", "Ukraine"),
 				GeoDAO.createCity("Prague", "Czech Republic"), GeoDAO.createCity("Budapest", "Hungary"),
 				GeoDAO.createCity("London", "United Kingdom") };
@@ -180,14 +178,13 @@ public class TestAPI {
 		}
 		ProductDAO.save(p);
 		Random r = new Random();
-		int i = 0;
 		for (ClientEntity cli : clients) {
 			if (cli.isActive()) {
 				Order ord = new Order();
 				cli.setOrderid(ord.getId());
 				ord.setClient(cli);
 				ord.setProduct(p[r.nextInt(p.length)]);
-				ord.setCreatedBy(admins[i++ % admins.length]);
+				ord.setCreatedBy(cli.getCurator());
 				if (Math.random() > 0.5) {
 					ord.setPaid(ord.getPrice());
 				} else {

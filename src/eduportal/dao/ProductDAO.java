@@ -10,12 +10,8 @@ public class ProductDAO {
 		ofy().save().entity(p).now();
 		return (ofy().load().type(Product.class).id(p.getId()).now() != null);
 	}
-
-	public static Product get(String productId) {
-		return ofy().load().type(Product.class).id(productId).now();
-	}
 	
-	public static Product get(Long id) {
+	public static Product get(String id) {
 		return ofy().load().type(Product.class).id(id).now();
 	}
 	

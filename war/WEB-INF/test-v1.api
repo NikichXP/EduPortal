@@ -85,15 +85,36 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.testAPI.test1" : {
-      "path" : "test1",
+    "test.listSessions" : {
+      "path" : "listsession",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.test1",
+      "rosyMethod" : "eduportal.api.TestAPI.listSession",
       "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.rebuild__DB" : {
+      "path" : "rebuildDB",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.rebuildDB",
+      "request" : {
+        "parameters" : {
+          "size" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
         "body" : "empty"
       },
       "response" : {
@@ -115,43 +136,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.rebuild__DB" : {
-      "path" : "rebuildDB",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.rebuildDB",
-      "request" : {
-        "parameters" : {
-          "size" : {
-            "type" : "string",
-            "required" : true
-          },
-          "usersize" : {
-            "type" : "int32",
-            "required" : false
-          },
-          "ordersize" : {
-            "type" : "int32",
-            "required" : false
-          },
-          "shuffled" : {
-            "type" : "boolean",
-            "required" : false
-          },
-          "prior" : {
-            "type" : "int32",
-            "required" : false
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "test.testAPI.getAllObj" : {
       "path" : "getAllObj",
       "httpMethod" : "GET",
@@ -167,14 +151,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.listSessions" : {
-      "path" : "listsession",
+    "test.testAPI.test1" : {
+      "path" : "test1",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.listSession",
+      "rosyMethod" : "eduportal.api.TestAPI.test1",
       "request" : {
         "body" : "empty"
       },
@@ -259,12 +243,7 @@
           "$ref" : "Text"
         }
       },
-      "eduportal.api.TestAPI.test1" : {
-        "response" : {
-          "$ref" : "_anyCollection"
-        }
-      },
-      "eduportal.api.TestAPI.getAllAuth" : {
+      "eduportal.api.TestAPI.listSession" : {
         "response" : {
           "$ref" : "StringCollection"
         }
@@ -274,14 +253,19 @@
           "$ref" : "StringCollection"
         }
       },
+      "eduportal.api.TestAPI.getAllAuth" : {
+        "response" : {
+          "$ref" : "StringCollection"
+        }
+      },
       "eduportal.api.TestAPI.getAllObj" : {
         "response" : {
           "$ref" : "_anyCollection"
         }
       },
-      "eduportal.api.TestAPI.listSession" : {
+      "eduportal.api.TestAPI.test1" : {
         "response" : {
-          "$ref" : "StringCollection"
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.testCookies" : {

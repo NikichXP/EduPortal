@@ -86,8 +86,8 @@
 				%>
 				<tr>
 					<td><%=u.getName() + " " + u.getSurname()%></td>
-					<td>Создатель</td>
-					<td>Файлы</td>
+					<td><%= u.getMail() %></td>
+					<td><%= u.getFiles().size() %></td>
 					<td><input type="button" value = 'RESET' id='passreset<%=u.getMail().replaceAll("@", "-at-").replaceAll("\\.", "-dot-") %>'/></td>
 					<script>
 					$('#passreset<%=u.getMail().replaceAll("@", "-at-").replaceAll("\\.", "-dot-") + "'"%>).on('click', function() {

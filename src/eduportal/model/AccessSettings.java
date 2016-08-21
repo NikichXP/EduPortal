@@ -24,7 +24,7 @@ public class AccessSettings {
 	public static final int EDIT_ORDER = MODERATOR_LEVEL;
 	public static final int LIST_TOKENS = ADMIN_LEVEL;
 	public static final int LIST_USERS = MODERATOR_LEVEL;
-	public static final int LIST_OFFLINE_PRODUCTS = MODERATOR_LEVEL;
+	public static final int LIST_OFFLINE_PRODUCTS = MODERATOR_LEVEL - 1;
 	public static final int LIST_ACTUAL_PRODUCTS = EVERYONE;
 	public static final int DEACTIVATE_PRODUCTS = MODERATOR_LEVEL;
 	public static final int CREATE_CITY = ADMIN_LEVEL;

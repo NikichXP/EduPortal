@@ -8,6 +8,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Api(name = "order", version = "v1", title = "Order/Product API")
 public class OrderAPI {
@@ -21,11 +24,11 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "getProductById", path = "getproductbyid", httpMethod = "GET")
-	public Product getById(@Named("id") Long id, @Named("token") String token) {
+	public Object getById(@Named("id") String id, @Named("token") String token) {
 		if (AccessLogic.canSeeAllProducts(token)) {
 			return ProductDAO.get(id);
 		}
-		return null;
+		return new Text("No product get");
 	}
 
 	@ApiMethod(name = "getAllProducts", path = "allProducts", httpMethod = "GET")
@@ -37,7 +40,7 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(name = "setActivity", httpMethod = "GET", path = "productActivation")
-	public Text setUnActualProduct(@Named("id") Long id, @Named("token") String token,
+	public Text setUnActualProduct(@Named("id") String id, @Named("token") String token,
 			@Named("actual") Boolean actual) {
 		if (AccessLogic.canActivateProduct(token)) {
 			try {
@@ -54,7 +57,7 @@ public class OrderAPI {
 	}
 
 	@ApiMethod(path = "createorder", httpMethod = "GET")
-	public Order createOrder(@Named("productid") Long productid, @Named("clientid") String clientid,
+	public Order createOrder(@Named("productid") String productid, @Named("clientid") String clientid,
 			@Named("token") String token, @Named("paid") @Nullable Double paid, @Named("year") Integer year,
 			@Named("comment") @Nullable String comment) { // Token to identify
 															// creator
@@ -198,6 +201,23 @@ public class OrderAPI {
 		p.setDefaultPrice(price);
 		ProductDAO.save(p);
 		return new Text(p.toString());
+	}
+	
+	@ApiMethod (name = "addProductPost", httpMethod = "POST", path = "product/add")
+	public Text addProductPost (ProductDeploy product) {
+		return new Text (product.toString());
+	}
+	
+	@ApiMethod (name = "editProductPost", httpMethod = "POST", path = "product/edit")
+	public Text editProductPost (ProductDeploy product) {
+		return new Text (product.toString());
+	}
+	
+	@Data
+	@EqualsAndHashCode(callSuper = true)
+	@ToString(callSuper = true)
+	class ProductDeploy extends Product {
+		private String token;
 	}
 
 }
