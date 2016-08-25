@@ -7,24 +7,26 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<!-- TEST STRING -->
+
 	<groupId>com.googlecode.objectify</groupId>
 	<artifactId>eduportal-1277</artifactId>
 	<version>beta</version>
 	<!-- <packaging>jar</packaging> -->
 
-	<!-- <profiles> <profile> <id>release-sign-artifacts</id> <activation> <property> 
-		<name>performRelease</name> <value>true</value> </property> </activation> 
-		<build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
-		<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals> 
-		<goal>sign</goal> </goals> </execution> </executions> </plugin> </plugins> 
+	<!-- <profiles> <profile> <id>release-sign-artifacts</id> <activation> <property>
+		<name>performRelease</name> <value>true</value> </property> </activation>
+		<build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId>
+		<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals>
+		<goal>sign</goal> </goals> </execution> </executions> </plugin> </plugins>
 		</build> </profile> </profiles> -->
 
 	<build>
-		<!-- <resources> <resource> <directory>src/main/java</directory> <includes> 
-			<include>**/NotFoundException.java</include> <include>**/*_CustomFieldSerializer.java</include> 
-			</includes> <excludes> We have a special way of doing this on client, pulled 
-			in as a normal resource <exclude>com/googlecode/objectify/impl/ref/LiveRef_CustomFieldSerializer.java</exclude> 
-			</excludes> </resource> <resource> <directory>src/main/resources</directory> 
+		<!-- <resources> <resource> <directory>src/main/java</directory> <includes>
+			<include>**/NotFoundException.java</include> <include>**/*_CustomFieldSerializer.java</include>
+			</includes> <excludes> We have a special way of doing this on client, pulled
+			in as a normal resource <exclude>com/googlecode/objectify/impl/ref/LiveRef_CustomFieldSerializer.java</exclude>
+			</excludes> </resource> <resource> <directory>src/main/resources</directory>
 			</resource> </resources> -->
 
 		<plugins>
