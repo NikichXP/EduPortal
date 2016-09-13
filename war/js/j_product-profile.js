@@ -4,9 +4,11 @@
 	
 
 	
+	var prodID = getCookie('productID');
+
 	var userData = {
 		'token' : getCookie("sesToken"), 
-		'id' : getCookie('productID'),
+		'id' : prodID,
 	}
 
 	$.ajax({
@@ -31,7 +33,7 @@
 	
 });
 $(window).unload(function() {
-  		deleteCookie('productID');
+  		//deleteCookie('productID');
 	});
 
 function checkFiles(data)

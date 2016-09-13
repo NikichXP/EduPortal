@@ -39,14 +39,13 @@
 	if (getCookie("accessLevel") == 'ADMIN')
 	{
 		$('#ul-side-menu').append('<li id="menu-adm">Меню администратора</li>');
-		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
+		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');		
 	}
 
 	if (getCookie("accessLevel") == 'AGENT')
 	{
 		$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
-		$('input#input-paid').css('display', 'none');
-
+		$('#order-payment-edit').css('display', 'none');
 	}
 
 
@@ -55,6 +54,7 @@
 		$('li#menu-client-open').toggle();
 		//$('li#menu-create-order').toggle();
 		$('li#menu-product-page').toggle();
+		$('div#order-payment-edit').css('display', 'none');
 		//$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
 	}
 
