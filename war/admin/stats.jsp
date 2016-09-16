@@ -168,6 +168,43 @@
 			</table>
 		</div>
 
+		<h1>Provider stats</h1>
+		<div class='table-div'>
+			<table class='table-list'>
+				<tr class='table-list-header'>
+					<td>Провайдер</td>
+					<td>Количество заказов</td>
+					<td>Оплачено</td>
+					<td>Итого</td>
+					<td>Долг</td>
+				</tr>
+				<%
+				HashMap <String, Double> compPaid = new HashMap();
+				HashMap <String, Double> compTotal = new HashMap();
+				for (Product prod : prodlist) {
+					double summPaid = (compPaid.get(prod.getProvider()) != null) ? compPaid.get(prod.getProvider()) : 0;
+					double summTotal = (compTotal.get(prod.getProvider()) != null) ? compTotal.get(prod.getProvider()) : 0;
+					for (Order ord : OrderDAO.getOrdersByProduct(prod)) {
+						summPaid += ord.getPaid();
+						summTotal += ord.getPrice();
+					}
+					compPaid.put(prod.getProvider(), summPaid);
+					compTotal.put(prod.getProvider(), summTotal);
+				}
+				for (String str : compPaid.keySet()) {
+				%>
+				<tr>
+				<td><%=str %></td>
+				<td>%%%</td>
+				<td><%=compPaid.get(str) %></td>
+				<td><%=compTotal.get(str) %></td>
+				<td><%=compPaid.get(str)-compTotal.get(str) %></td>
+				</tr>
+				<%}%>
+			</table>
+
+		</div>
+
 	</div>
 </body>
 </html>

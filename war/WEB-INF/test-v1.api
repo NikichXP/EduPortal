@@ -70,14 +70,35 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.ping" : {
-      "path" : "ping",
+    "test.rebuild__DB" : {
+      "path" : "rebuildDB",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.ping",
+      "rosyMethod" : "eduportal.api.TestAPI.rebuildDB",
+      "request" : {
+        "parameters" : {
+          "size" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "test.testAPI.test1" : {
+      "path" : "test1",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.TestAPI.test1",
       "request" : {
         "body" : "empty"
       },
@@ -100,21 +121,15 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.rebuild__DB" : {
-      "path" : "rebuildDB",
+    "test.testAPI.testCookies" : {
+      "path" : "cookies",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.rebuildDB",
+      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
       "request" : {
-        "parameters" : {
-          "size" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
         "body" : "empty"
       },
       "response" : {
@@ -151,29 +166,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "test.testAPI.test1" : {
-      "path" : "test1",
+    "test.ping" : {
+      "path" : "ping",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.test1",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "test.testAPI.testCookies" : {
-      "path" : "cookies",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.TestAPI.testCookies",
+      "rosyMethod" : "eduportal.api.TestAPI.ping",
       "request" : {
         "body" : "empty"
       },
@@ -238,9 +238,14 @@
           "$ref" : "StringCollection"
         }
       },
-      "eduportal.api.TestAPI.ping" : {
+      "eduportal.api.TestAPI.rebuildDB" : {
         "response" : {
-          "$ref" : "Text"
+          "$ref" : "StringCollection"
+        }
+      },
+      "eduportal.api.TestAPI.test1" : {
+        "response" : {
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.listSession" : {
@@ -248,9 +253,9 @@
           "$ref" : "StringCollection"
         }
       },
-      "eduportal.api.TestAPI.rebuildDB" : {
+      "eduportal.api.TestAPI.testCookies" : {
         "response" : {
-          "$ref" : "StringCollection"
+          "$ref" : "_anyCollection"
         }
       },
       "eduportal.api.TestAPI.getAllAuth" : {
@@ -263,14 +268,9 @@
           "$ref" : "_anyCollection"
         }
       },
-      "eduportal.api.TestAPI.test1" : {
+      "eduportal.api.TestAPI.ping" : {
         "response" : {
-          "$ref" : "_anyCollection"
-        }
-      },
-      "eduportal.api.TestAPI.testCookies" : {
-        "response" : {
-          "$ref" : "_anyCollection"
+          "$ref" : "Text"
         }
       }
     }

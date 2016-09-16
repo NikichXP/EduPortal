@@ -224,6 +224,9 @@ public class TestAPI {
 	public List<Object> getAllObj() {
 		List<Object> ret = new ArrayList<>();
 		for (Class<?> clazz : UserAPI.objectifiedClasses) {
+			if (clazz.equals(AuthSession.class)) {
+				continue;
+			}
 			for (Object o : ofy().load().kind(clazz.getSimpleName()).list()) {
 				ret.add(o);
 			}

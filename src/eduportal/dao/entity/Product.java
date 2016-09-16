@@ -50,6 +50,7 @@ public class Product extends AbstractEntity {
 	public City getCity() {
 		return Ref.create(city).get();
 	}
+	
 	public void setCity(City city) {
 		this.city = Ref.create(city).getKey();
 	}
