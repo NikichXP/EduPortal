@@ -80,6 +80,7 @@
 					<td>Почта</td>
 					<td>Файлы</td>
 					<td>Смена пароля</td>
+					<td>Зайти за него</td>
 				</tr>
 				<%
 					for (UserEntity u : UserDAO.getClients(user)) {
@@ -89,8 +90,9 @@
 					<td><%= u.getMail() %></td>
 					<td><%= u.getFiles().size() %></td>
 					<td><input type="button" value = 'RESET' id='passreset<%=u.getMail().replaceAll("@", "-at-").replaceAll("\\.", "-dot-") %>'/></td>
+					<td><input type="button" value = 'Login' id='login<%=u.getId()%>'></td>
 					<script>
-					$('#passreset<%=u.getMail().replaceAll("@", "-at-").replaceAll("\\.", "-dot-") + "'"%>).on('click', function() {
+					$(<%="'#passreset" + u.getMail().replaceAll("@", "-at-").replaceAll("\\.", "-dot-") + "'"%>).on('click', function() {
 						if (confirm('Are u sure')) {
 							var userData = {
 									user: '<%= u.getId() + "'" %>,
@@ -106,7 +108,11 @@
 								},
 							});
 						}
-					})
+					});
+					
+					$(<%= "'#login" + u.getId() + "'"%>).on('click', function() {
+						window.location.href='/admin/swapcookie.jsp?target=<%=u.getId() + "'"%>;
+					});
 					</script>
 				</tr>
 				<%

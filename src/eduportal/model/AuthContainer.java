@@ -19,60 +19,22 @@ public class AuthContainer {
 		cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	}
 
-	private static Set<String> keySet() {
-		Set<String> ret = sessions.keySet();
-		return ret;
-	}
-
-	private static AuthSession get(String key) {
-		if (sessions.get(key) != null) {
-			return sessions.get(key);
-		}
-		try {
-			Future<Object> futureValue = cache.get(key);
-			AuthSession session = (AuthSession) futureValue.get();
-			if (session != null) {
-				return session;
-			}
-		} catch (Exception e) {
+	public static AuthToken requireAuth (Employee emp, UserEntity target) {
+		if (AccessLogic.canEditUser(emp, target) == false) {
 			return null;
 		}
-		AuthSession ret = ofy().load().type(AuthSession.class).id(key).now();
-		if (ret == null) {
-			return ret;
-		} else {
-			sessions.put(key, ret); // back-impl
-		}
-		if (ret.getTimeout() < System.currentTimeMillis()) {
-			List<AuthSession> clearList = ofy().load().type(AuthSession.class)
-					.filter("timeout < ", System.currentTimeMillis()).list();
-			ofy().delete().entities(clearList);
-			ret = null;
-		}
-		return ret;
+		return auth(target);
 	}
-
-	private static void put(String key, AuthSession value) {
-		value.setToken(key);
-		sessions.put(key, value);
-		cache.put(key, value, Expiration.byDeltaSeconds(3600 * 24)); // 1 day
-		ofy().save().entity(value);
-	}
-
-	public static void remove(String token) {
-		try {
-			sessions.remove(token);
-		} catch (Exception e) {
-		}
-		cache.delete(token);
-		ofy().delete().type(AuthSession.class).id(token).now();
-	}
-
+	
 	public static AuthToken authenticate(String login, String pass) {
 		UserEntity user = UserDAO.get(login, pass);
 		if (user == null) {
 			return new AuthToken().setAccessLevel("FAIL");
 		}
+		return auth(user);
+	}
+	
+	private static AuthToken auth(UserEntity user) {
 		String token = UUID.randomUUID().toString();
 		AuthSession session = new AuthSession(user);
 		synchronized (sessions) {
@@ -89,7 +51,6 @@ public class AuthContainer {
 			}
 		}
 		return ret;
-
 	}
 
 	public static boolean checkReq(String token, int acclvl) {
@@ -173,6 +134,55 @@ public class AuthContainer {
 			}
 			return true;
 		}
+	}
+	
+	private static Set<String> keySet() {
+		Set<String> ret = sessions.keySet();
+		return ret;
+	}
+
+	private static AuthSession get(String key) {
+		if (sessions.get(key) != null) {
+			return sessions.get(key);
+		}
+		try {
+			Future<Object> futureValue = cache.get(key);
+			AuthSession session = (AuthSession) futureValue.get();
+			if (session != null) {
+				return session;
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		AuthSession ret = ofy().load().type(AuthSession.class).id(key).now();
+		if (ret == null) {
+			return ret;
+		} else {
+			sessions.put(key, ret); // back-impl
+		}
+		if (ret.getTimeout() < System.currentTimeMillis()) {
+			List<AuthSession> clearList = ofy().load().type(AuthSession.class)
+					.filter("timeout < ", System.currentTimeMillis()).list();
+			ofy().delete().entities(clearList);
+			ret = null;
+		}
+		return ret;
+	}
+
+	private static void put(String key, AuthSession value) {
+		value.setToken(key);
+		sessions.put(key, value);
+		cache.put(key, value, Expiration.byDeltaSeconds(3600 * 24)); // 1 day
+		ofy().save().entity(value);
+	}
+
+	public static void remove(String token) {
+		try {
+			sessions.remove(token);
+		} catch (Exception e) {
+		}
+		cache.delete(token);
+		ofy().delete().type(AuthSession.class).id(token).now();
 	}
 
 	// CUT BELOW

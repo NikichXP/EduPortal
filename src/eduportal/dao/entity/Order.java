@@ -78,6 +78,7 @@ public class Order implements Serializable {
 		this.product = product.getId();
 		this.productName = product.getTitle();
 		this.setPrice(product.getDefaultPrice());
+		this.setCurrency(product.getCurrency());
 		return this;
 	}
 
@@ -108,7 +109,7 @@ public class Order implements Serializable {
 		}
 		return false;
 	}
-
+	
 	// <!--- For frontend-only! ---!>
 
 	private String clientName;

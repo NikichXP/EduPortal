@@ -18,6 +18,7 @@
 <title>Statistics</title>
 </head>
 <%
+	UserAPI u = new UserAPI();
 	Employee user = null;
 	String token = null;
 	for (Cookie c : request.getCookies()) {
@@ -42,6 +43,9 @@
 %>
 <body>
 	<div id='main-div'>
+		<div class="div-form-button">
+			<a href=/admin/moderator.jsp>Назад на панель управления</a>
+		</div>
 		<h1>
 			Статистика:
 			<%=user.getCorporation()%>
