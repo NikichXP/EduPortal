@@ -111,9 +111,18 @@
 	});
 	//log out
 	$('#menu-logout').on('click', function(){
-		deleteCookie("sesToken");	
-		deleteCookie("sesTO");	
-		window.location = "auth.html";
+		if (getCookie('sesToken') == getCookie('mainToken')) 
+		{
+			deleteCookie("sesToken");	
+			deleteCookie("sesTO");	
+			window.location = "auth.html";
+		}
+		else
+		{
+			setCookie('mainToken', getCookie('sesToken'));
+			location.reload();
+		}
+		
 	});
 	//hide order edit block
 	$('#opacity').on('click', function(){

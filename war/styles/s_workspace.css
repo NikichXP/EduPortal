@@ -1,6 +1,6 @@
 body {
 	margin: 0px;
-	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+	font-family: roboto, tahoma, arial, verdana, sans-serif, Lucida Sans;
 	font-size: 14px; 
 	background-color: #f1f1f1;
 	z-index: 100;
@@ -386,7 +386,7 @@ td.order-create-td-res {
 	cursor: pointer;
 }
 #table-client-menu td:hover {
-	background-color: #435ea4;
+	background-color: #7593E0;
 	color: #fff;
 }
 
@@ -456,7 +456,7 @@ td.order-create-td-res {
 	cursor: pointer;
 }
 #table-product-menu td:hover {
-	background-color: #435ea4;
+	background-color: #7593E0;
 	color: #fff;
 }
 
@@ -493,13 +493,12 @@ td.order-create-td-res {
 	min-width: 930px;
 	background-color: #f1f1f1;
 }
-
+/* #688bb0; */
 #header-main {
 	height: 100%;
-	width: 95%;
-	background-color: /* #688bb0; */ #435ea4;
+	width: 100%;
+	background-color: #435ea4;
 	margin: auto;
-	border-radius: 0 0 20px 20px;
 }
 
 #header-main H1 {
@@ -513,8 +512,8 @@ td.order-create-td-res {
 
 #main {
 	height: 700px;
-	width: 90%;
-	min-width: 732px;
+	width: 100%;
+	min-width: 1150px;
 	/* border: 1px solid #d9e0e7; */
 	margin: auto;
 	margin-top: 0px;
@@ -522,9 +521,9 @@ td.order-create-td-res {
 
 #div-right {
 	height: 100%;
-	width: 70%;
-	min-width: 600px;
-	border: 1px solid #d9e0e7;
+	width: 80%;
+	min-width: 900px;
+	/*border: 1px solid #d9e0e7;*/
 	position: relative;
 	float: left;
 }
@@ -532,25 +531,25 @@ td.order-create-td-res {
 /* SIDE MENU STARTS HERE */
 
 #div-side-menu {
-	width: 15%;
-	min-width: 130px;
+	width: 20%;
+	min-width: 170px;
 	height: 100%;
 	background-color: #f1f1f1;
-	position: relative;
+	/*position: relative;*/
 	float: left;
 }
 
 #ul-side-menu {
 	padding: 0;
-	width: 145px;
+	width: 160px;
 	float: right;
 }
 
 #ul-side-menu li {
 	list-style: none;
-	width: 135px;
-	line-height: 22px;
-	font-size: 12px;
+	width: 160px;
+	line-height: 28px;
+	font-size: 14px;
 	padding-left: 10px;
 	cursor: pointer;
 }
@@ -597,7 +596,7 @@ td.order-create-td-res {
 }
 
 #table-orders-header {
-	background-color: #82a8bc;
+	background-color: #7593E0;
 }
 
 #table-orders td {
@@ -608,7 +607,7 @@ td.order-create-td-res {
 }
 
 .tr-order:hover {
-	background-color: #82a8bc;
+	background-color: #A7BCF2;
 	cursor: pointer;
 }
 
@@ -621,4 +620,8 @@ td.order-create-td-res {
 	text-align: center;
 	font-size: 11px;
 
+}
+
+.with-shadow {
+	box-shadow: 0 0 15px rgba(0,0,0,0.9);
 }

@@ -28,6 +28,7 @@ $(function(){
 				sTO = resData.timeout;
 				sID = resData.sessionId;
 				setCookie("sesToken", sID);
+				setCookie("mainToken", sID);
 				setCookie("sesTO", sTO);
 				setCookie("accessLevel", resData.accessLevel);
 				window.location = "workspace.html";
@@ -51,6 +52,7 @@ $(function(){
 						sTO = resData.timeout;
 						sID = resData.sessionId;
 						setCookie("sesToken", sID);
+						setCookie("mainToken", sID);
 						setCookie("sesTO", sTO);
 						setCookie("accessLevel", resData.accessLevel);
 						window.location = "workspace.html";

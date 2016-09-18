@@ -5,6 +5,7 @@
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 		
 		<link rel='stylesheet' type='text/css' href='styles/s_workspace.css' />
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 		
 		<script type="text/javascript" src="js/cookie_func.js"></script>
 		<script>
@@ -27,7 +28,7 @@
 	<body>
 		<div id="opacity"></div>	
 		
-		<div id="order-edit-payment">
+		<div id="order-edit-payment" class='with-shadow'>
 			<div id="order-payment-text-block"></div>
 			<div id="order-payment-main">	
 				<table id="table-order-payment">
@@ -52,36 +53,6 @@
 			<input type="hidden" id="input-order-Id">
 		</div>
 		
-		<!-- <div id="order-create">
-			<div id="order-create-text-block"></div>
-			<div id="order-create-main">	
-				<table id="table-order-create">
-					<tbody>
-						<tr>
-							<td>Клиент</td>
-							<td id='order-client-name'></td>
-						</tr>
-						<tr>
-							<td>Продукт</td>
-							<td id='order-product-name'></td>
-						</tr>
-						<tr>
-							<td>Стоимость</td>
-							<td id='order-product-price'></td>
-						</tr>
-						<tr>
-							<td>Внесенная оплата</td>
-							<td id='order-product-paid'><input type="text" id="create-input-paid" placeholder="0.00"></td>
-						</tr>
-					</tbody>
-				</table>
-				Загрузить файлы? <input type="checkbox" name="file-upload-chb" id="file-upload-chb">
-				<div class="div-form-button" id="order-create-send">Принять</div>
-			</div>
-			<input type="hidden" id="input-order-client-id">
-			<input type="hidden" id="input-order-product-id">
-		</div> -->
-		
 		<div id="lists-container">
 			<div id="client-list">
 				<p id='client-list-head'>Ваши клиенты</p>
@@ -101,7 +72,7 @@
 			</div>
 		</div>
 		
-		<div id="client-menu">
+		<div id="client-menu" class='with-shadow'>
 			<div id="client-menu-text-block"></div>
 			<div id="client-menu-main">
 				<table id="table-client-menu">
@@ -111,7 +82,7 @@
 			<div class="div-form-button" id="client-menu-create">Добавить клиента</div>	
 		</div>
 
-		<div id="product-menu">
+		<div id="product-menu" class='with-shadow'>
 			<div id="product-menu-text-block"></div>
 			<div id="product-menu-main">
 				<table id="table-product-menu">
@@ -132,7 +103,7 @@
 					<li id="menu-client-open">Мои клиенты</li>
 					<li id="menu-create-order">Оформить заказ</li>
 					<li id="menu-product-page">Продукты</li>
-					<li id="menu-logout">Log Out</li>
+					<li id="menu-logout">Выйти</li>
 					<!-- <li id="menu-showses">Show cookie info</li>
 					<li id="menu-adm">Меню администратора</li>
 					<li id="menu-mod">Меню модератора</li> -->
