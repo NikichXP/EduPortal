@@ -12,6 +12,7 @@
 <title>Управление: модератор</title>
 <link rel='stylesheet' type='text/css' href='s_admin.css' />
 <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="\js/cookie_func.js"></script>
 </head>
 <body>
 	<div id="header">
@@ -110,8 +111,31 @@
 						}
 					});
 					
-					$(<%= "'#login" + u.getId() + "'"%>).on('click', function() {
-						window.location.href='/admin/swapcookie.jsp?target=<%=u.getId() + "'"%>;
+					var userid = '<%= u.getId() %>';
+					
+					$('#login'+userid).on('click', function() {
+						if (confirm('Are u sure')) {
+							$.ajax({
+								type: 'GET',
+								url: 'http://beta-dot-eduportal-1277.appspot.com/admin/swapcookie.jsp?target=' + userid,
+								success: function(resData) {
+									resData = resData.trim()
+									if (resData[0] == '+') {
+										resData = resData.substring(1);
+										setCookie ('mainToken', getCookie('sesToken'));
+										setCookie('sesToken', resData);
+										//window.location.href='\\workspace.html';
+										alert(getCookie('sesToken') + '       ' + getCookie('mainToken'));
+									} else if (resData == 'usernotfound') {
+										alert ('Пользователь не найден? Перезагрузите страницу, попробуйте заново');
+									} else if (resData == 'unexpected') {
+										alert ('Время сессии истекло. Перезайдите в систему');
+									} else {
+										alert (resData);
+									}
+								},
+							});	
+						}
 					});
 					</script>
 				</tr>
