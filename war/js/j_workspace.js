@@ -65,7 +65,7 @@
 	});
 
 	$('#menu-mod').on('click', function(){
-		window.location = "moderator.jsp";
+		window.location = "admin/moderator.jsp";
 	});
 	
 

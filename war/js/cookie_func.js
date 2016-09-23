@@ -24,6 +24,8 @@ function setCookie(name, value, options) {
     }
   }
 
+  updatedCookie += "; path=/;"
+
   document.cookie = updatedCookie;
 }
 
