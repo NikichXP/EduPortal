@@ -65,7 +65,7 @@
 	});
 
 	$('#menu-mod').on('click', function(){
-		window.location = "admin/moderator.jsp";
+		window.location = "moderator.jsp";
 	});
 	
 
@@ -114,6 +114,7 @@
 		if (getCookie('sesToken') == getCookie('mainToken')) 
 		{
 			deleteCookie("sesToken");	
+			deleteCookie("mainToken");
 			deleteCookie("sesTO");	
 			window.location = "auth.html";
 		}

@@ -478,7 +478,7 @@ td.order-create-td-res {
 	width: 80px;
 	margin: auto;
 	margin-top: 10px;
-	background-color: #5269b1;
+	background-color: #7593E0;
 	color: #fff;
 	text-align: center;
 	line-height: 40px;
@@ -531,8 +531,8 @@ td.order-create-td-res {
 /* SIDE MENU STARTS HERE */
 
 #div-side-menu {
-	width: 20%;
-	min-width: 170px;
+	width: 12%;
+	min-width: 180px;
 	height: 100%;
 	background-color: #f1f1f1;
 	/*position: relative;*/
