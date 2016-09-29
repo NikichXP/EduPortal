@@ -3,17 +3,13 @@
 	var $resDiv = $('#div-right');
 	var dateObj = new Date();
 	
-	var authSesToken = getCookie("sesToken");
 	var authSesTO = getCookie("sesTO");
 
 	var ordersList = {};
-	var tokenJson = {
-		token: authSesToken,
-	};
 		
 	
-	if (authSesToken != null)
-		if(authSesTO - dateObj < 0)
+	if (getCookie("sesToken") != null)
+		if(getCookie("sesTO") - dateObj < 0)
 			window.location = "auth.html";
 
 	//check if session ok every 60 secs
@@ -74,7 +70,7 @@
 	$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			$('#p-greeting').append("<h3>Добро пожаловать, " + resData.name + "!</h3>");
 		},	
@@ -83,11 +79,11 @@
 	$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++)
 			{
-				$('#table-orders').append("<tr class='tr-order'>" +
+				$('#table-orders').append("<tr class='tr-hover'>" +
 						"<td>" + (i + 1) + "</td>" +
 						"<td>" + resData.items[i].id + "</td>" +
 						"<td>" + resData.items[i].clientName + "</td>" +
@@ -189,7 +185,7 @@
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;
 			var count = 0;
@@ -222,7 +218,7 @@
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;
 			var count = 0;
@@ -251,7 +247,7 @@
 	});
 	
 	//open payment edit menu
-	$('#table-orders').on("click", "tr.tr-order", function() {
+	$('#table-orders').on("click", "tr.tr-hover", function() {
 		
 		var rowIndex = $(this).index() - 1;
 		
@@ -268,7 +264,7 @@
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			$('#table-order-payment').html("<tbody></tbody>");
 			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
@@ -296,7 +292,7 @@
 		else var payment = 0;
 		
 		var paymentData = {
-			token: authSesToken,
+			token: getCookie("sesToken"),
 			orderid: $('#input-order-Id').val(),
 			paid: payment,
 		};
@@ -325,7 +321,7 @@
 	$('#order-edit-del').on('click', function(){
 
 		var delData = {
-			token: authSesToken,
+			token: getCookie("sesToken"),
 			orderid: $('#input-order-Id').val(),
 		};
 		
@@ -380,7 +376,7 @@
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			if (resData.items)
 			{
@@ -459,7 +455,7 @@
 		$.ajax({
 		type: 'GET',
 		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/products',
-		data: tokenJson,
+		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;
 			var count = 0;

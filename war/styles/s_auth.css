@@ -1,10 +1,10 @@
 body {
 	margin: 0px;
-	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+	font-family: roboto, tahoma, arial, verdana, sans-serif, Lucida Sans;
 	font-size: 14px; 
 }
 
-#opacity{
+/*#opacity{
 	height: 100%;
 	width: 100%;
 	background-color: #fff;
@@ -12,12 +12,12 @@ body {
 	position: absolute;
 	opacity: 0.5;
 	z-index: 500;
-}
+}*/
 #div-auth {
 	position: absolute;
 	height: 200px;
 	width: 350px;
-	background-color: #fff;
+	/*background-color: #fff;*/
 	border: 1px solid #d9e0e7;
 	left: 50%;
 	top: 50%;
@@ -38,7 +38,7 @@ body {
 	margin: 0px;
 }
 
-#div-send-button {
+/*#div-send-button {
 	height: 40px;
 	width: 80px;
 	margin: auto;
@@ -48,7 +48,7 @@ body {
 	text-align: center;
 	line-height: 40px;
 	cursor: pointer;
-}
+}*/
 
 #div-form {
 	margin: auto;
@@ -58,7 +58,7 @@ body {
 }
 
 
-#header {
+/*#header {
 	height: 80px;
 	width: 100%;
 	background-color: #fff;
@@ -78,5 +78,5 @@ body {
 	line-height: 70px;
 	margin-left: 20px;
 }
-
+*/
 

@@ -211,11 +211,8 @@ body {
 }
 
 #table-order-payment {
-	border: 1px solid #d9e0e7;
-	border-spacing: 0px;
 	margin: auto;
 	width: 90%;
-	font-size: 11px
 }
 
 #table-order-payment-header {
@@ -485,28 +482,6 @@ td.order-create-td-res {
 	cursor: pointer;
 }
 
-/* HEADER */
-
-#header {
-	height: 80px;
-	width: 100%;
-	min-width: 930px;
-	background-color: #f1f1f1;
-}
-/* #688bb0; */
-#header-main {
-	height: 100%;
-	width: 100%;
-	background-color: #435ea4;
-	margin: auto;
-}
-
-#header-main H1 {
-	color: #fff;
-	margin: 0px;
-	line-height: 70px;
-	margin-left: 20px;
-}
 
 /* MAIN DIV */
 
@@ -588,28 +563,25 @@ td.order-create-td-res {
 	overflow-x: hidden;
 }
 
-#table-orders {
+/*#table-orders {
 	border: 1px solid #d9e0e7;
 	border-spacing: 0px;
 	width: 100%;
 	font-size: 11px
-}
+}*/
 
-#table-orders-header {
+/*#table-orders-header {
 	background-color: #7593E0;
-}
+}*/
 
-#table-orders td {
+/*#table-orders td {
 	border: 1px solid #d9e0e7;
 	border-spacing: 0px;
 	padding: 10px 5px 10px 5px;
 	text-align: center;
-}
+}*/
 
-.tr-order:hover {
-	background-color: #A7BCF2;
-	cursor: pointer;
-}
+
 
 
 
