@@ -3,6 +3,8 @@ package eduportal.dao.entity;
 import java.io.Serializable;
 import java.util.*;
 
+import javax.annotation.Nullable;
+
 import com.googlecode.objectify.*;
 import com.googlecode.objectify.annotation.*;
 
@@ -29,18 +31,24 @@ public class Order implements Serializable {
 	private Date start;
 	private Date end;
 	@Index
+	@Nullable
+	private String agentid;
+	@Index
+	@Nullable
+	private String curatorid;
+	@Index
 	private Key<Employee> createdBy;
 	private String comment;
 	private ArrayList<SavedFile> files;
 	private String currency;
-	
-	protected final long maxIdValue = 0;
 	
 	public Order() {
 		this.id = UUID.randomUUID().toString().substring(4, 13);
 		comment = "";
 		files = new ArrayList<>();
 		files.ensureCapacity(5);
+		this.agentid = null;
+		this.curatorid = null;
 	}
 
 	public Order(Product p) {
@@ -53,10 +61,24 @@ public class Order implements Serializable {
 		files = new ArrayList<>();
 		files.ensureCapacity(5);
 		this.currency = p.getCurrency();
+		this.agentid = null;
+		this.curatorid = null;
 	}
 	
-	public UserEntity clientEntity() {
-		return Ref.create(client).get();
+	public void defineAgent(Employee agent) {
+		this.agentid = agent.getId();
+	}
+	
+	public void defineCurator(Employee agent) {
+		this.curatorid = agent.getId();
+	}
+	
+	public Employee curatorEntity() {
+		return (curatorid == null) ? null : UserDAO.getEmp(curatorid);
+	}
+	
+	public Employee agentEntity() {
+		return (agentid == null) ? null : UserDAO.getEmp(agentid);
 	}
 
 	public Product productEntity() {
@@ -72,6 +94,10 @@ public class Order implements Serializable {
 		user.setOrderid(this.id);
 		UserDAO.update(user);
 		this.clientName = user.getSurname() + " " + user.getName();
+	}
+	
+	public ClientEntity getClient () {
+		return Ref.create(client).get();
 	}
 
 	public Order setProduct(Product product) {
@@ -121,10 +147,6 @@ public class Order implements Serializable {
 	}
 	
 	// <!-- Somehow it should be here --!>
-	
-	public long getClient() {
-		return client.getId();
-	}
 	
 	public long getCreatedBy() {
 		return createdBy.getId();

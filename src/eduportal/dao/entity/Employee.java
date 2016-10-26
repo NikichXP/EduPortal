@@ -20,15 +20,19 @@ public class Employee extends UserEntity {
 	private int accessLevel;
 	@Index
 	private String corporation;
+	@Index
+	private boolean isAgent;
 	
 	public Employee() {
 		super();
+		isAgent = false;
 		country = new HashSet<>();
 	}
 	
 	public Employee(String string, String string2, String string3, String string4, String string5, String string6,
 			Date date) {
 		super(string, string2, string3, string4, string5, string6, date);
+		isAgent = false;
 		country = new HashSet<>();
 	}
 	

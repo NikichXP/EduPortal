@@ -2,6 +2,7 @@ package eduportal.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.*;
+
 import javax.servlet.http.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
@@ -9,6 +10,7 @@ import com.google.appengine.api.datastore.Text;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
+import logic.OrderLogic;
 
 @Api(name = "test", version = "v1")
 public class TestAPI {
@@ -16,15 +18,11 @@ public class TestAPI {
 	@ApiMethod(path = "test", httpMethod = "GET")
 	public List<Object> test() {
 		ArrayList<Object> ret = new ArrayList<>();
-		List<Product> prodlist = OrderDAO.getProductsByCompany(AccessSettings.OWNERCORP_NAME);
-		ret.add(prodlist);
-		for (Product prod: prodlist) {
-			ret.add(OrderDAO.getOrdersByProduct(prod));
-		}
-		ret.add(ofy().load().type(Order.class).list());
-		return ret;
+		ArrayList<Object> re2t = new ArrayList<>();
+
+		return re2t;
 	}
-	
+
 	@ApiMethod(path = "test1", httpMethod = "GET")
 	public List<Object> test1() {
 		ArrayList<Object> ret = new ArrayList<>();
@@ -75,8 +73,8 @@ public class TestAPI {
 		for (Employee user : admins) {
 			user.setCreator(admins[0].getId());
 			user.setCorporation(AccessSettings.OWNERCORP_NAME);
-			user.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
-					+ "-" + (1 + (int) (Math.random() * 31)));
+			user.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12)) + "-"
+					+ (1 + (int) (Math.random() * 31)));
 			user.addData("This is works", "YEAH");
 		}
 		ClientEntity[] clients;
@@ -104,7 +102,7 @@ public class TestAPI {
 				dbsize = 512_000;
 				break;
 			default:
-				dbsize = 20;
+				dbsize = 25;
 				break;
 			}
 		}
@@ -120,14 +118,14 @@ public class TestAPI {
 			clients[i].setPhone("+5555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
 			clients[i].setCreator(admins[i % admins.length].getId());
 			clients[i].setCurator(admins[i % admins.length]);
-			clients[i].setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
-					+ "-" + (1 + (int) (Math.random() * 31)));
+			clients[i].setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12)) + "-"
+					+ (1 + (int) (Math.random() * 31)));
 			clients[i].addData("Адрес Skype", "skuser" + i);
 			clients[i].addData("Год окончания обучения", (2010 + (int) (Math.random() * 7)) + "");
 			if (Math.random() < 0.7) {
 				for (String str : ClientEntity.userParams) {
 					StringBuilder sb = new StringBuilder();
-					for (String nnn: NameGen.genNames((int)(Math.random()*10) + 1)) {
+					for (String nnn : NameGen.genNames((int) (Math.random() * 10) + 1)) {
 						sb.append(nnn);
 					}
 					clients[i].addData(str, sb.toString());
@@ -135,15 +133,34 @@ public class TestAPI {
 				clients[i].setActive(true);
 			}
 		}
-		
-		//Test testovich 
-		ClientEntity test1 = new ClientEntity("Testovich", "Test", "Testov", "test@qwe.rty", "test", "+123455556789", new Date());
-		test1.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12))
-					+ "-" + (1 + (int) (Math.random() * 31)));
+
+		Employee agents[] = new Employee[15];
+		clientName = NameGen.genNames(agents.length * 3);
+		for (int i = 0; i < agents.length; i++) {
+			agents[i] = new Employee();
+			agents[i].setCorporation(
+					(i < 5) ? AccessSettings.OWNERCORP_NAME : "AgentCorp" + (int) (Math.random() * 2 + 1));
+			agents[i].setName(clientName[3 * i]);
+			agents[i].setSurname(clientName[3 * i + 1]);
+			agents[i].setFathersname(clientName[3 * i] + "vych");
+			agents[i].setPass("pass" + i);
+			agents[i].setMail("user" + i + "@agent.com");
+			agents[i].setPhone("+7555" + ((i < 10) ? "00" + i : (i > 9 && i < 100) ? "0" + i : i) + "12345");
+			agents[i].setCreator(admins[i % admins.length].getId());
+			agents[i].setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12)) + "-"
+					+ (1 + (int) (Math.random() * 31)));
+			agents[i].setAgent(true);
+		}
+
+		// Test testovich
+		ClientEntity test1 = new ClientEntity("Testovich", "Test", "Testov", "test@qwe.rty", "test", "+123455556789",
+				new Date());
+		test1.setBorn("" + (1950 + (int) (Math.random() * 60)) + "-" + (1 + (int) (Math.random() * 12)) + "-"
+				+ (1 + (int) (Math.random() * 31)));
 		test1.setActive(true);
 		for (String str : ClientEntity.userParams) {
 			StringBuilder sb = new StringBuilder();
-			for (String nnn: NameGen.genNames((int)(Math.random()*10) + 1)) {
+			for (String nnn : NameGen.genNames((int) (Math.random() * 10) + 1)) {
 				sb.append(nnn);
 			}
 			test1.addData(str, sb.toString());
@@ -154,11 +171,10 @@ public class TestAPI {
 		ofy().save().entity(test1);
 		ofy().save().entities(admins);
 		ofy().save().entities(clients);
-		
-		//End creating users
-		
-		
-		
+		ofy().save().entities(agents);
+
+		// End creating users
+
 		City[] c = { GeoDAO.createCity("Kiev", "Ukraine"), GeoDAO.createCity("Lvov", "Ukraine"),
 				GeoDAO.createCity("Prague", "Czech Republic"), GeoDAO.createCity("Budapest", "Hungary"),
 				GeoDAO.createCity("London", "United Kingdom") };
@@ -167,8 +183,7 @@ public class TestAPI {
 				new Product("Prague Study School", "Nice Prague school of english, .......", c[2]),
 				new Product("Высшая школа Будапешта", "Описание программы", c[3]),
 				new Product("Высшая школа Лондона", "Описание программы", c[4]),
-				new Product("LSE", "Описание программы", c[4]), 
-				new Product("Ещё один ВУЗ", "Описание программы", c[2]),
+				new Product("LSE", "Описание программы", c[4]), new Product("Ещё один ВУЗ", "Описание программы", c[2]),
 				new Product("КПИ", "Как же без него?", c[0]), };
 		for (Product prod : p) {
 			prod.setActual(Math.random() < 0.75); // chance vary!
@@ -180,16 +195,19 @@ public class TestAPI {
 		Random r = new Random();
 		for (ClientEntity cli : clients) {
 			if (cli.isActive()) {
-				Order ord = new Order();
-				cli.setOrderid(ord.getId());
-				ord.setClient(cli);
-				ord.setProduct(p[r.nextInt(p.length)]);
-				ord.setCreatedBy(cli.getCurator());
+				Order ord = null;
 				if (Math.random() > 0.5) {
-					ord.setPaid(ord.getPrice());
+					ord = OrderLogic.createOrder(cli, cli.getCurator(), p[r.nextInt(p.length)], 0.0, "", null, null);
+					if (Math.random() > 0.5) {
+						ord.setPaid(ord.getPrice());
+					} else {
+						ord.setPaid((double) Math.round(Math.random() * 100.0 * ord.getPrice()) / 100);
+					}
 				} else {
-					ord.setPaid((double) Math.round(Math.random() * 100.0 * ord.getPrice()) / 100);
+					ord = OrderLogic.createOrder(cli, agents[new Random().nextInt(agents.length)],
+							p[r.nextInt(p.length)], 0.0, "", null, null);
 				}
+
 				OrderDAO.saveOrder(ord);
 			}
 		}
@@ -197,11 +215,13 @@ public class TestAPI {
 		ordt.setClient(test1);
 		ordt.setProduct(p[0]);
 		ordt.setCreatedBy(admins[0]);
+		ordt.defineCurator(admins[0]);
 		ofy().save().entity(ordt);
+
 		return getAll();
 	}
-	
-	@ApiMethod(path="getauth", httpMethod = "GET")
+
+	@ApiMethod(path = "getauth", httpMethod = "GET")
 	public ArrayList<String> getAllAuth() {
 		List<AuthSession> l = ofy().load().type(AuthSession.class).list();
 		AuthContainer.reinit(l);

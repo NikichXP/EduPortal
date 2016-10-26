@@ -7,37 +7,41 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.entity.*;
 
 public class OrderDAO {
-	
-	public static List<Order> getOrdersByUser (UserEntity u) {
+
+	public static List<Order> getOrdersByUser(UserEntity u) {
 		List<Order> ret = new ArrayList<>();
 		Key<UserEntity> key = Ref.create(u).key();
 		ret = ofy().load().type(Order.class).filter("user", key).list();
 		ret.addAll(ofy().load().type(Order.class).filter("createdBy", key).list());
 		return ret;
 	}
-	
-	public static List<Product> getProductsByCompany (String corp) {
+
+	public static List<Product> getProductsByCompany(String corp) {
 		return ofy().load().type(Product.class).filter("provider", corp).list();
 	}
-	
-	public static List<Order> getOrdersByProduct (String prod) {
+
+	public static List<Order> getOrdersByProduct(String prod) {
 		return ofy().load().type(Order.class).filter("product", prod).list();
 	}
-	
-	public static List<Order> getOrdersByProduct (Product prod) {
+
+	public static List<Order> getOrdersByProduct(Product prod) {
 		return ofy().load().type(Order.class).filter("product", prod.getId()).list();
 	}
-	
-	public static List<Order> getCreatedOrdersByUser (UserEntity u) {
+
+	public static List<Order> getAgentOnlyOrdersList() {
+		return ofy().load().type(Order.class).filter("curatorid", null).list();
+	}
+
+	public static List<Order> getCreatedOrdersByUser(UserEntity u) {
 		Key<UserEntity> key = Ref.create(u).key();
 		return ofy().load().type(Order.class).filter("createdBy", key).list();
 	}
-	
-	public static List<Order> getSelfOrdersByUser (UserEntity u) {
+
+	public static List<Order> getSelfOrdersByUser(UserEntity u) {
 		Key<UserEntity> key = Ref.create(u).key();
 		return ofy().load().type(Order.class).filter("user", key).list();
 	}
-	
+
 	public static List<Order> getAllOrders() {
 		return ofy().load().type(Order.class).list();
 	}
@@ -45,27 +49,35 @@ public class OrderDAO {
 	public static List<Product> getAllProducts(boolean isActual) {
 		return ofy().load().type(Product.class).filter("actual", isActual).list();
 	}
-	
-	public static void saveOrder (Order o) {
-		if (o.getStart() == null) {
+
+	public static void saveOrder(Order o) {
+		try {
+			if (o.getStart() == null) {
+				o.setStart(new Date());
+			}
+			if (o.getEnd() == null) {
+				o.setEnd(new Date(System.currentTimeMillis() + (1_000 * 3600)));
+			}
+		} catch (NullPointerException e) {
+			if (o == null) {
+				throw new IllegalArgumentException();
+			}
 			o.setStart(new Date());
+			o.setEnd(new Date(System.currentTimeMillis() + (1_000 * 3600)));
 		}
-		if (o.getEnd() == null) {
-			o.setEnd(new Date (System.currentTimeMillis() + ( 1_000 * 3600)));
-		}
-		ofy().save().entity(o); 
+		ofy().save().entity(o);
 	}
-	
-	public static void saveProduct (Product p) {
+
+	public static void saveProduct(Product p) {
 		ofy().save().entity(p).now();
 	}
-	
-	public static boolean saveProduct (String title, String description, City c, double defaultPrice) {
+
+	public static boolean saveProduct(String title, String description, City c, double defaultPrice) {
 		Product p = new Product(title, description, c).setDefaultPrice(defaultPrice);
 		ofy().save().entity(p).now();
 		return true;
 	}
-	
+
 	public static Product getProduct(String product) {
 		return ofy().load().type(Product.class).id(product).now();
 	}
@@ -74,7 +86,7 @@ public class OrderDAO {
 		return ofy().load().type(Order.class).id(id).now();
 	}
 
-	public static void deleteOrder (Order order) {
+	public static void deleteOrder(Order order) {
 		ofy().delete().entity(order);
 	}
 }

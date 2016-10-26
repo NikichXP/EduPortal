@@ -8,6 +8,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import eduportal.dao.*;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
+import logic.OrderLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -62,24 +63,19 @@ public class OrderAPI {
 			@Named("comment") @Nullable String comment) { // Token to identify
 															// creator
 		Employee admin = AuthContainer.getEmp(token);
-		if (admin == null) {
+		if (admin == null || AccessLogic.canCreateOrder(admin) == false) {
 			return null;
 		}
-		if (AccessLogic.canCreateOrder(admin) == false) {
-			return null;
-		}
-		Order o = new Order(ProductDAO.get(productid));
-		if (paid != null) {
-			o.setPaid(paid);
-		}
-		o.setCreatedBy(admin);
-		o.setClient((ClientEntity)UserDAO.get(clientid));
-		o.setComment(comment);
-		// TODO year
-		o.setStart(new Date());
-		o.setEnd(new Date());
+		
+		Order o = OrderLogic.createOrder(clientid, admin.getId(), productid, paid, null, null, comment);
 		OrderDAO.saveOrder(o);
 		return o;
+		
+	}
+	
+	@ApiMethod(path = "unsignedOrders", httpMethod = "GET")
+	public List<Order> getUnsignedOrdersList () {
+		return OrderDAO.getAgentOnlyOrdersList();
 	}
 
 	@ApiMethod(name = "editOrder", path = "editorder", httpMethod = "GET")
@@ -202,21 +198,22 @@ public class OrderAPI {
 		ProductDAO.save(p);
 		return new Text(p.toString());
 	}
-	
-	@ApiMethod (name = "addProductPost", httpMethod = "POST", path = "product/add")
-	public Text addProductPost (ProductDeploy product) {
-		return new Text (product.toString());
+
+	@ApiMethod(name = "addProductPost", httpMethod = "POST", path = "product/add")
+	public Text addProductPost(ProductDeploy product) {
+		return new Text(product.toString());
 	}
-	
-	@ApiMethod (name = "editProductPost", httpMethod = "POST", path = "product/edit")
-	public Text editProductPost (ProductDeploy product) {
-		return new Text (product.toString());
+
+	@ApiMethod(name = "editProductPost", httpMethod = "POST", path = "product/edit")
+	public Text editProductPost(ProductDeploy product) {
+		return new Text(product.toString());
 	}
-	
+
 	@Data
 	@EqualsAndHashCode(callSuper = true)
 	@ToString(callSuper = true)
 	class ProductDeploy extends Product {
+		private static final long serialVersionUID = 1170309933073341696L;
 		private String token;
 	}
 

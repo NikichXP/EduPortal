@@ -111,21 +111,19 @@
 						}
 					});
 					
-					var userid = '<%= u.getId() %>';
-					
-					$('#login'+userid).on('click', function() {
+					$('#login<%= u.getId() + "'"%>).on('click', function() {
 						if (confirm('Are u sure')) {
 							$.ajax({
 								type: 'GET',
-								url: 'http://beta-dot-eduportal-1277.appspot.com/admin/swapcookie.jsp?target=' + userid,
+								url: 'http://beta-dot-eduportal-1277.appspot.com/admin/swapcookie.jsp?target=<%= u.getId() + "'"%>,
 								success: function(resData) {
 									resData = resData.trim()
 									if (resData[0] == '+') {
 										resData = resData.substring(1);
 										setCookie ('mainToken', getCookie('sesToken'));
 										setCookie('sesToken', resData);
-										//window.location.href='\\workspace.html';
-										alert(getCookie('sesToken') + '       ' + getCookie('mainToken'));
+										window.location.href='\\workspace.html';
+										console.log(getCookie('sesToken') + '       ' + getCookie('mainToken'));
 									} else if (resData == 'usernotfound') {
 										alert ('Пользователь не найден? Перезагрузите страницу, попробуйте заново');
 									} else if (resData == 'unexpected') {

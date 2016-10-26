@@ -107,6 +107,18 @@ public class UserDAO {
 	public static UserEntity get(String id) {
 		return ofy().cache(false).load().type(UserEntity.class).id(id).now();
 	}
+	
+	public static ClientEntity getClient(String userid) {
+		return ofy().load().type(ClientEntity.class).id(userid).now();
+	}
+	
+	public static Employee getEmp (String id) {
+		return ofy().load().type(Employee.class).id(id).now();
+	}
+	
+	public static List<Employee> getEmployeeList () {
+		return ofy().load().type(Employee.class).filter("isAgent", "true").list();
+	}
 
 	public static void delete(String target) {
 		UserEntity u = ofy().load().type(UserEntity.class).id(target).now();
@@ -165,5 +177,7 @@ public class UserDAO {
 	public static UserEntity getUserByMail(String mail) {
 		return ofy().load().type(UserEntity.class).filter("mail", mail).first().now();
 	}
+
+	
 
 }

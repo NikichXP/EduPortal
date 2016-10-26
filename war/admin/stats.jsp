@@ -208,6 +208,32 @@
 			</table>
 
 		</div>
+		
+		<h1>Agent stats</h1>
+		<div class='table-div'>
+			<table class='table-list'>
+				<tr class='table-list-header'>
+					<td>Агент</td>
+					<td>Количество заказов</td>
+					<td>Сумма на заказы</td>
+				</tr>
+				<%
+				for (Employee emp: UserDAO.getEmployeeList()) {
+					List<Order> ordList = OrderDAO.getOrdersByUser(emp);
+					double summ = 0;
+					for (Order o : ordList) {
+						summ += o.getPrice();
+					}
+				%>
+				<tr>
+				<td><%=emp %></td>
+				<td><%= ordList.size() %></td>
+				<td><%= summ %></td>
+				</tr>
+				<%}%>
+			</table>
+
+		</div>
 
 	</div>
 </body>
