@@ -24,8 +24,7 @@ public class UserUtils {
 			e.printStackTrace();
 		}
 	}
-
-	/** Encodes password with SHA-512 */
+	
 	public static String encodePass (String pass) {
 		byte[] result = mDigest.digest(pass.getBytes());
 		StringBuffer sb = new StringBuffer();
@@ -35,14 +34,4 @@ public class UserUtils {
 		return sb.toString();
 	}
 	
-	
-	
-//	public UserEntity setModerator (UserEntity u) {
-//		u.setAccessLevel(AccessSettings.MODERATOR_LEVEL);
-//		return u;
-//	}
-	
-	/**
-	 * Here - other methods - adding country etc
-	 */
 }

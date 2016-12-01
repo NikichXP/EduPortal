@@ -1,17 +1,44 @@
 package eduportal.api;
 
-import java.util.List;
-
+import java.util.*;
 import com.google.api.server.spi.config.*;
 import com.google.appengine.api.datastore.Text;
 
 import eduportal.dao.GeoDAO;
+import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
 import eduportal.model.*;
 
-@Api(name = "util", version = "v1", title = "Misc features") 
-public class UtilAPI {
-
+@Api(name = "admin", version = "v1")
+public class AdminAPI {
+	
+	@ApiMethod(path = "myEmployees", httpMethod = "GET", name = "getMyEmployees")
+	public List<UserEntity> myEmployees(@Named("token") String token) {
+		Employee emp = AuthContainer.getEmp(token);
+		if (emp == null) {
+			return null;
+		}
+		return UserDAO.getCorpEmployees(emp.getCorporation());
+	}
+	
+	@ApiMethod(path = "myClients", httpMethod = "GET", name = "getMyClients")
+	public List<UserEntity> myClients (@Named("token") String token) {
+		Employee emp = AuthContainer.getEmp(token);
+		if (emp == null) {
+			return null;
+		}
+		return UserDAO.getClients(emp);
+	}
+	
+	@ApiMethod(path = "unactiveClients", httpMethod = "GET", name = "unactiveClients")
+	public List<UserEntity> unactiveClients (@Named("token") String token) {
+		Employee emp = AuthContainer.getEmp(token);
+		if (emp == null) {
+			return null;
+		}
+		return UserDAO.getUnactiveClients(false);
+	}
+	
 	@ApiMethod (path = "cityList", httpMethod = "GET")
 	public List<City> getCityList () {
 		return GeoDAO.getCityList();
@@ -33,4 +60,5 @@ public class UtilAPI {
 		int resp = GeoDAO.deleteCity(Long.parseLong(cityid));
 		return new Text((resp == -1) ? "City in use" : "Deleted");
 	}
+
 }

@@ -9,14 +9,13 @@ import com.google.appengine.api.blobstore.*;
 import eduportal.dao.OrderDAO;
 import eduportal.dao.UserDAO;
 import eduportal.dao.entity.*;
-import eduportal.model.AccessSettings;
-import eduportal.model.AuthContainer;
+import eduportal.model.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class FileProcessorServlet extends HttpServlet {
 	private static final long serialVersionUID = 4212663183594760678L;
 
-	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	private static BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

@@ -94,6 +94,9 @@ public class AuthContainer {
 
 	public static Employee getEmp(String token) {
 		UserEntity user = getUser(token);
+		if (user == null) {
+			return null;
+		}
 		if (user instanceof Employee) {
 			return (Employee) user;
 		} else {
