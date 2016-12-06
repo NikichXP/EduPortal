@@ -114,10 +114,10 @@ public class UserAPI {
 		if (creator == null || AccessLogic.canCreateUser(creator) == false) {
 			return null;
 		}
-		if (mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
+		if (!mail.matches("[0-9a-zA-Z]{2,}@[0-9a-zA-Z]{2,}\\.[a-zA-Z]{2,5}")) {
 			return null;
 		}
-		if (phone.matches("[+]{0,1}[0-9]{10,12}")) {
+		if (!phone.matches("[+]{0,1}[0-9]{10,12}")) {
 			return null;
 		}
 		if (pass == null) {

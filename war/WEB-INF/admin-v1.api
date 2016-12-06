@@ -25,20 +25,31 @@
     "maxAge" : 0
   },
   "methods" : {
-    "admin.adminAPI.deleteCity" : {
-      "path" : "deletecity",
+    "admin.adminAPI.getCityList" : {
+      "path" : "cityList",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.deleteCity",
+      "rosyMethod" : "eduportal.api.AdminAPI.getCityList",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "admin.getMyEmployees" : {
+      "path" : "myEmployees",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.myEmployees",
       "request" : {
         "parameters" : {
-          "city" : {
-            "type" : "string",
-            "required" : true
-          },
           "token" : {
             "type" : "string",
             "required" : true
@@ -79,21 +90,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "admin.adminAPI.getCityList" : {
-      "path" : "cityList",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.getCityList",
-      "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "admin.unactiveClients" : {
       "path" : "unactiveClients",
       "httpMethod" : "GET",
@@ -102,27 +98,6 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "eduportal.api.AdminAPI.unactiveClients",
-      "request" : {
-        "parameters" : {
-          "token" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "admin.getMyEmployees" : {
-      "path" : "myEmployees",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "eduportal.api.AdminAPI.myEmployees",
       "request" : {
         "parameters" : {
           "token" : {
@@ -156,19 +131,35 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "admin.adminAPI.deleteCity" : {
+      "path" : "deletecity",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "eduportal.api.AdminAPI.deleteCity",
+      "request" : {
+        "parameters" : {
+          "city" : {
+            "type" : "string",
+            "required" : true
+          },
+          "token" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
     "schemas" : {
-      "Text" : {
-        "id" : "Text",
-        "type" : "object",
-        "properties" : {
-          "value" : {
-            "type" : "string"
-          }
-        }
-      },
       "City" : {
         "id" : "City",
         "type" : "object",
@@ -262,6 +253,12 @@
           "creator" : {
             "type" : "string"
           },
+          "active" : {
+            "type" : "boolean"
+          },
+          "realActive" : {
+            "type" : "boolean"
+          },
           "simpleData" : {
             "type" : "array",
             "items" : {
@@ -270,12 +267,6 @@
                 "type" : "string"
               }
             }
-          },
-          "realActive" : {
-            "type" : "boolean"
-          },
-          "active" : {
-            "type" : "boolean"
           }
         }
       },
@@ -306,27 +297,21 @@
             }
           }
         }
+      },
+      "Text" : {
+        "id" : "Text",
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          }
+        }
       }
     },
     "methods" : {
-      "eduportal.api.AdminAPI.deleteCity" : {
-        "response" : {
-          "$ref" : "Text"
-        }
-      },
-      "eduportal.api.AdminAPI.createcity" : {
-        "response" : {
-          "$ref" : "Text"
-        }
-      },
       "eduportal.api.AdminAPI.getCityList" : {
         "response" : {
           "$ref" : "CityCollection"
-        }
-      },
-      "eduportal.api.AdminAPI.unactiveClients" : {
-        "response" : {
-          "$ref" : "UserEntityCollection"
         }
       },
       "eduportal.api.AdminAPI.myEmployees" : {
@@ -334,9 +319,24 @@
           "$ref" : "UserEntityCollection"
         }
       },
+      "eduportal.api.AdminAPI.createcity" : {
+        "response" : {
+          "$ref" : "Text"
+        }
+      },
+      "eduportal.api.AdminAPI.unactiveClients" : {
+        "response" : {
+          "$ref" : "UserEntityCollection"
+        }
+      },
       "eduportal.api.AdminAPI.myClients" : {
         "response" : {
           "$ref" : "UserEntityCollection"
+        }
+      },
+      "eduportal.api.AdminAPI.deleteCity" : {
+        "response" : {
+          "$ref" : "Text"
         }
       }
     }
