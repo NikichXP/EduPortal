@@ -12,6 +12,15 @@ import eduportal.model.*;
 @Api(name = "admin", version = "v1")
 public class AdminAPI {
 	
+	/*
+	 * Contains:
+	 * # users
+	 * # companies
+	 * # city
+	 */
+	
+	// Users here
+	
 	@ApiMethod(path = "myEmployees", httpMethod = "GET", name = "getMyEmployees")
 	public List<UserEntity> myEmployees(@Named("token") String token) {
 		Employee emp = AuthContainer.getEmp(token);
@@ -30,13 +39,30 @@ public class AdminAPI {
 		return UserDAO.getClients(emp);
 	}
 	
-	@ApiMethod(path = "unactiveClients", httpMethod = "GET", name = "unactiveClients")
-	public List<UserEntity> unactiveClients (@Named("token") String token) {
+	@ApiMethod(path = "inactiveClients", httpMethod = "GET", name = "inactiveClients")
+	public List<UserEntity> inactiveClients (@Named("token") String token) {
 		Employee emp = AuthContainer.getEmp(token);
 		if (emp == null) {
 			return null;
 		}
 		return UserDAO.getUnactiveClients(false);
+	}
+	
+	@ApiMethod (path = "listByCompany", httpMethod = "GET") 
+	public List<UserEntity> listByCompany (@Named ("company") String companyName) {
+		return UserDAO.getCorpEmployees(companyName);
+	}
+	
+	// Companies
+	
+	@ApiMethod (path = "listCompanies", httpMethod = "GET")
+	public Set<String> getCompanyList() {
+		List<Employee> list = UserDAO.getEmployeeList();
+		Set<String> ret = new HashSet<>();
+		for (Employee e : list) {
+			ret.add(e.getCorporation());
+		}
+		return ret;
 	}
 	
 	@ApiMethod (path = "cityList", httpMethod = "GET")
@@ -47,8 +73,8 @@ public class AdminAPI {
 	@ApiMethod (path = "createcity", httpMethod = "GET")
 	public Text createcity (@Named("city") String cityname, @Named("country") String countryname, @Named ("token") String token) {
 		Employee user = AuthContainer.getEmp(token);
-		if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL || user.getCorporation().equals(AccessSettings.OWNERCORP_NAME)) {
-			return null;
+		if (user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL || !user.getCorporation().equals(AccessSettings.OWNERCORP_NAME)) {
+			return new Text ("Unauthorised");
 		}
 		Country ctr = GeoDAO.getCountry(countryname);
 		City c = GeoDAO.createCity(cityname, ctr);
