@@ -1,0 +1,19 @@
+.main-container {
+    text-align: center;
+}
+
+.toggler {
+    text-align: center;
+}
+
+.toggler:hover {
+    cursor: pointer;
+}
+
+.table {
+    display: none;
+}
+
+.menu-city {
+    display: none;
+}

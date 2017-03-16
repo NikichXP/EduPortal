@@ -16,30 +16,26 @@
 <body>
 	<%
 		UserEntity user = null;
-		String token = null;
 		for (Cookie c : request.getCookies()) {
 			if (c.getName().equals("sesToken")) {
 				user = AuthContainer.getUser(c.getValue());
-				token = c.getValue();
 			}
 		}
 		if (user == null) {
 			response.sendRedirect("/auth.html");
 		}
 		String exist = request.getParameter("exist");
-		if (exist != null) {
-			String newPass = request.getParameter("new");
-			exist = UserUtils.encodePass(exist);
-			if (user.getPass().equals(exist) == false) {
-				System.out.println("Wrong pass");
-				return;
-			}
-			if (newPass.equals(request.getParameter("valid")) == false) {
-				return;
-			}
-			UserUtils.changePass(user.getMail(), newPass, token);
-			response.sendRedirect("/auth.html");
+		String newPass = request.getParameter("new");
+		exist = UserUtils.encodePass(exist);
+		if (user.getPass().equals(exist) == false) {
+			System.out.println("Wrong pass");
+			return;
 		}
+		if (newPass.equals(request.getParameter("valid")) == false) {
+			return;
+		}
+		user.setPass(newPass);
+		UserDAO.update(user);
 	%>
 	<div id="header">
 		<div id="header-main">

@@ -8,7 +8,7 @@ body {
 
 .div-form-button {
 	height: 40px;
-	width: 80px;
+/*	width: 80px;*/
 	margin: auto;
 	margin-top: 10px;
 	background-color: #7593E0;
@@ -16,6 +16,9 @@ body {
 	text-align: center;
 	line-height: 40px;
 	cursor: pointer;
+/*    display: inline-block;*/
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #opacity{

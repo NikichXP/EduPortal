@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon" />
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+        <link rel="stylesheet" href="admin.css">
+
+		
+		<title>EduPortal</title>
+	</head>
+	
+	
+	<body>
+		
+		<div class='container-fluid'>
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12 bg-primary'><h1>Администрирование</h1></div>
+			</div>	
+			
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12 main-container'>
+				    <button class='btn btn-default' id='button-back'>Назад на основной сайт</button>
+				</div>
+			</div>	
+			
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12'>
+                    <h2 class='toggler page-header' id='toggle-emp'>Список сотрудников</h2>
+				    <table class='table table-striped table-hover table-emp'>
+				        <thead>
+				            <th>Имя</th>    
+				            <th>e-mail</th>  
+				            <th>Доступные страны</th>  
+				            <th>Доступ</th>   
+				        </thead>
+				        <tbody>
+				            
+				        </tbody>
+				    </table>
+				</div>
+			</div>
+			
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12'>
+                    <h2 class='toggler page-header' id='toggle-clients'>Список клиентов</h2>
+				    <table class='table table-striped table-hover table-clients'>
+				        <thead>
+				            <th>Имя</th>    
+				            <th>Email</th>  
+				            <th>Файлы</th>  
+				            <th>Сбросить пароль</th>   
+				            <th>Зайти за пользователя</th>  
+				        </thead>
+				        <tbody>
+				            
+				        </tbody>
+				    </table>
+				    
+				</div>
+			</div>
+			
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12'>
+                    <h2 class='toggler page-header' id='toggle-inactive'>Список неактивных клиентов</h2>
+				    <table class='table table-striped table-hover table-inactive'>
+				        <thead>
+				            <th>Имя</th>    
+				            <th>Создатель</th>  
+				            <th>Файлы</th>  
+				            <th>Активация</th>    
+				        </thead>
+				        <tbody>
+				            
+				        </tbody>
+				    </table>
+				    
+				</div>
+			</div>
+			
+			<div class='row'>
+				<div class='col-lg-12 col-xs-12'>
+                    <h2 class='toggler page-header' id='toggle-city'>Список городов</h2>
+				    <table class='table table-striped table-hover table-city'>
+				        <thead>
+				            <th>ID</th>    
+				            <th>Название города</th>  
+				            <th>Название латиницей</th>  
+				            <th>Название страны</th>   
+				            <th>Название латиницей</th>  
+				        </thead>
+				        <tbody>
+				            
+				        </tbody>
+				    </table>
+				    <div class='form-inline menu-city'>
+				        <input type="text" class='form-control' id='city-name' placeholder='Город'>
+                        <input type="text" class='form-control' id='city-country' placeholder='Страна'>
+                        <button class='btn btn-default' id='add-city'>Добавить город</button>    
+				    </div>
+				    
+				</div>
+			</div>
+			
+			
+
+			
+
+
+		</div>
+
+	
+
+
+		<script type="text/javascript" src="../js/cookie_func.js"></script>
+		<script>
+			var authSesToken = getCookie("sesToken");
+			var authSesTO = getCookie("sesTO");
+			var dateObj = new Date();
+			
+			if (authSesToken != null)
+				if(authSesTO - dateObj < 0)
+					window.location = "auth.html";
+		</script>
+		
+		<script type="text/javascript" src="../js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="admin.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>	
+	</body>
+</html>

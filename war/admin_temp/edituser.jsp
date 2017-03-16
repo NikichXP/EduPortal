@@ -26,7 +26,7 @@
 			}
 		}
 		UserEntity user = UserDAO.get(request.getParameter("id"));
-		if (((Employee)user).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+		if (admin.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			return;
 		}
 		if (user == null) {
@@ -35,7 +35,7 @@
 		}
 
 		if (request.getParameter("mail") != null) {
-			for (String param : user.toMap().keySet()) {
+			for (String param : UserEntity.userParams) {
 				if (request.getParameter(param) != null) {
 					user.putData(param, request.getParameter(param));
 				}
@@ -66,8 +66,13 @@
 						<td><input type="text" name="phone"
 							value="<%=user.getPhone()%>"></td>
 					</tr>
+					<tr>
+						<td>Паспорт:</td>
+						<td><input type="text" name="паспорт"
+							value="<%=user.getPassport()%>"></td>
+					</tr>
 					<%
-						for (String param : user.toMap().keySet()) {
+						for (String param : UserEntity.userParams) {
 					%>
 					<tr>
 						<td><%=param%></td>

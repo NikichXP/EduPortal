@@ -15,9 +15,9 @@
 		<input type="text" name="mail" value="Owner mail"><br> <input
 			type="submit">
 	</form>
-	<a href = "admin.jsp">Go back</a>
+	<a href = "Admin.jsp?token=<%=request.getParameter("token") %>">Go back</a>
 
-	<!--% TODO CreateAgent module 
+	<%
 		if (request.getParameter("name") == null || request.getParameter("mail") == null) {
 			out.print("</body>	</html>");
 			return;
@@ -34,6 +34,6 @@
 	u.setAccessLevel(AccessSettings.ADMIN_LEVEL);
 	UserDAO.createCorp(corp);
 	UserDAO.update(u);
-	% -->
+	%>
 </body>
 </html>

@@ -15,9 +15,6 @@
 <link rel='stylesheet' type='text/css' href='s_admin.css' />
 </head>
 <body>
-	<div class="div-form-button">
-		<a href=/admin/moderator.jsp>Назад на панель управления</a>
-	</div>
 	<%
 		UserEntity user = null;
 		String token = null;
@@ -27,7 +24,7 @@
 				token = c.getValue();
 			}
 		}
-		if (user == null || ((Employee)user).getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
+		if (user == null || user.getAccessLevel() < AccessSettings.MODERATOR_LEVEL) {
 			out.print("</body></html>");
 			return;
 		}
@@ -59,7 +56,7 @@
 				}
 				break;
 			case "city":
-				City c = GeoDAO.getCity(request.getParameter("city"));
+				City c = GeoDAO.getCity("city");
 				if (c != null) {
 					product.setCity(c);
 				} else {
@@ -74,12 +71,6 @@
 							"<script>alert('Вы ввели неверный формат даты начала. Используйте следующий: \"31.03, 31/03 или 31-03\"')</script>");
 				}
 				break;
-			case "active":
-				if (request.getParameter("active").equals("on")) {
-					product.setActual(true);
-				} else {
-					product.setActual(false);
-				}
 			default:
 				break;
 			}
@@ -128,14 +119,10 @@
 						value="<%=product.getCity().getCyrname()%>"></td>
 				</tr>
 			</table>
-			<input type="checkbox" name="active"
-				<%if (product.isActual()) {
-				out.print("checked");
-			}%>>Актуальный
 			<input type="submit" value="Submit changes" id="prodSubmit">
 			<%
 				if (product.getFiles().size() == 0) {
-					out.print("<br>No files attached<br>");
+					out.print("<br>No files attached");
 				} else {
 					for (SavedFile file : product.getFiles()) {
 						out.println(file.toString());
@@ -152,6 +139,5 @@
 				файлы к продукту</a>
 		</div>
 	</form>
-
 </body>
 </html>

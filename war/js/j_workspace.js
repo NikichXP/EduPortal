@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 	var count;	
 	var $resDiv = $('#div-right');
 	var dateObj = new Date();
@@ -57,7 +57,7 @@
 
 
 	$('#menu-adm').on('click', function(){
-		window.location = "admin/admin.jsp";
+		window.location = "admin/admin.html";
 	});
 
 	$('#menu-mod').on('click', function(){
@@ -158,7 +158,7 @@
 	//get client name from table
 	$('#table-client-list').on("click", "td.td-client-list", function() {
 		var chosenClientId = $(this).children('input.inner-client-input-1').val();
-		$('#order-client-name').html($(this).html())
+		$('#order-client-name').html($(this).html());
 		$('#client-list').css('display', 'none');
 		$('#lists-container').css('display', 'none');
 		
@@ -347,7 +347,7 @@
 					{
 						var url = "order-create-table.html?token=" + getCookie("sesToken");
 						var windowName = "Order creation";
-						var windowSize = ["width=450, height=900"];
+						var windowSize = ["width=450, height=800"];
 						window.open(url, windowName, windowSize);
 						event.preventDefault();
 					}
@@ -487,7 +487,7 @@
 
 		var url = "admin/createproduct.jsp?token=" + getCookie("sesToken");
 		var windowName = "Product creation";
-		var windowSize = ["width=520, height=900"];
+		var windowSize = ["width=520, height=800"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});
@@ -498,7 +498,7 @@
 		setCookie('productID', $(this).children('input.inner-product-menu-input-1').val());
 		var url = "product-profile.html?token=" + getCookie("sesToken");
 		var windowName = "Product creation";
-		var windowSize = ["width=520, height=900"];
+		var windowSize = ["width=520, height=800"];
 		window.open(url, windowName, windowSize);
 		event.preventDefault();
 	});

@@ -34,17 +34,7 @@ body {
 	text-align: right;
 }
 
-.div-form-button {
-	height: 40px;
-	width: 135px;
-	margin: auto;
-	margin-top: 10px;
-	background-color: #7593E0;
-	color: #fff;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
-}
+
 
 .order-new-fields-header {
 	font-size: 12px;

@@ -46,7 +46,7 @@
 	<h3>Указанные пользователем поля</h3>
 	<table>
 	<%
-	HashMap<String, String> data = client.toMap();
+	HashMap<String, String> data = client.getUserData();
 		for (String[] param : client.getSimpleData()) {
 	%>
 	<tr>
