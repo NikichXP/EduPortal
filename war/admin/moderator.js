@@ -6,7 +6,7 @@ $(function(){
 	var authSesTO = getCookie("sesTO");
 
 	var ordersList = {};
-	
+	 
     
 	
 	if (getCookie("sesToken") != null)
@@ -27,21 +27,20 @@ $(function(){
 				},
 			});		
 	}, 60000);
-
-	
     
-
-	$.ajax({
+    $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/myEmployees',
+		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/listProducts',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
-				$('.table-emp').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].mail + "</td>" +
-                        "<td>где</td>" +
-						"<td>" + returnAccessLevel(resData.items[i].accessLevel) + "</td>" +
+				$('.table-products').append("<tr>" +
+						"<td>" + resData.items[i].id + "</td>" +
+						"<td>" + resData.items[i].title + "</td>" +
+                        "<td>" + resData.items[i].description + "</td>" +
+                        "<td>" + resData.items[i].city.cyrname + "</td>" +
+                        "<td>" + resData.items[i].start + "</td>" +
+                        "<td>" + resData.items[i].defaultPrice + "</td>" +
 					"</tr>");	
 			};
 		},
@@ -49,7 +48,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/myClients',
+		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/myClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -66,72 +65,56 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/inactiveClients',
+		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/myOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
-				$('.table-inactive').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].creator + "</td>" +
-                        "<td>мда</td>" +
-                        "<td><button value='" + resData.items[i].id + "' class='user-fields btn btn-default'>RESET</button></td>" +
+				$('.table-orders').append("<tr>" +
+                        "<td>" + resData.items[i].id + "</td>" +
+						"<td>" + resData.items[i].client.name + " " + resData.items[i].client.surname + "</td>" +
+						"<td>" + resData.items[i].productName + "</td>" +
+                        "<td>" + resData.items[i].creatorName + "</td>" +
+                        "<td>" + resData.items[i].price + "</td>" +
+						"<td>" + resData.items[i].paid + "</td>" +
 					"</tr>");	
 			};
 		},
 	});
+
     
-    $.ajax({
-		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/cityList',
-//		data: { token: getCookie("sesToken")},
-		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
-				$('.table-city').append("<tr>" +
-						"<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].cyrname + "</td>" +
-                        "<td>" + resData.items[i].name + "</td>" +
-                        "<td>" + resData.items[i].country.cyrname + "</td>" +
-                        "<td>" + resData.items[i].country.name + "</td>" +
-					"</tr>");	
-			};
-		},
-	});	
-    
-     
     
     
     $('body').on("click", "#button-back", function() {
 		window.location.href='../workspace.html';
 	});
     
-    $('body').on("click", "#button-mod", function() {
-		window.location.href='moderator.html';
-	});
-    
-    $('body').on("click", "#toggle-emp", function() {
-		$(".table-emp").toggle();
+    $('body').on("click", "#toggle-products", function() {
+		$(".table-products").toggle();
+        $(".menu-products").toggle();
 	});
     
     $('body').on("click", "#toggle-clients", function() {
 		$(".table-clients").toggle();
 	});
     
-    $('body').on("click", "#toggle-inactive", function() {
-		$(".table-inactive").toggle();
+    $('body').on("click", "#toggle-orders", function() {
+		$(".table-orders").toggle();
 	});
     
-    $('body').on("click", "#toggle-city", function() {
-		$(".table-city").toggle();
-        $(".menu-city").toggle();
-	});
-    
-    $('body').on("click", "#add-city", function() {
+    $('body').on("click", "#add-product", function() {
         $.ajax({
             type: 'GET',
-            url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/createcity',
-    		data: { token: getCookie("sesToken"), city: $("#city-name").val(), country: $("#city-country").val() },
+            url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/product/add',
+    		data: { 
+                token: getCookie("sesToken"), 
+                cityname: $("#product-city").val(), 
+                title: $("#product-name").val(), 
+                description: $("#product-desc").val(), 
+                price: $("#product-price").val(),
+                begin: $("#product-date").val()
+            },
             success: function(resData) { 
-                window.location.reload();
+                //window.location.reload();
             },
         });		
 	});

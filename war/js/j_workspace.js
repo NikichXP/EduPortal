@@ -11,6 +11,8 @@ $(function(){
 	if (getCookie("sesToken") != null)
 		if(getCookie("sesTO") - dateObj < 0)
 			window.location = "auth.html";
+    
+    if (getCookie("sesToken") == null) window.location = "auth.html";
 
 	//check if session ok every 60 secs
 	setInterval(function() 
@@ -61,7 +63,7 @@ $(function(){
 	});
 
 	$('#menu-mod').on('click', function(){
-		window.location = "admin/moderator.jsp";
+		window.location = "admin/moderator.html";
 	});
 	
 
