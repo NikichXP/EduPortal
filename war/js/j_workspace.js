@@ -55,6 +55,9 @@ $(function(){
 		$('div#order-payment-edit').css('display', 'none');
 		//$('#ul-side-menu').append('<li id="menu-mod">Меню модератора</li>');
 	}
+    
+    
+
 
 
 
@@ -279,6 +282,12 @@ $(function(){
 				"<td>" + (resData.items[rowIndex].price - resData.items[rowIndex].paid) + "</td>" + 
 				"<td>" + checkFiles(resData.items[rowIndex]) + "</td>" + 
 			+ "</tr>");
+            
+            $('.file-list').html("");
+            
+            for (var i = 0; i < resData.items[rowIndex].files.length; i++) {
+                $('.file-list').append('<li id=' + resData.items[rowIndex].files[i].id + '>' + (i + 1) + '</li>');    
+            }
 			
 			$('#input-order-Id').val(resData.items[rowIndex].id);
 			$('#opacity').css('display', 'block');
@@ -286,6 +295,15 @@ $(function(){
 		},
 		});	
 	});
+    
+    //dload file
+    $('body').on("click", ".file-list li", function() {
+        var shittyURL = 'https://eduportal-1277.appspot.com/FileProcessorServlet?key=' + $(this).attr('id');
+        window.open(shittyURL, '_blank');
+		
+	});
+    
+    
 	//Send order payment
 	$('#order-edit-send').on('click', function(){
 
