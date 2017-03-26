@@ -148,6 +148,7 @@
     </build>
 
     <properties>
+        <start-class>com.eduportal.AppLoader</start-class>
         <java.version>1.8</java.version>
     </properties>
 
