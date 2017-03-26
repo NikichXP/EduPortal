@@ -130,7 +130,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>AppLoader</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
