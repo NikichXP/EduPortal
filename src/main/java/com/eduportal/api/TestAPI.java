@@ -16,15 +16,18 @@ import com.eduportal.model.OrderLogic;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.stream;
 
 @RestController
 @Controller
@@ -251,6 +254,42 @@ public class TestAPI {
 		orderRepository.save(ordt);
 
 		return getAll();
+	}
+
+	@RequestMapping("/getMappings")
+	public ResponseEntity getMappings() {
+		return ResponseEntity.ok(
+				Stream.of(AdminAPI.class, ModeratorAPI.class, OrderAPI.class, TestAPI.class, UserAPI.class)
+						.flatMap(clz -> stream(clz.getMethods()))
+						.filter(e -> e.getAnnotations().length > 0)
+						.filter((Method e) -> stream(e.getAnnotations())
+								.map(x -> x.annotationType().getSimpleName())
+								.anyMatch(x -> x.equals("RequestMapping") || x.equals("GetMapping")))
+						.map((Method meth) -> stream(meth.getDeclaringClass().getAnnotations())
+								.filter(x -> x.annotationType().getSimpleName().equals("RequestMapping"))
+								.map(x -> (RequestMapping) x)
+								.map(RequestMapping::value)
+								.map(arr -> (arr.length == 1) ? arr[0] : Arrays.toString(arr))
+								.findAny()
+								.orElse("Nothing")
+								+
+								((meth.getAnnotation(RequestMapping.class) != null && meth.getAnnotation(RequestMapping.class).value().length == 1)
+										? meth.getAnnotation(RequestMapping.class).value()[0]
+										: ((meth.getAnnotation(GetMapping.class) != null)
+										? ((meth.getAnnotation(GetMapping.class).value().length == 1)
+										? meth.getAnnotation(GetMapping.class).value()[0]
+										: Arrays.toString(meth.getAnnotation(GetMapping.class).value()))
+										: Arrays.toString(meth.getAnnotation(RequestMapping.class).value()))
+								)
+								+ " :: "
+								+ stream(meth.getParameterAnnotations())
+								.flatMap(Arrays::stream)
+								.filter(x -> x.annotationType().getSimpleName().equals("RequestParam"))
+								.map(x -> (RequestParam) x)
+								.map(RequestParam::value)
+								.reduce((s1, s2) -> s1 + ", " + s2)
+								.orElse("-----"))
+						.collect(Collectors.toList()));
 	}
 
 	@RequestMapping(path = "getauth", method = RequestMethod.GET)
