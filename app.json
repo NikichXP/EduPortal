@@ -1,0 +1,6 @@
+{
+  "name": "Eduportal v2.0",
+  "description": "Eduportal app for VTG",
+  "image": "heroku/java",
+  "addons": [ "heroku-postgresql" ]
+}

@@ -1,3 +1,4 @@
-# Eduportal
+# Contacts
 
-Just test stuff to understand what I can code
+* nikichx2@gmail.com
+* vk.com/id9867491
