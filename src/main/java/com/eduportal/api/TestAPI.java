@@ -256,7 +256,7 @@ public class TestAPI {
 		return getAll();
 	}
 
-	@RequestMapping("/getMappings")
+	@RequestMapping(path = "/getMappings")
 	public ResponseEntity getMappings() {
 		return ResponseEntity.ok(
 				Stream.of(AdminAPI.class, ModeratorAPI.class, OrderAPI.class, TestAPI.class, UserAPI.class)
@@ -272,14 +272,14 @@ public class TestAPI {
 								.map(arr -> (arr.length == 1) ? arr[0] : Arrays.toString(arr))
 								.findAny()
 								.orElse("Nothing")
-								+
-								((meth.getAnnotation(RequestMapping.class) != null && meth.getAnnotation(RequestMapping.class).value().length == 1)
-										? meth.getAnnotation(RequestMapping.class).value()[0]
+								+ "/" +
+								((meth.getAnnotation(RequestMapping.class) != null && meth.getAnnotation(RequestMapping.class).path().length == 1)
+										? meth.getAnnotation(RequestMapping.class).path()[0]
 										: ((meth.getAnnotation(GetMapping.class) != null)
-										? ((meth.getAnnotation(GetMapping.class).value().length == 1)
-										? meth.getAnnotation(GetMapping.class).value()[0]
-										: Arrays.toString(meth.getAnnotation(GetMapping.class).value()))
-										: Arrays.toString(meth.getAnnotation(RequestMapping.class).value()))
+										? ((meth.getAnnotation(GetMapping.class).path().length == 1)
+										? meth.getAnnotation(GetMapping.class).path()[0]
+										: Arrays.toString(meth.getAnnotation(GetMapping.class).path()))
+										: Arrays.toString(meth.getAnnotation(RequestMapping.class).path()))
 								)
 								+ " :: "
 								+ stream(meth.getParameterAnnotations())
