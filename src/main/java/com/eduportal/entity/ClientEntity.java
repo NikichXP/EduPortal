@@ -42,6 +42,7 @@ public class ClientEntity extends UserEntity {
 			Date date) {
 		super(string, string2, string3, string4, string5, string6, date);
 		this.orderid = null;
+		this.entityClassName = "client";
 	}
 
 	public ClientEntity(UserEntity user) {
@@ -68,6 +69,7 @@ public class ClientEntity extends UserEntity {
 				}
 			}
 		}
+		this.entityClassName = "client";
 	}
 
 	@Override

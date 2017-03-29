@@ -1,8 +1,8 @@
 package com.eduportal.interceptor;
 
-import com.hm.AppLoader;
-import com.hm.entity.User;
-import com.hm.model.AuthController;
+import com.eduportal.AppLoader;
+import com.eduportal.entity.UserEntity;
+import com.eduportal.model.AuthContainer;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class AccessInterceptor extends HandlerInterceptorAdapter {
 
-	private AuthController authController;
+	private AuthContainer authController;
 
 	public AccessInterceptor() {
 		new Thread(() -> {
@@ -22,7 +22,7 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 				while (AppLoader.ctx == null) {
 					Thread.sleep(10);
 				}
-				authController = AppLoader.ctx.getBean(AuthController.class);
+				authController = AppLoader.ctx.getBean(AuthContainer.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -39,7 +39,7 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 			return true;
 		}
 
-		User user = null;
+		UserEntity user = null;
 		try {
 			user = getUser(request);
 		} catch (Exception e) {
@@ -49,25 +49,16 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 			return true; //TODO false
 		}
 
-		switch (auth.value()) {
-			case "admin":
-			case "moderator":
-				if (user.getEntityClassName().compareToIgnoreCase("moderator") == 0) {
-					return true;
-				}
-				break;
-			case "worker":
-				if (user.getEntityClassName().compareToIgnoreCase("worker") == 0) {
-					return true;
-				}
-				break;
-
+		//TODO Normalize
+		if (user.getEntityClassName().compareToIgnoreCase(user.getEntityClassName()) == 0) {
+			return true;
 		}
+
 		System.out.println("Check auth: " + ((HandlerMethod) handler).getMethod().getAnnotation(Auth.class).value());
 		return true;
 	}
 
-	private User getUser(HttpServletRequest request) {
+	private UserEntity getUser(HttpServletRequest request) {
 		String token = Arrays.stream(request.getCookies())
 				.filter(cookie -> cookie.getName().equals("sessionId"))
 				.map(Cookie::getValue)

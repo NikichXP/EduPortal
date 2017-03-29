@@ -20,6 +20,7 @@ public abstract class UserEntity implements Serializable, Comparable<UserEntity>
 	protected HashMap<String, String> userData;
 	protected String creator;
 	protected boolean isActive;
+	protected String entityClassName;
 
 	public UserEntity() {
 		super();
