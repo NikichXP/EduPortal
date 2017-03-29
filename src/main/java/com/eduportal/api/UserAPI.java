@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserAPI {
 

@@ -11,16 +11,14 @@ import com.eduportal.model.AccessSettings;
 import com.eduportal.model.AuthContainer;
 import com.eduportal.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/admin")
 public class AdminAPI {
 	

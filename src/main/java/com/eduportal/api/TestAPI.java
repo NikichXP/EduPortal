@@ -8,16 +8,15 @@ import com.eduportal.dao.ProductDAO;
 import com.eduportal.dao.UserDAO;
 import com.eduportal.entity.*;
 import com.eduportal.manualdb.ConnectionHandler;
+import com.eduportal.model.AccessSettings;
 import com.eduportal.model.AuthContainer;
+import com.eduportal.model.OrderLogic;
 import com.eduportal.repo.*;
 import com.mongodb.Block;
-import com.eduportal.model.AccessSettings;
-import com.eduportal.model.OrderLogic;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -30,7 +29,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.stream;
 
 @RestController
-@Controller
+@CrossOrigin
 @RequestMapping("/test")
 public class TestAPI {
 
