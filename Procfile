@@ -1,1 +1,1 @@
-web: java -jar -Dserver.port=$PORT target/eduportal-final.jar
+web: java -jar -Dserver.port=$PORT target/eduportal-2.0.0-beta.jar
