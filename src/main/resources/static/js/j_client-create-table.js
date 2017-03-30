@@ -7,13 +7,13 @@ $(function(){
 		url: apiPath + 'user/fields',
 		success: function(resData) {
 			$('#client-new-fields').html(' ');
-			for (var i = 0; i < resData.items.length; i++) 
+			for (var i = 0; i < resData.length; i++) 
 			{
-				if (resData.items[i] == "Срок действия заграничного паспорта")
+				if (resData[i] == "Срок действия заграничного паспорта")
 				{
-					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData[i] + "'>");
 						$('#field-' + i).append("<td class='col-left'>");
-							$('#field-' + i + ' .col-left').append(resData.items[i]);
+							$('#field-' + i + ' .col-left').append(resData[i]);
 						$('#field-' + i).append('</td>');
 
 						$('#field-' + i).append("<td class='col-right'>");
@@ -43,9 +43,9 @@ $(function(){
 				}
 				else
 				{
-					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+					$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData[i] + "'>");
 						$('#field-' + i).append("<td class='col-left'>");
-							$('#field-' + i + ' .col-left').append(resData.items[i]);
+							$('#field-' + i + ' .col-left').append(resData[i]);
 						$('#field-' + i).append('</td>');
 
 						$('#field-' + i).append("<td class='col-right'>");
@@ -82,9 +82,9 @@ $(function(){
 		// 	type: 'GET',
 		// 	url: apiPath + 'user/fields',
 		// 	success: function(resData) {
-		// 		for (var i = 0; i < resData.items.length; i++) 
+		// 		for (var i = 0; i < resData.length; i++) 
 		// 		{
-		// 			keys[i] = resData.items[i];
+		// 			keys[i] = resData[i];
 		// 		}
 		// 	},	
 		// });

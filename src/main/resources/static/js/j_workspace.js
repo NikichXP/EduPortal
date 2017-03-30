@@ -86,23 +86,23 @@ $(function(){
 		url: apiPath + 'order/allOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				$('#table-orders').append("<tr class='tr-hover'>" +
 						"<td>" + (i + 1) + "</td>" +
-						"<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].clientName + "</td>" +
-						"<td>" + resData.items[i].productName + "</td>" +
-						"<td>" + resData.items[i].creatorName + "</td>" +
-						"<td>" + resData.items[i].paid + "</td>" +
-						"<td>" + resData.items[i].currency + "</td>" +
-						"<td>" + checkFiles(resData.items[i]) + "</td>" +
+						"<td>" + resData[i].id + "</td>" +
+						"<td>" + resData[i].clientName + "</td>" +
+						"<td>" + resData[i].productName + "</td>" +
+						"<td>" + resData[i].creatorName + "</td>" +
+						"<td>" + resData[i].paid + "</td>" +
+						"<td>" + resData[i].currency + "</td>" +
+						"<td>" + checkFiles(resData[i]) + "</td>" +
 					"</tr>");	
 			};
 			$('#li-open-orders').append(" " + i);
 			var k = 0;
-			for (var i = 0; i < resData.items.length; i++)
-				if (resData.items[i].donePaid == false) k++;
+			for (var i = 0; i < resData.length; i++)
+				if (resData[i].donePaid == false) k++;
 			$('#li-done-orders').append(" " + k);
 		},
 	});	
@@ -192,17 +192,17 @@ $(function(){
 		url: apiPath + 'user/getMyClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
-			var imax = resData.items.length;
+			var imax = resData.length;
 			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				if (count == imax) break;
 				$('#table-client-list tbody').append("<tr id='tr-client-list-" + (i + 1) + "'>");
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-client-list-' + (i + 1)).append(
-					"<td class='td-client-list'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-client-input-1' value=" + resData.items[count].id + ">" +
+					"<td class='td-client-list'>" + resData[count].name + " " + resData[count].surname + 
+					"<input type='hidden' class='inner-client-input-1' value=" + resData[count].id + ">" +
 					"</td>"
 					);
 					count++;
@@ -225,9 +225,9 @@ $(function(){
 		url: apiPath + 'order/allProducts',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
-			var imax = resData.items.length;
+			var imax = resData.length;
 			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				if (count == imax) break;
 				$('#table-product-list tbody').append("<tr id='tr-product-list-" + (i + 1) + "'>");
@@ -235,9 +235,9 @@ $(function(){
 				{
 					$('#tr-product-list-' + (i + 1)).append(
 					"<td class='td-product-list'>" + 
-					resData.items[count].title + 
-					"<input type='hidden' class='inner-product-input-1' value=" + resData.items[count].id + ">" +
-					"<input type='hidden' class='inner-product-input-2' value=" + resData.items[count].defaultPrice + ">" 
+					resData[count].title + 
+					"<input type='hidden' class='inner-product-input-1' value=" + resData[count].id + ">" +
+					"<input type='hidden' class='inner-product-input-2' value=" + resData[count].defaultPrice + ">" 
 					+ "</td>"
 					);
 					count++;
@@ -272,24 +272,24 @@ $(function(){
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			$('#table-order-payment').html("<tbody></tbody>");
-			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData.items[rowIndex].id + "</H2>");
+			$('#order-payment-text-block').html("<H2>Редактирование заказа #" + resData[rowIndex].id + "</H2>");
 			
 			$('#table-order-payment tbody').append("<tr>" + 
-				"<td>" + resData.items[rowIndex].clientName + "</td>" + 
-				"<td>" + resData.items[rowIndex].productName + "</td>" +
-				"<td>" + resData.items[rowIndex].price + "</td>" + 
-				"<td>" + resData.items[rowIndex].paid + "</td>" + 
-				"<td>" + (resData.items[rowIndex].price - resData.items[rowIndex].paid) + "</td>" + 
-				"<td>" + checkFiles(resData.items[rowIndex]) + "</td>" + 
+				"<td>" + resData[rowIndex].clientName + "</td>" + 
+				"<td>" + resData[rowIndex].productName + "</td>" +
+				"<td>" + resData[rowIndex].price + "</td>" + 
+				"<td>" + resData[rowIndex].paid + "</td>" + 
+				"<td>" + (resData[rowIndex].price - resData[rowIndex].paid) + "</td>" + 
+				"<td>" + checkFiles(resData[rowIndex]) + "</td>" + 
 			+ "</tr>");
             
             $('.file-list').html("");
             
-            for (var i = 0; i < resData.items[rowIndex].files.length; i++) {
-                $('.file-list').append('<li id=' + resData.items[rowIndex].files[i].id + '>' + (i + 1) + '</li>');    
+            for (var i = 0; i < resData[rowIndex].files.length; i++) {
+                $('.file-list').append('<li id=' + resData[rowIndex].files[i].id + '>' + (i + 1) + '</li>');    
             }
 			
-			$('#input-order-Id').val(resData.items[rowIndex].id);
+			$('#input-order-Id').val(resData[rowIndex].id);
 			$('#opacity').css('display', 'block');
 			$('#order-edit-payment').css('display', 'block');
 		},
@@ -398,20 +398,20 @@ $(function(){
 		url: apiPath + 'user/getMyClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
-			if (resData.items)
+			if (resData)
 			{
 				$('#table-client-menu').html("<tbody></tbody>");
-				var imax = resData.items.length;
+				var imax = resData.length;
 				var count = 0;
-				for (var i = 0; i < resData.items.length; i++)
+				for (var i = 0; i < resData.length; i++)
 				{
 					if (count == imax) break;
 					$('#table-client-menu tbody').append("<tr id='tr-client-menu-" + (i + 1) + "'>");
 					for (var j = 0; j < 5; j++)
 					{
 						$('#tr-client-menu-' + (i + 1)).append(
-						"<td class='td-client-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-						"<input type='hidden' class='inner-client-menu-input-1' value=" + resData.items[count].id + ">" +
+						"<td class='td-client-menu'>" + resData[count].name + " " + resData[count].surname + 
+						"<input type='hidden' class='inner-client-menu-input-1' value=" + resData[count].id + ">" +
 						"</td>"
 						);
 						count++;
@@ -477,18 +477,18 @@ $(function(){
 		url: apiPath + 'order/products',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
-			var imax = resData.items.length;
+			var imax = resData.length;
 			var count = 0;
 			$('#table-product-menu').html("<tbody></tbody>");
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				if (count == imax) break;
 				$('#table-product-menu tbody').append("<tr id='tr-product-menu-" + (i + 1) + "'>");
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-product-menu-' + (i + 1)).append(
-					"<td class='td-product-menu'>" + resData.items[count].title +  
-					"<input type='hidden' class='inner-product-menu-input-1' value=" + resData.items[count].id + ">" +
+					"<td class='td-product-menu'>" + resData[count].title +  
+					"<input type='hidden' class='inner-product-menu-input-1' value=" + resData[count].id + ">" +
 					"</td>"
 					);
 					count++;

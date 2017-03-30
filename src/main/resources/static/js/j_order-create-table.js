@@ -12,17 +12,17 @@ $(function(){
 		url: apiPath + 'user/getMyorders',
 		data: tokenJson,
 		success: function(resData) {
-			var imax = resData.items.length;
+			var imax = resData.length;
 			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				if (count == imax) break;
 				$('#table-order-menu tbody').append("<tr id='tr-order-menu-" + (i + 1) + "'>");
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-order-menu-' + (i + 1)).append(
-					"<td class='td-order-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-order-menu-input-1' value=" + resData.items[count].id + ">" +
+					"<td class='td-order-menu'>" + resData[count].name + " " + resData[count].surname + 
+					"<input type='hidden' class='inner-order-menu-input-1' value=" + resData[count].id + ">" +
 					"</td>"
 					);
 					count++;
@@ -166,10 +166,10 @@ $(function(){
 		url: apiPath + 'order/products',
 		data: {'token' : getCookie("sesToken")},
 		success: function(resData) {
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
-				$('#select-product').append("<option class='" + resData.items[i].currency + "' value='" + resData.items[i].id + "'>" 
-					+ resData.items[i].title
+				$('#select-product').append("<option class='" + resData[i].currency + "' value='" + resData[i].id + "'>" 
+					+ resData[i].title
 					+ "</option>" 
 				);
 			}
@@ -186,12 +186,12 @@ $(function(){
 		data: {'token' : getCookie("sesToken")},
 		success: function(resData) {
 			if (resData)
-				for (var i = 0; i < resData.items.length; i++)
+				for (var i = 0; i < resData.length; i++)
 				{
-					if (resData.items[i].active)
+					if (resData[i].active)
 					{
-						$('#select-client').append("<option id='client-" + i + "' value='" + resData.items[i].id + "'>" 
-						+ resData.items[i].name + " " + resData.items[i].surname 
+						$('#select-client').append("<option id='client-" + i + "' value='" + resData[i].id + "'>" 
+						+ resData[i].name + " " + resData[i].surname 
 						+ "</option>" );
 					}						
 				}

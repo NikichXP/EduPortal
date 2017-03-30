@@ -12,17 +12,17 @@ $(function(){
 		url: apiPath + 'user/getMyproducts',
 		data: tokenJson,
 		success: function(resData) {
-			var imax = resData.items.length;
+			var imax = resData.length;
 			var count = 0;
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
 				if (count == imax) break;
 				$('#table-product-menu tbody').append("<tr id='tr-product-menu-" + (i + 1) + "'>");
 				for (var j = 0; j < 5; j++)
 				{
 					$('#tr-product-menu-' + (i + 1)).append(
-					"<td class='td-product-menu'>" + resData.items[count].name + " " + resData.items[count].surname + 
-					"<input type='hidden' class='inner-product-menu-input-1' value=" + resData.items[count].id + ">" +
+					"<td class='td-product-menu'>" + resData[count].name + " " + resData[count].surname + 
+					"<input type='hidden' class='inner-product-menu-input-1' value=" + resData[count].id + ">" +
 					"</td>"
 					);
 					count++;
@@ -48,9 +48,9 @@ $(function(){
 		url: apiPath + 'util/cityList',
 		// data: clData,
 		success: function(resData) {
-			for (var i = 0; i < resData.items.length; i++)
+			for (var i = 0; i < resData.length; i++)
 			{
-				$('#select-city').append("<option value='" + resData.items[i].id + "'>" + resData.items[i].cyrname + "</option>");
+				$('#select-city').append("<option value='" + resData[i].id + "'>" + resData[i].cyrname + "</option>");
 			}
 		},	
 	});

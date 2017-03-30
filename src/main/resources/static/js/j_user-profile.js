@@ -8,11 +8,11 @@ $(function(){
 		url: apiPath + 'user/fields',
 		success: function(resData) {
 			$('#client-new-fields').html(' ');
-			for (var i = 0; i < resData.items.length; i++) 
+			for (var i = 0; i < resData.length; i++) 
 			{
-				$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData.items[i] + "'>");
+				$('#client-new-fields').append("<tr id='field-" + i + "'><input type='hidden' id='select-" + i + "' value='" + resData[i] + "'>");
 					$('#field-' + i).append("<td class='col-left'>");
-						$('#field-' + i + ' .col-left').append(resData.items[i]);
+						$('#field-' + i + ' .col-left').append(resData[i]);
 					$('#field-' + i).append('</td>');
 
 					$('#field-' + i).append("<td class='col-right'>");
@@ -89,8 +89,8 @@ $(function(){
 	// 	url: apiPath + 'order/allOrders',
 	// 	data: {'token' : getCookie("sesToken")},
 	// 	success: function(resData) { 
-	// 		for (var i = 0; i < resData.items.length; i++)
-	// 			checkFiles(resData.items[i]) 
+	// 		for (var i = 0; i < resData.length; i++)
+	// 			checkFiles(resData[i]) 
 	// 	},
 	// });
 	var userData = {
@@ -171,9 +171,9 @@ $(function(){
 		// 	type: 'GET',
 		// 	url: apiPath + 'user/fields',
 		// 	success: function(resData) {
-		// 		for (var i = 0; i < resData.items.length; i++) 
+		// 		for (var i = 0; i < resData.length; i++) 
 		// 		{
-		// 			keys[i] = resData.items[i];
+		// 			keys[i] = resData[i];
 		// 		}
 		// 	},	
 		// });

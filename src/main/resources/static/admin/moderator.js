@@ -33,14 +33,14 @@ $(function(){
 		url: apiPath + 'moderator/listProducts',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-products').append("<tr>" +
-						"<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].title + "</td>" +
-                        "<td>" + resData.items[i].description + "</td>" +
-                        "<td>" + resData.items[i].city.cyrname + "</td>" +
-                        "<td>" + resData.items[i].start + "</td>" +
-                        "<td>" + resData.items[i].defaultPrice + "</td>" +
+						"<td>" + resData[i].id + "</td>" +
+						"<td>" + resData[i].title + "</td>" +
+                        "<td>" + resData[i].description + "</td>" +
+                        "<td>" + resData[i].city.cyrname + "</td>" +
+                        "<td>" + resData[i].start + "</td>" +
+                        "<td>" + resData[i].defaultPrice + "</td>" +
 					"</tr>");	
 			};
 		},
@@ -51,13 +51,13 @@ $(function(){
 		url: apiPath + 'moderator/myClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-clients').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].mail + "</td>" +
+						"<td>" + resData[i].name + " " + resData[i].surname + "</td>" +
+						"<td>" + resData[i].mail + "</td>" +
                         "<td>мда</td>" +
-                        "<td><button value='" + resData.items[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
-						"<td><button value='" + resData.items[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
+                        "<td><button value='" + resData[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
+						"<td><button value='" + resData[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
 					"</tr>");	
 			};
 		},
@@ -68,14 +68,14 @@ $(function(){
 		url: apiPath + 'moderator/myOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-orders').append("<tr>" +
-                        "<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].client.name + " " + resData.items[i].client.surname + "</td>" +
-						"<td>" + resData.items[i].productName + "</td>" +
-                        "<td>" + resData.items[i].creatorName + "</td>" +
-                        "<td>" + resData.items[i].price + "</td>" +
-						"<td>" + resData.items[i].paid + "</td>" +
+                        "<td>" + resData[i].id + "</td>" +
+						"<td>" + resData[i].client.name + " " + resData[i].client.surname + "</td>" +
+						"<td>" + resData[i].productName + "</td>" +
+                        "<td>" + resData[i].creatorName + "</td>" +
+                        "<td>" + resData[i].price + "</td>" +
+						"<td>" + resData[i].paid + "</td>" +
 					"</tr>");	
 			};
 		},

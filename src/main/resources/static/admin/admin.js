@@ -36,12 +36,12 @@ $(function(){
 		url: apiPath + 'admin/myEmployees',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-emp').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].mail + "</td>" +
+						"<td>" + resData[i].name + " " + resData[i].surname + "</td>" +
+						"<td>" + resData[i].mail + "</td>" +
                         "<td>где</td>" +
-						"<td>" + returnAccessLevel(resData.items[i].accessLevel) + "</td>" +
+						"<td>" + returnAccessLevel(resData[i].accessLevel) + "</td>" +
 					"</tr>");	
 			};
 		},
@@ -52,13 +52,13 @@ $(function(){
 		url: apiPath + 'admin/myClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-clients').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].mail + "</td>" +
+						"<td>" + resData[i].name + " " + resData[i].surname + "</td>" +
+						"<td>" + resData[i].mail + "</td>" +
                         "<td>мда</td>" +
-                        "<td><button value='" + resData.items[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
-						"<td><button value='" + resData.items[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
+                        "<td><button value='" + resData[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
+						"<td><button value='" + resData[i].id + "' class='reset-pass btn btn-default'>RESET</button></td>" +
 					"</tr>");	
 			};
 		},
@@ -69,12 +69,12 @@ $(function(){
 		url: apiPath + 'admin/inactiveClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-inactive').append("<tr>" +
-						"<td>" + resData.items[i].name + " " + resData.items[i].surname + "</td>" +
-						"<td>" + resData.items[i].creator + "</td>" +
+						"<td>" + resData[i].name + " " + resData[i].surname + "</td>" +
+						"<td>" + resData[i].creator + "</td>" +
                         "<td>мда</td>" +
-                        "<td><button value='" + resData.items[i].id + "' class='user-fields btn btn-default'>RESET</button></td>" +
+                        "<td><button value='" + resData[i].id + "' class='user-fields btn btn-default'>RESET</button></td>" +
 					"</tr>");	
 			};
 		},
@@ -85,13 +85,13 @@ $(function(){
 		url: apiPath + 'admin/cityList',
 //		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
-			for (var i = 0; i < resData.items.length; i++) {
+			for (var i = 0; i < resData.length; i++) {
 				$('.table-city').append("<tr>" +
-						"<td>" + resData.items[i].id + "</td>" +
-						"<td>" + resData.items[i].cyrname + "</td>" +
-                        "<td>" + resData.items[i].name + "</td>" +
-                        "<td>" + resData.items[i].country.cyrname + "</td>" +
-                        "<td>" + resData.items[i].country.name + "</td>" +
+						"<td>" + resData[i].id + "</td>" +
+						"<td>" + resData[i].cyrname + "</td>" +
+                        "<td>" + resData[i].name + "</td>" +
+                        "<td>" + resData[i].country.cyrname + "</td>" +
+                        "<td>" + resData[i].country.name + "</td>" +
 					"</tr>");	
 			};
 		},
