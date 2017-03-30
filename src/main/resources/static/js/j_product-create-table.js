@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 			
 	//open product menu
 	$('#menu-product-open').on("click", function() {
@@ -9,7 +9,7 @@
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyproducts',
+		url: apiPath + 'user/getMyproducts',
 		data: tokenJson,
 		success: function(resData) {
 			var imax = resData.items.length;
@@ -45,7 +45,7 @@
 	$('#select-city').html(' ');
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/util/v1/cityList',
+		url: apiPath + 'util/cityList',
 		// data: clData,
 		success: function(resData) {
 			for (var i = 0; i < resData.items.length; i++)
@@ -74,7 +74,7 @@
 		alert("Продукт создан");	
 		$.ajax({
 			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/product/add',
+			url: apiPath + 'order/product/add',
 			data: prData,
 			success: window.close(),
 		});	

@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 			
 	var countOfFields = 0;		
 	
@@ -13,7 +13,7 @@
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/getproductbyid',
+		url: apiPath + 'order/getproductbyid',
 		data: userData,
 		success: function(resData) {
 			$('#field-req-1').html(resData.title);

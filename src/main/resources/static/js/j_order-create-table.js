@@ -1,4 +1,4 @@
-﻿$(function(){
+$(function(){
 			
 	//open order menu
 	$('#menu-order-open').on("click", function() {
@@ -9,7 +9,7 @@
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyorders',
+		url: apiPath + 'user/getMyorders',
 		data: tokenJson,
 		success: function(resData) {
 			var imax = resData.items.length;
@@ -57,7 +57,7 @@
 			
 			$.ajax({
 			type: 'POST',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/createuser',
+			url: apiPath + 'user/createuser',
 			data: clData,
 			processData: false,
 			contentType: false,
@@ -137,7 +137,7 @@
 	{
 		$.ajax({
 			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
+			url: apiPath + 'user/getname',
 			data: {'token' : getCookie("sesToken")},
 			success: function(resData) {
 				$('#order-new-emp').val(resData.name + " " + resData.surname);
@@ -149,7 +149,7 @@
 
 		$.ajax({
 			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+			url: apiPath + 'user/getInfo',
 			data: {'token' : getCookie("sesToken")},
 			success: function(resData) {
 				$('#select-client').append("<option id='client-" + i + "' value='" + resData.id + "'>" 
@@ -163,7 +163,7 @@
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/products',
+		url: apiPath + 'order/products',
 		data: {'token' : getCookie("sesToken")},
 		success: function(resData) {
 			for (var i = 0; i < resData.items.length; i++)
@@ -182,7 +182,7 @@
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
+		url: apiPath + 'user/getMyClients',
 		data: {'token' : getCookie("sesToken")},
 		success: function(resData) {
 			if (resData)
@@ -212,7 +212,7 @@
 
 			$.ajax({
 				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/createorder',
+				url: apiPath + 'order/createorder',
 				data: orderData,
 				success: window.close(),
 			});	

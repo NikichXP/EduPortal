@@ -21,7 +21,7 @@ $(function(){
 		else 
 			$.ajax({
 				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/checkToken',
+				url: apiPath + 'user/checkToken',
 				data: { token: getCookie("sesToken")},
 				success: function(resData) { 
 					if (resData.value == 'false') window.location = "auth.html";
@@ -74,7 +74,7 @@ $(function(){
 	//get user name	
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getname',
+		url: apiPath + 'user/getname',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			$('#p-greeting').append("<h3>Добро пожаловать, " + resData.name + "!</h3>");
@@ -83,7 +83,7 @@ $(function(){
 	//dynamic table of orders
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
+		url: apiPath + 'order/allOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++)
@@ -189,7 +189,7 @@ $(function(){
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
+		url: apiPath + 'user/getMyClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;
@@ -222,7 +222,7 @@ $(function(){
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allProducts',
+		url: apiPath + 'order/allProducts',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;
@@ -268,7 +268,7 @@ $(function(){
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
+		url: apiPath + 'order/allOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			$('#table-order-payment').html("<tbody></tbody>");
@@ -319,7 +319,7 @@ $(function(){
 		
 		$.ajax({
 			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/editorder',
+			url: apiPath + 'order/editorder',
 			data: paymentData,
 			success: location.reload(),	
 		});		
@@ -347,7 +347,7 @@ $(function(){
 		
 		$.ajax({
 			type: 'GET',
-			url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/cancelOrder',
+			url: apiPath + 'order/cancelOrder',
 			data: delData,
 			success: location.reload(),	
 		});		
@@ -360,7 +360,7 @@ $(function(){
 		{
 			$.ajax({
 				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+				url: apiPath + 'user/getInfo',
 				data: {'token' : getCookie("sesToken")},
 				success: function(resData) {
 					if (resData.active)
@@ -395,7 +395,7 @@ $(function(){
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getMyClients',
+		url: apiPath + 'user/getMyClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			if (resData.items)
@@ -474,7 +474,7 @@ $(function(){
 		
 		$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/products',
+		url: apiPath + 'order/products',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) {
 			var imax = resData.items.length;

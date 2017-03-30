@@ -20,7 +20,7 @@ $(function(){
 		else 
 			$.ajax({
 				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/checkToken',
+				url: apiPath + 'user/checkToken',
 				data: { token: getCookie("sesToken")},
 				success: function(resData) { 
 					if (resData.value == 'false') window.location = "../auth.html";
@@ -30,7 +30,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/listProducts',
+		url: apiPath + 'moderator/listProducts',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -48,7 +48,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/myClients',
+		url: apiPath + 'moderator/myClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -65,7 +65,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/myOrders',
+		url: apiPath + 'moderator/myOrders',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -104,7 +104,7 @@ $(function(){
     $('body').on("click", "#add-product", function() {
         $.ajax({
             type: 'GET',
-            url: 'https://eduportal-1277.appspot.com/_ah/api/moderator/v1/product/add',
+            url: apiPath + 'moderator/product/add',
     		data: { 
                 token: getCookie("sesToken"), 
                 cityname: $("#product-city").val(), 

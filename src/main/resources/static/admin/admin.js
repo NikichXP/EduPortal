@@ -20,7 +20,7 @@ $(function(){
 		else 
 			$.ajax({
 				type: 'GET',
-				url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/checkToken',
+				url: apiPath + 'user/checkToken',
 				data: { token: getCookie("sesToken")},
 				success: function(resData) { 
 					if (resData.value == 'false') window.location = "/auth.html";
@@ -33,7 +33,7 @@ $(function(){
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/myEmployees',
+		url: apiPath + 'admin/myEmployees',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -49,7 +49,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/myClients',
+		url: apiPath + 'admin/myClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -66,7 +66,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/inactiveClients',
+		url: apiPath + 'admin/inactiveClients',
 		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -82,7 +82,7 @@ $(function(){
     
     $.ajax({
 		type: 'GET',
-		url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/cityList',
+		url: apiPath + 'admin/cityList',
 //		data: { token: getCookie("sesToken")},
 		success: function(resData) { 
 			for (var i = 0; i < resData.items.length; i++) {
@@ -128,7 +128,7 @@ $(function(){
     $('body').on("click", "#add-city", function() {
         $.ajax({
             type: 'GET',
-            url: 'https://eduportal-1277.appspot.com/_ah/api/admin/v1/createcity',
+            url: apiPath + 'admin/createcity',
     		data: { token: getCookie("sesToken"), city: $("#city-name").val(), country: $("#city-country").val() },
             success: function(resData) { 
                 window.location.reload();

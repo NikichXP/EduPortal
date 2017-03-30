@@ -1,11 +1,11 @@
-﻿$(function(){
+$(function(){
 			
 	var countOfFields = 0;		
 	
 	//fields
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/fields',
+		url: apiPath + 'user/fields',
 		success: function(resData) {
 			$('#client-new-fields').html(' ');
 			for (var i = 0; i < resData.items.length; i++) 
@@ -86,7 +86,7 @@
 	//get user's files
 	// $.ajax({
 	// 	type: 'GET',
-	// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/order/v1/allOrders',
+	// 	url: apiPath + 'order/allOrders',
 	// 	data: {'token' : getCookie("sesToken")},
 	// 	success: function(resData) { 
 	// 		for (var i = 0; i < resData.items.length; i++)
@@ -101,7 +101,7 @@
 		
 	$.ajax({
 		type: 'GET',
-		url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/getInfo',
+		url: apiPath + 'user/getInfo',
 		data: userData,
 		success: function(resData) {
 			$('#field-req-1').html(resData.name);
@@ -169,7 +169,7 @@
 		var value = new Array();
 		// $.ajax({
 		// 	type: 'GET',
-		// 	url: 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/user/v1/fields',
+		// 	url: apiPath + 'user/fields',
 		// 	success: function(resData) {
 		// 		for (var i = 0; i < resData.items.length; i++) 
 		// 		{
@@ -206,7 +206,7 @@
 			
 		$.ajax({
 			type: 'POST',
-			url: 'https://eduportal-1277.appspot.com/_ah/api/user/v1/updateuser',
+			url: apiPath + 'user/updateuser',
 			data: clData,
 			processData: false,
 			contentType: false,

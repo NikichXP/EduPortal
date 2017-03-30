@@ -1,3 +1,9 @@
+//var apiPath = 'https://beta-dot-eduportal-1277.appspot.com/_ah/api/';
+
+var apiPath = 'https://vtg.herokuapp.com/';
+
+
+
 function setCookie(name, value, options) {
   options = options || {};
 
