@@ -1,6 +1,5 @@
 package com.eduportal.interceptor;
 
-import com.eduportal.AppLoader;
 import com.eduportal.entity.UserEntity;
 import com.eduportal.model.AuthContainer;
 import org.springframework.web.method.HandlerMethod;
@@ -14,20 +13,6 @@ import java.util.Arrays;
 
 public class AccessInterceptor extends HandlerInterceptorAdapter {
 
-	private AuthContainer authController;
-
-	public AccessInterceptor() {
-		new Thread(() -> {
-			try {
-				while (AppLoader.ctx == null) {
-					Thread.sleep(10);
-				}
-				authController = AppLoader.ctx.getBean(AuthContainer.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}).start();
-	}
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -63,7 +48,7 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
 				.filter(cookie -> cookie.getName().equals("sessionId"))
 				.map(Cookie::getValue)
 				.findAny().orElseGet(() -> (request.getParameter("token") != null) ? request.getParameter("token") : request.getParameter("sessionId"));
-		return (token == null) ? null : authController.getUser(token);
+		return (token == null) ? null : AuthContainer.getUser(token);
 	}
 
 }

@@ -14,7 +14,8 @@ public class OrderLogic {
 	public static Order createOrder(ClientEntity user, Employee admin, Product p, double paid, String comment,
 	                                Date start, Date end) {
 
-		return (admin.isAgent()) ? createOrderByAgent(user, admin, p, paid, start, end, comment)
+		return (admin.isAgent())
+				? createOrderByAgent(user, admin, p, paid, start, end, comment)
 				: createOrderByAdmin(user, admin, p, paid, start, end, comment);
 
 	}

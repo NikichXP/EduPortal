@@ -3,8 +3,14 @@ package com.eduportal;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @SpringBootApplication
+@RestController
 public class AppLoader {
 
 	public static final ApplicationContext ctx = SpringApplication.run(AppLoader.class, new String[]{});
@@ -17,5 +23,10 @@ public class AppLoader {
 	public static <T> T get(Class<T> clazz) {
 		while (ctx == null) {}
 		return ctx.getBean(clazz);
+	}
+
+	@RequestMapping("/")
+	public void index(HttpServletResponse response) throws IOException {
+		response.sendRedirect("/auth.html");
 	}
 }
