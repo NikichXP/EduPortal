@@ -56,12 +56,12 @@ $(function(){
 			clData.append('pass', '');
 			
 			$.ajax({
-			type: 'POST',
-			url: apiPath + 'user/createuser',
-			data: clData,
-			processData: false,
-			contentType: false,
-			success: location.reload(),	
+                type: 'POST',
+                url: apiPath + 'user/createuser',
+                data: clData,
+                processData: false,
+                contentType: false,
+                success: location.reload(),	
 			});	
 		}
 		else 
@@ -214,7 +214,7 @@ $(function(){
 				type: 'GET',
 				url: apiPath + 'order/createorder',
 				data: orderData,
-				success: window.close(),
+                success: window.close();
 			});	
 			
 		};	
