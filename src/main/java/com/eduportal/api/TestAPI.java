@@ -55,7 +55,7 @@ public class TestAPI {
 	@RequestMapping(path = "test1", method = RequestMethod.GET)
 	public List<Object> test1() {
 		ArrayList<Object> ret = new ArrayList<>();
-		UserEntity u = UserDAO.get("admin@corp.com", "pass");
+		UserEntity u = UserDAO.get("ADMIN@corp.com", "pass");
 		ret.add(u);
 		ret.add(u.toString());
 		return ret;
@@ -92,7 +92,7 @@ public class TestAPI {
 		});
 
 		Employee[] admins = {
-				new Employee("Adminovich", "Admin", "Adminov", "admin@corp.com", "pass", "+123456789012", new Date())
+				new Employee("Adminovich", "Admin", "Adminov", "ADMIN@corp.com", "pass", "+123456789012", new Date())
 						.setAccessLevel(AccessSettings.ADMIN_LEVEL + 1),
 				new Employee("Ordovich", "New", "Order", "order@corp.com", "order", "+123456789015", new Date())
 						.setAccessLevel(AccessSettings.MODERATOR_LEVEL),

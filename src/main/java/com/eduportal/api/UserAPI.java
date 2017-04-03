@@ -281,7 +281,7 @@ public class UserAPI {
 		return AccessLogic.listUsers(phone, name, mail, login, token);
 	}
 
-	@RequestMapping(name = "user.filter.admin", path = "user/filterAll", method = RequestMethod.GET)
+	@RequestMapping(name = "user.filter.ADMIN", path = "user/filterAll", method = RequestMethod.GET)
 	public List<UserEntity> listEveryUserFilter(@RequestParam(value = "login", required = false) String login,
 	                                            @RequestParam(value = "phone", required = false) String phone, @RequestParam(value = "name", required = false) String name,
 	                                            @RequestParam(value = "mail", required = false) String mail, @RequestParam(value = "token", required = false) String token) {

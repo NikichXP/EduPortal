@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 
 @SpringBootApplication
 @RestController
@@ -27,6 +28,7 @@ public class AppLoader {
 
 	@RequestMapping("/")
 	public void index(HttpServletResponse response) throws IOException {
+		LinkedList x;
 		response.sendRedirect("/auth.html");
 	}
 }

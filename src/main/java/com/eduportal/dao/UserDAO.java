@@ -1,9 +1,6 @@
 package com.eduportal.dao;
 
-import com.eduportal.entity.ClientEntity;
-import com.eduportal.entity.DeletedUser;
-import com.eduportal.entity.Employee;
-import com.eduportal.entity.UserEntity;
+import com.eduportal.entity.*;
 import com.eduportal.repo.ClientRepository;
 import com.eduportal.repo.DeletedUserRepository;
 import com.eduportal.repo.UserRepository;
@@ -11,6 +8,7 @@ import com.eduportal.AppLoader;
 import com.eduportal.repo.EmployeeRepository;
 import com.eduportal.util.UserUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -99,7 +97,7 @@ public class UserDAO {
 		}
 		UserEntity u = userRepo().findByPhoneOrMail(login, login);
 		if (pass.equals(u.getPass())) {
-			if (u.getClassType().equals("client")) {
+			if (u.getClassType().equals("CLIENT")) {
 				return clientRepo().findOne(u.getId());
 			} else if (u.getClassType().equals("employee")) {
 				return empRepo().findOne(u.getId());
@@ -115,7 +113,7 @@ public class UserDAO {
 			case "employee":
 				empRepo().save((Employee) u);
 				break;
-			case "client":
+			case "CLIENT":
 				clientRepo().save((ClientEntity) u);
 				break;
 		}
@@ -126,7 +124,7 @@ public class UserDAO {
 		UserEntity u = userRepo().findOne(id);
 		if (u.getClassType().equals("employee")) {
 			return empRepo().findOne(id);
-		} else if (u.getClassType().equals("client")) {
+		} else if (u.getClassType().equals("CLIENT")) {
 			return clientRepo().findOne(id);
 		}
 		throw new UnsupportedOperationException("Unknown class");
@@ -163,7 +161,7 @@ public class UserDAO {
 	public static UserEntity create(UserEntity user) {
 
 		userRepo().save(user);
-		if (user.getClassType().equals("client")) {
+		if (user.getClassType().equals("CLIENT")) {
 			clientRepo().save((ClientEntity) user);
 		} else if (user.getClassType().equals("employee")) {
 			empRepo().save((Employee) user);
@@ -188,6 +186,10 @@ public class UserDAO {
 	public static UserEntity getUserByMail(String mail) {
 
 		return userRepo().findByMail(mail);
+	}
+
+	public static ArrayList<SavedFile> getFiles(String userid) {
+		return get(userid).getFiles();
 	}
 
 	public List<Employee> getEmpList() {
